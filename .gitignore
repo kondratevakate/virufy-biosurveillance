@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+# Models are fetched at runtime from their official URLs, never committed
+*.tflite
+# Raw audio never enters the repository
+*.wav
+*.mp3
+*.webm
+*.ogg
+eval/cache/
+.DS_Store

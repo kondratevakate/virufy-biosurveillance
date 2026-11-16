@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f5c4d">
+  <title>Virufy Biosurveillance</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">Virufy <span>biosurveillance prototype</span></div>
+    <nav>
+      <button class="tab active" data-view="phone">My phone</button>
+      <button class="tab" data-view="dashboard">Dashboard</button>
+      <button class="tab" data-view="about">About</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Participant view: on-device cough counting -->
+    <section id="view-phone" class="view active">
+      <div id="consent" class="card">
+        <h2>Count coughs on this phone</h2>
+        <p>The microphone audio is analysed <b>on this phone</b> and discarded within a second.
+           Nothing is recorded or uploaded. Only the number of coughs per 15 minutes and your zone code
+           can be shared, and only when you press <i>Share counts</i>.</p>
+        <label>Zone
+          <select id="zone">
+            <option value="ZONE-AIRPORT-ARRIVALS">Airport arrivals hall</option>
+            <option value="ZONE-WORKSITE-A">Worksite A</option>
+            <option value="ZONE-CLINIC-WAITING">Clinic waiting room</option>
+          </select>
+        </label>
+        <button id="start" class="primary">Continue as guest and start</button>
+        <p class="small">Not a diagnostic device. It does not tell you whether you are ill.</p>
+      </div>
+
+      <div id="listening" class="card hidden">
+        <div class="row">
+          <div><div class="label">Coughs counted</div><div id="count" class="big">0</div></div>
+          <div><div class="label">This 15-min window</div><div id="binCount" class="big">0</div></div>
+        </div>
+        <div class="label">Cough score (last second)</div>
+        <div class="meter"><div id="meter"></div><div id="thresholdMark"></div></div>
+        <p id="status" class="small">Starting…</p>
+        <div class="row">
+          <button id="stop">Stop</button>
+          <button id="share" class="primary">Share counts</button>
+        </div>
+        <details>
+          <summary>What would be sent</summary>
+          <pre id="payload">Nothing yet.</pre>
+        </details>
+      </div>
+
+      <div id="phoneError" class="card error hidden"></div>
+    </section>
+
+    <!-- Officer view: zones, wastewater and alerts -->
+    <section id="view-dashboard" class="view">
+      <div class="card notice">Guest mode. Zone data are <b>synthetic</b> except your own shared counts.
+        Aviation wastewater series are <b>real</b> (US and UK, 2024 to 2025, Zenodo, CC BY 4.0).</div>
+      <h2>Alerts</h2>
+      <div id="alerts"></div>
+      <h2>Zones: coughs per participant-hour</h2>
+      <div id="zones" class="grid"></div>
+      <h2>Aviation wastewater: share of positive samples per week</h2>
+      <div class="row">
+        <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
+      </div>
+      <div id="wastewater" class="grid"></div>
+      <h2>Environment (dust, PM2.5, heat)</h2>
+      <div class="card muted">Not connected in this prototype: the UAE data source is still being chosen.</div>
+      <div id="dashError" class="card error hidden"></div>
+    </section>
+
+    <section id="view-about" class="view">
+      <div class="card">
+        <h2>How it works</h2>
+        <ol>
+          <li>The phone runs a cough detector (YAMNet audio classifier, MediaPipe) in the browser.</li>
+          <li>Only cough counts per 15 minutes and a zone code leave the phone.</li>
+          <li>Zones with fewer than 10 participants are hidden.</li>
+          <li>Each zone is compared with its own previous 8 periods; a rise of more than 2 robust standard deviations raises an alert.</li>
+          <li>The same rule runs on aviation wastewater series, the second signal.</li>
+        </ol>
+        <h3>Detector check on ESC-50 (2000 labelled sounds, 40 coughs)</h3>
+        <div id="evalBox">Loading…</div>
+        <p class="small">Data: ESC-50 (CC BY-NC 3.0); aviation wastewater qPCR (Zenodo, doi:10.5281/zenodo.18432347, CC BY 4.0).
+          Not a medical device.</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

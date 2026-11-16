@@ -1,0 +1,2164 @@
+{
+ "source": "Aviation wastewater qPCR dataset (US-UK research collaboration), Zenodo, doi:10.5281/zenodo.18432347, CC BY 4.0",
+ "rule": {
+  "baseline_weeks": 8,
+  "min_prior_weeks": 4,
+  "min_measurements": 5,
+  "z_limit": 2.0,
+  "abs_limit": 0.15
+ },
+ "series": [
+  {
+   "country": "US",
+   "target": "SARS-CoV-2",
+   "weeks": [
+    "2024-W13",
+    "2024-W14",
+    "2024-W15",
+    "2024-W16",
+    "2024-W17",
+    "2024-W18",
+    "2024-W19",
+    "2024-W20",
+    "2024-W21",
+    "2024-W22",
+    "2024-W23",
+    "2024-W24",
+    "2024-W25",
+    "2024-W26",
+    "2024-W27",
+    "2024-W28",
+    "2024-W29",
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2024-W52",
+    "2025-W01",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.5,
+    0.167,
+    0.625,
+    0.5,
+    0.75,
+    0.7,
+    0.7,
+    0.8,
+    0.7,
+    0.7,
+    0.833,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.9,
+    1.0,
+    0.9,
+    0.833,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.667,
+    0.75,
+    1.0,
+    0.75,
+    0.667,
+    0.8,
+    0.4,
+    0.6,
+    0.0,
+    0.25,
+    0.167,
+    0.5,
+    0.625,
+    0.167,
+    0.5,
+    0.667,
+    0.5
+   ],
+   "n": [
+    2,
+    6,
+    8,
+    10,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    6,
+    10,
+    8,
+    10,
+    6,
+    10,
+    6,
+    10,
+    6,
+    6,
+    10,
+    8,
+    6,
+    6,
+    8,
+    10,
+    8,
+    6,
+    10,
+    10,
+    10,
+    2,
+    4,
+    6,
+    10,
+    8,
+    6,
+    4,
+    6,
+    8
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.5,
+     "z": 2.7
+    },
+    {
+     "flag": false,
+     "baseline": 0.5,
+     "z": 1.08
+    },
+    {
+     "flag": false,
+     "baseline": 0.5625,
+     "z": 0.93
+    },
+    {
+     "flag": false,
+     "baseline": 0.625,
+     "z": 0.94
+    },
+    {
+     "flag": false,
+     "baseline": 0.6625,
+     "z": 0.22
+    },
+    {
+     "flag": false,
+     "baseline": 0.7,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.7,
+     "z": 3.6
+    },
+    {
+     "flag": true,
+     "baseline": 0.7,
+     "z": 8.09
+    },
+    {
+     "flag": true,
+     "baseline": 0.725,
+     "z": 7.42
+    },
+    {
+     "flag": true,
+     "baseline": 0.75,
+     "z": 3.37
+    },
+    {
+     "flag": false,
+     "baseline": 0.8166666666666667,
+     "z": 1.06
+    },
+    {
+     "flag": false,
+     "baseline": 0.9166666666666667,
+     "z": -0.13
+    },
+    {
+     "flag": false,
+     "baseline": 0.95,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.95,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 1.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.875,
+     "z": -0.4
+    },
+    {
+     "flag": false,
+     "baseline": 0.775,
+     "z": -2.33
+    },
+    {
+     "flag": false,
+     "baseline": 0.75,
+     "z": -1.21
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.6333333333333333,
+     "z": -1.57
+    },
+    {
+     "flag": false,
+     "baseline": 0.5,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.45,
+     "z": 0.57
+    },
+    {
+     "flag": false,
+     "baseline": 0.45,
+     "z": -1.02
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.375,
+     "z": 0.94
+    },
+    {
+     "flag": false,
+     "baseline": 0.375,
+     "z": 0.4
+    }
+   ],
+   "n_flagged_weeks": 4
+  },
+  {
+   "country": "US",
+   "target": "Influenza A",
+   "weeks": [
+    "2024-W13",
+    "2024-W14",
+    "2024-W15",
+    "2024-W16",
+    "2024-W17",
+    "2024-W18",
+    "2024-W19",
+    "2024-W20",
+    "2024-W21",
+    "2024-W22",
+    "2024-W23",
+    "2024-W24",
+    "2024-W25",
+    "2024-W26",
+    "2024-W27",
+    "2024-W28",
+    "2024-W29",
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2024-W52",
+    "2025-W01",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.0,
+    0.0,
+    0.0,
+    0.3,
+    0.25,
+    0.1,
+    0.2,
+    0.0,
+    0.1,
+    0.2,
+    0.0,
+    0.1,
+    0.375,
+    0.2,
+    0.333,
+    0.0,
+    0.0,
+    0.2,
+    0.0,
+    0.167,
+    0.1,
+    0.0,
+    0.167,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.167,
+    0.0,
+    0.0,
+    0.1,
+    0.0,
+    0.25,
+    0.5,
+    0.2,
+    0.625,
+    0.167,
+    0.25,
+    0.5,
+    0.125
+   ],
+   "n": [
+    2,
+    6,
+    8,
+    10,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    6,
+    10,
+    8,
+    10,
+    6,
+    10,
+    6,
+    10,
+    6,
+    6,
+    10,
+    8,
+    6,
+    6,
+    8,
+    10,
+    8,
+    6,
+    10,
+    10,
+    10,
+    2,
+    4,
+    6,
+    10,
+    8,
+    6,
+    4,
+    6,
+    8
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.05,
+     "z": 2.02
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": -1.35
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": -0.45
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": 1.85
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": 0.67
+    },
+    {
+     "flag": true,
+     "baseline": 0.15000000000000002,
+     "z": 2.47
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": -1.01
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": -1.01
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": 0.22
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": 0.07
+    },
+    {
+     "flag": false,
+     "baseline": 0.18333333333333335,
+     "z": -0.34
+    },
+    {
+     "flag": false,
+     "baseline": 0.13333333333333333,
+     "z": -0.9
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": 1.57
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.05,
+     "z": 2.02
+    },
+    {
+     "flag": true,
+     "baseline": 0.13333333333333333,
+     "z": 2.65
+    },
+    {
+     "flag": false,
+     "baseline": 0.15000000000000002,
+     "z": 0.07
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.225,
+     "z": 2.02
+    },
+    {
+     "flag": false,
+     "baseline": 0.25,
+     "z": -0.51
+    }
+   ],
+   "n_flagged_weeks": 8
+  },
+  {
+   "country": "US",
+   "target": "Influenza B",
+   "weeks": [
+    "2024-W13",
+    "2024-W14",
+    "2024-W15",
+    "2024-W16",
+    "2024-W17",
+    "2024-W18",
+    "2024-W19",
+    "2024-W20",
+    "2024-W21",
+    "2024-W22",
+    "2024-W23",
+    "2024-W24",
+    "2024-W25",
+    "2024-W26",
+    "2024-W27",
+    "2024-W28",
+    "2024-W29",
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2024-W52",
+    "2025-W01",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.0,
+    0.0,
+    0.25,
+    0.1,
+    0.0,
+    0.0,
+    0.1,
+    0.0,
+    0.2,
+    0.1,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.167,
+    0.0,
+    0.167,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.2,
+    0.125,
+    0.167,
+    0.25,
+    0.333,
+    0.125
+   ],
+   "n": [
+    2,
+    6,
+    8,
+    10,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    6,
+    10,
+    8,
+    10,
+    6,
+    10,
+    6,
+    10,
+    6,
+    6,
+    10,
+    8,
+    6,
+    6,
+    8,
+    10,
+    8,
+    6,
+    10,
+    10,
+    10,
+    2,
+    4,
+    6,
+    10,
+    8,
+    6,
+    4,
+    6,
+    8
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0625,
+     "z": 2.92
+    },
+    {
+     "flag": false,
+     "baseline": 0.14583333333333331,
+     "z": -0.11
+    }
+   ],
+   "n_flagged_weeks": 6
+  },
+  {
+   "country": "US",
+   "target": "RSV",
+   "weeks": [
+    "2024-W13",
+    "2024-W14",
+    "2024-W15",
+    "2024-W16",
+    "2024-W17",
+    "2024-W18",
+    "2024-W19",
+    "2024-W20",
+    "2024-W21",
+    "2024-W22",
+    "2024-W23",
+    "2024-W24",
+    "2024-W25",
+    "2024-W26",
+    "2024-W27",
+    "2024-W28",
+    "2024-W29",
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2024-W52",
+    "2025-W01",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.0,
+    0.0,
+    0.25,
+    0.1,
+    0.125,
+    0.0,
+    0.1,
+    0.0,
+    0.1,
+    0.0,
+    0.0,
+    0.0,
+    0.125,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.2,
+    0.333,
+    0.167,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.125,
+    0.0,
+    0.125,
+    0.0,
+    0.1,
+    0.0,
+    0.4,
+    0.5,
+    0.5,
+    0.5,
+    0.4,
+    0.25,
+    0.5,
+    0.75,
+    0.333,
+    0.5
+   ],
+   "n": [
+    2,
+    6,
+    8,
+    10,
+    8,
+    10,
+    10,
+    10,
+    10,
+    10,
+    6,
+    10,
+    8,
+    10,
+    6,
+    10,
+    6,
+    10,
+    6,
+    6,
+    10,
+    8,
+    6,
+    6,
+    8,
+    10,
+    8,
+    6,
+    10,
+    10,
+    10,
+    2,
+    4,
+    6,
+    10,
+    8,
+    6,
+    4,
+    6,
+    8
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": 1.01
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": -1.08
+    },
+    {
+     "flag": false,
+     "baseline": 0.1,
+     "z": -1.08
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0625,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0625,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.1125,
+     "z": 2.32
+    },
+    {
+     "flag": false,
+     "baseline": 0.2625,
+     "z": 0.39
+    },
+    {
+     "flag": false,
+     "baseline": 0.4,
+     "z": -1.01
+    },
+    {
+     "flag": false,
+     "baseline": 0.4,
+     "z": 0.67
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.5,
+     "z": -2.25
+    },
+    {
+     "flag": false,
+     "baseline": 0.5,
+     "z": 0.0
+    }
+   ],
+   "n_flagged_weeks": 5
+  },
+  {
+   "country": "UK",
+   "target": "SARS-CoV-2",
+   "weeks": [
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W45",
+    "2024-W46",
+    "2024-W47",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.7,
+    0.75,
+    0.833,
+    0.333,
+    0.333,
+    1.0,
+    0.75,
+    0.5,
+    0.625,
+    0.375,
+    0.75,
+    0.333,
+    0.5,
+    0.625,
+    1.0,
+    0.5,
+    0.5,
+    0.0,
+    0.5,
+    0.75,
+    0.5,
+    0.5,
+    0.333,
+    0.5
+   ],
+   "n": [
+    10,
+    4,
+    6,
+    6,
+    6,
+    2,
+    4,
+    8,
+    8,
+    8,
+    4,
+    6,
+    2,
+    8,
+    4,
+    2,
+    4,
+    2,
+    2,
+    4,
+    4,
+    2,
+    6,
+    4
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.725,
+     "z": -3.96
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.75,
+     "z": -2.02
+    },
+    {
+     "flag": false,
+     "baseline": 0.725,
+     "z": -0.4
+    },
+    {
+     "flag": false,
+     "baseline": 0.6875,
+     "z": -1.26
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.5625,
+     "z": -0.82
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.5625,
+     "z": 0.22
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.5,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    }
+   ],
+   "n_flagged_weeks": 0
+  },
+  {
+   "country": "UK",
+   "target": "Influenza A",
+   "weeks": [
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W45",
+    "2024-W46",
+    "2024-W47",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.0,
+    0.25,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.125,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.25,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "n": [
+    10,
+    4,
+    6,
+    6,
+    6,
+    2,
+    4,
+    8,
+    8,
+    8,
+    4,
+    6,
+    2,
+    8,
+    4,
+    2,
+    4,
+    2,
+    2,
+    4,
+    4,
+    2,
+    6,
+    4
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    }
+   ],
+   "n_flagged_weeks": 1
+  },
+  {
+   "country": "UK",
+   "target": "Influenza B",
+   "weeks": [
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W45",
+    "2024-W46",
+    "2024-W47",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.0,
+    0.0,
+    0.0,
+    0.167,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "n": [
+    10,
+    4,
+    6,
+    6,
+    6,
+    2,
+    4,
+    8,
+    8,
+    8,
+    4,
+    6,
+    2,
+    8,
+    4,
+    2,
+    4,
+    2,
+    2,
+    4,
+    4,
+    2,
+    6,
+    4
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    }
+   ],
+   "n_flagged_weeks": 0
+  },
+  {
+   "country": "UK",
+   "target": "RSV",
+   "weeks": [
+    "2024-W30",
+    "2024-W31",
+    "2024-W32",
+    "2024-W33",
+    "2024-W34",
+    "2024-W35",
+    "2024-W36",
+    "2024-W37",
+    "2024-W38",
+    "2024-W39",
+    "2024-W40",
+    "2024-W41",
+    "2024-W42",
+    "2024-W43",
+    "2024-W44",
+    "2024-W45",
+    "2024-W46",
+    "2024-W47",
+    "2024-W48",
+    "2024-W49",
+    "2024-W50",
+    "2024-W51",
+    "2025-W02",
+    "2025-W03"
+   ],
+   "positivity": [
+    0.1,
+    0.0,
+    0.0,
+    0.167,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.125,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.25,
+    0.0,
+    0.0,
+    0.333,
+    0.0
+   ],
+   "n": [
+    10,
+    4,
+    6,
+    6,
+    6,
+    2,
+    4,
+    8,
+    8,
+    8,
+    4,
+    6,
+    2,
+    8,
+    4,
+    2,
+    4,
+    2,
+    2,
+    4,
+    4,
+    2,
+    6,
+    4
+   ],
+   "flags": [
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.05,
+     "z": -0.67
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": 0.0
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    },
+    {
+     "flag": true,
+     "baseline": 0.0,
+     "z": null
+    },
+    {
+     "flag": false,
+     "baseline": null,
+     "z": null
+    }
+   ],
+   "n_flagged_weeks": 1
+  }
+ ]
+}

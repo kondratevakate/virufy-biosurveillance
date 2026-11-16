@@ -1,0 +1,60 @@
+{
+  "model_file": "yamnet.tflite",
+  "model_sha256": "4d8b4a53282dc83ef04e3e7dbc4fbc98082e34e44ed798e16c3a0cdd4c584faf",
+  "n_clips": 2000,
+  "n_cough": 40,
+  "n_noncough": 1960,
+  "roc_auc_all_clips": 0.9905357142857143,
+  "fold_thresholds": {
+    "1": 0.015625,
+    "2": 0.26171875,
+    "3": 0.03125,
+    "4": 0.015625,
+    "5": 0.015625
+  },
+  "sensitivity": 0.925,
+  "sensitivity_ci95": [
+    0.8013546984090248,
+    0.9741644432281419
+  ],
+  "specificity": 0.9122448979591837,
+  "specificity_ci95": [
+    0.8988985622608983,
+    0.9239783948215875
+  ],
+  "false_positives": 172,
+  "noncough_hours": 2.7222222222222223,
+  "false_positives_per_hour": 63.183673469387756,
+  "close_classes": {
+    "sneezing": {
+      "n": 40,
+      "flagged_as_cough": 30
+    },
+    "breathing": {
+      "n": 40,
+      "flagged_as_cough": 29
+    },
+    "snoring": {
+      "n": 40,
+      "flagged_as_cough": 8
+    },
+    "laughing": {
+      "n": 40,
+      "flagged_as_cough": 16
+    },
+    "clapping": {
+      "n": 40,
+      "flagged_as_cough": 0
+    }
+  },
+  "top_false_positive_classes": {
+    "sneezing": 30,
+    "breathing": 29,
+    "drinking_sipping": 19,
+    "crying_baby": 19,
+    "laughing": 16,
+    "snoring": 8,
+    "brushing_teeth": 7,
+    "mouse_click": 7
+  }
+}
