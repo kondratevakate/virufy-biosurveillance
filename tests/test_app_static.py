@@ -1,0 +1,45 @@
+"""Static checks on the prototype pages for UX regressions found in the 2026-11-18 audit."""
+import re
+from pathlib import Path
+
+APP = Path(__file__).resolve().parents[1] / "app"
+
+
+def _view(html: str, view_id: str) -> str:
+    start = html.index(f'id="{view_id}"')
+    end = html.find('<section id="view-', start + 1)
+    return html[start:end if end != -1 else None]
+
+
+def test_share_outcome_is_visible_after_listening_card_hides():
+    # Sharing hides #listening; the outcome must go to elements outside it.
+    html = (APP / "app.html").read_text(encoding="utf-8")
+    count_view = _view(html, "view-phone")
+    listening = count_view[count_view.index('id="listening"'):]
+    assert 'id="phoneNote"' in count_view and 'id="phoneError"' in count_view
+    assert 'id="phoneNote"' not in listening and 'id="phoneError"' not in listening
+
+
+def test_location_errors_shown_on_count_screen():
+    js = (APP / "app.js").read_text(encoding="utf-8")
+    body = js[js.index("function useMyLocation"):js.index('$("useLocation")')]
+    assert '$("phoneError")' in body and '$("mapError")' not in body
+
+
+def test_copy_names_existing_tabs():
+    html = (APP / "app.html").read_text(encoding="utf-8")
+    js = (APP / "app.js").read_text(encoding="utf-8")
+    tabs = set(re.findall(r'class="tab[^"]*" data-view="\w+">([^<]+)<', html))
+    quoted_tabs = re.findall(r'on the \\?"([^"\\]+)\\?" tab', js)
+    assert quoted_tabs, "expected the empty-state copy to name a tab"
+    for name in quoted_tabs:
+        assert name in tabs, f"copy refers to a tab that does not exist: {name}"
+
+
+def test_legend_text_is_one_flex_item():
+    # Legend rows are flex containers; bare text next to <b> splits into columns.
+    html = (APP / "app.html").read_text(encoding="utf-8")
+    rows = re.findall(r"<li><span class=\"dot [^\"]+\"></span>(.*?)</li>", html)
+    assert rows
+    for li in rows:
+        assert li.startswith("<span>") and li.endswith("</span>"), li

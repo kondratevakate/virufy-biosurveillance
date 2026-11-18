@@ -17,6 +17,8 @@ const $ = (id) => document.getElementById(id);
 // Escape every value that comes from storage or data files before it enters innerHTML.
 const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function showError(el, msg) { el.textContent = msg; el.classList.remove("hidden"); }
+// A message on the Count screen that stays visible after the listening card is hidden.
+function showNote(msg) { const el = $("phoneNote"); el.textContent = msg; el.classList.toggle("hidden", !msg); }
 function loadShared() {
   try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); }
   catch { return []; }
@@ -56,6 +58,7 @@ document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click"
 // ---------- participant: on-device counting ----------
 let classifier = null, audioCtx = null, stream = null, node = null;
 let total = 0, lastEventAt = 0, binStart = 0, binCount = 0, binSeconds = 0, buffer = [], bufferLen = 0;
+let listenedSeconds = 0, placeName = "";
 const bins = []; // {zone, bin_start, coughs}
 
 // One classifier for the page, created once: repeated taps must not load the 10 MB model again.
@@ -75,7 +78,7 @@ let starting = false;
 async function startListening() {
   if (starting || node) return;  // ignore repeated taps while loading or listening
   const err = $("phoneError"), btn = $("start");
-  err.classList.add("hidden");
+  err.classList.add("hidden"); showNote("");
   if (!navigator.mediaDevices?.getUserMedia) {
     showError(err, "This browser cannot access the microphone. Open the page over HTTPS in Chrome or Safari.");
     return;
@@ -105,6 +108,7 @@ async function startListening() {
   const src = audioCtx.createMediaStreamSource(stream);
   node = audioCtx.createScriptProcessor(4096, 1, 1);
   const zone = $("zone").value, rate = audioCtx.sampleRate;
+  placeName = $("zone").selectedOptions[0]?.textContent || zone; listenedSeconds = 0;
   binStart = Math.floor(Date.now() / BIN_MS) * BIN_MS;
   let busy = false;
   node.onaudioprocess = (ev) => {
@@ -139,7 +143,7 @@ async function startListening() {
   $("consent").classList.add("hidden");
   $("listening").classList.remove("hidden");
   $("thresholdMark").style.left = `${COUGH_THRESHOLD * 100}%`;
-  $("status").textContent = `Listening in ${zone}. Audio stays on this phone.`;
+  $("status").textContent = `Listening at: ${placeName}. Audio stays on this phone.`;
 }
 
 function onScore(score, zone) {
@@ -147,7 +151,9 @@ function onScore(score, zone) {
   $("meter").style.width = `${Math.round(score * 100)}%`;
   const bin = Math.floor(now / BIN_MS) * BIN_MS;
   if (bin !== binStart) { bins.push(binRecord(zone)); binStart = bin; binCount = 0; binSeconds = 0; }
-  binSeconds += 1;
+  binSeconds += 1; listenedSeconds += 1;
+  const mm = Math.floor(listenedSeconds / 60), ss = String(listenedSeconds % 60).padStart(2, "0");
+  $("status").textContent = `Listening at: ${placeName} for ${mm}:${ss}. Audio stays on this phone.`;
   if (score >= COUGH_THRESHOLD && now - lastEventAt > REFRACTORY_MS) {
     lastEventAt = now; total += 1; binCount += 1;
     $("count").textContent = total; $("binCount").textContent = binCount;
@@ -173,13 +179,19 @@ function shareCounts() {
   const payload = [...bins, binRecord(zone)];
   $("payload").textContent = JSON.stringify(payload, null, 1);
   const ok = saveShared([...loadShared(), ...payload]);
-  $("status").textContent = ok
-    ? "Counts shared with the demo aggregator on this device (in a pilot they go to the aggregator over HTTPS)."
-    : "Could not store the counts on this device (storage is blocked); nothing was shared.";
+  const coughs = payload.reduce((a, b) => a + b.coughs, 0);
   bins.length = 0; binCount = 0; binSeconds = 0;
   $("binCount").textContent = 0;
   stopListening();  // a visit ends when it is shared: the microphone goes off
-  if (ok && loadPlace()) go("map");  // the visit is now a circle on the map
+  // The listening card is hidden now, so the outcome is shown on the Count screen itself.
+  if (!ok) {
+    showError($("phoneError"), "Could not store the counts on this device (storage is blocked); nothing was shared.");
+  } else if (loadPlace()) {
+    go("map");  // the visit is now a circle on the map
+  } else {
+    showNote(`Shared ${coughs} cough${coughs === 1 ? "" : "s"} for this visit (demo: kept on this phone). No place was set, so the visit is not on the map. Set a place in Step 1 before your next visit.`);
+    window.scrollTo(0, 0);
+  }
 }
 
 $("start").addEventListener("click", startListening);
@@ -267,10 +279,11 @@ async function loadWastewater() {
 }
 
 async function renderDashboard() {
-  let zones = [];
+  let zones = [], zonesOk = true;
   try {
     zones = syntheticZones(await loadDetection());
   } catch (e) {
+    zonesOk = false;
     showError($("dashError"), `Zone settings could not be loaded (${e.message || e}).`);
   }
   const alerts = [];
@@ -307,6 +320,7 @@ async function renderDashboard() {
         ${sparkline(s.positivity, s.flags, { max: 1 })}</div>`;
     }).join("");
   } catch (e) {
+    $("wastewater").innerHTML = "";
     showError($("dashError"), `Wastewater data could not be loaded (${e.message || e}).`);
   }
 
@@ -321,10 +335,11 @@ async function renderDashboard() {
     const delay = z.outbreakStart >= 0 && z.firstAlarm >= z.outbreakStart
       ? ` The synthetic rise of 50% began ${last - z.outbreakStart + 1} days ago and was flagged on day ${z.firstAlarm - z.outbreakStart + 1}.` : "";
     return `<div class="card alert"><b>${z.name}, ${z.city}</b>: detections ${z.vals[last].toFixed(2)} per listening hour against a baseline of
-      ${z.baseline.toFixed(2)}. The sustained-rise statistic (a bank of CUSUMs) is above its alarm level, which is set for about
+      ${z.baseline.toFixed(2)}. The running sum of coughs above the baseline (CUSUM) is above its alarm level, which is set for about
       one false alarm in 180 days.${delay}<br>
       ${ww}<br>Suggested action: ${action}. Responsible: ${role}. A person decides; the system only recommends.</div>`;
-  }).join("") : `<div class="card muted">No zone is above its alarm level today.</div>`;
+  }).join("") : zonesOk ? `<div class="card muted">No zone is above its alarm level today.</div>`
+    : `<div class="card muted">Alerts are unavailable because the zone settings did not load.</div>`;
 }
 $("wwCountry").addEventListener("change", renderDashboard);
 
@@ -436,20 +451,21 @@ async function renderMap() {
   $("visits").innerHTML = visits.length ? `<table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
     `<tr><td>${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}</td><td>${c.seconds < 90 ? `${c.seconds} s` : `${Math.round(c.seconds / 60)} min`}</td><td>${c.coughs}</td>
      <td>${(c.coughs / (c.seconds / 3600)).toFixed(1)}</td></tr>`).join("")}</table>`
-    : `<p class="small">No visits yet. Set a place, count on the "My phone" tab, then press Share counts.</p>`;
+    : `<p class="small">No visits yet. Set a place, count on the "Count" tab, then press "Share counts and open my map".</p>`;
 }
 
 function useMyLocation() {
-  const errBox = $("mapError");
+  const errBox = $("phoneError");  // the button lives on the Count screen
   errBox.classList.add("hidden");
-  if (!navigator.geolocation) { showError(errBox, "This browser cannot give a location. Tap the map instead."); return; }
+  if (!navigator.geolocation) { showError(errBox, "This browser cannot give a location. Use \"Tap it on the map\" instead."); return; }
   navigator.geolocation.getCurrentPosition(
-    (pos) => { savePlace(pos.coords.latitude, pos.coords.longitude); renderMap(); },
-    () => showError(errBox, "Location was not shared. Tap the map to set the place instead."),
+    (pos) => { savePlace(pos.coords.latitude, pos.coords.longitude); },
+    () => showError(errBox, "Location was not shared. Use \"Tap it on the map\" to set the place instead."),
     { enableHighAccuracy: false, maximumAge: 600000, timeout: 15000 });
 }
 $("useLocation").addEventListener("click", useMyLocation);
 $("clearVisits").addEventListener("click", () => {
+  if (!window.confirm("Delete your visits and saved place from this phone? This cannot be undone.")) return;
   try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(PLACE_KEY); } catch { /* nothing stored */ }
   renderMap();
 });

@@ -55,6 +55,8 @@
 
     <!-- Participant flow: place, count, share -->
     <section id="view-phone" class="view">
+      <div id="phoneNote" class="card hidden" role="status"></div>
+      <div id="phoneError" class="card error hidden" role="alert"></div>
       <div id="consent">
         <h2><span class="marker"></span>Step 1. Where are you?</h2>
         <div class="card">
@@ -93,7 +95,7 @@
           </div>
           <div class="mono kicker">COUGH SCORE, LAST SECOND</div>
           <div class="meter"><div id="meter"></div><div id="thresholdMark"></div></div>
-          <p id="status" class="small">Starting…</p>
+          <p id="status" class="small" aria-live="polite">Starting…</p>
         </div>
         <h2><span class="marker"></span>Step 3. Put it on your map</h2>
         <div class="card">
@@ -108,7 +110,6 @@
         </div>
       </div>
 
-      <div id="phoneError" class="card error hidden"></div>
     </section>
 
     <!-- Map of the UAE: where the user counted, and the demo zones -->
@@ -116,11 +117,11 @@
       <h2><span class="marker"></span>My map</h2>
       <div class="card">
         <p class="small">Tap the map to set where you are. <span id="placeLabel" class="mono">No place set yet.</span></p>
-        <div id="uaeMap"></div>
+        <div id="uaeMap"><p class="small">Loading the map…</p></div>
         <ul class="legend small">
-          <li><span class="dot solid"></span>Your visits: bigger for longer listening; green, amber, red for more coughs per hour</li>
-          <li><span class="dot dashed"></span>Demo zones with <b>synthetic</b> data; red when above the alarm level</li>
-          <li><span class="dot pin"></span>The place set for your next visit</li>
+          <li><span class="dot solid"></span><span>Your visits: bigger for longer listening; green, amber, red for more coughs per hour</span></li>
+          <li><span class="dot dashed"></span><span>Demo zones with <b>synthetic</b> data; red when above the alarm level</span></li>
+          <li><span class="dot pin"></span><span>The place set for your next visit</span></li>
         </ul>
         <div id="visits"></div>
         <div class="row">
@@ -128,7 +129,7 @@
           <button id="clearVisits">Clear my visits</button>
         </div>
         <p class="small">Your place and visits are kept on this phone. The exact position is never stored.</p>
-        <div id="mapError" class="card error hidden"></div>
+        <div id="mapError" class="card error hidden" role="alert"></div>
       </div>
     </section>
 
@@ -136,17 +137,17 @@
     <section id="view-dashboard" class="view">
       <p class="mono kicker">GUEST MODE · ZONE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
       <h2><span class="marker"></span>Alerts</h2>
-      <div id="alerts"></div>
+      <div id="alerts"><p class="small">Loading alerts…</p></div>
       <h2><span class="marker"></span>Zones: cough detections per listening hour</h2>
-      <div id="zones" class="grid"></div>
+      <div id="zones" class="grid"><p class="small">Loading zones…</p></div>
       <h2><span class="marker"></span>Aircraft wastewater: share of positive samples per week</h2>
       <div class="row">
         <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
       </div>
-      <div id="wastewater" class="grid"></div>
+      <div id="wastewater" class="grid"><p class="small">Loading wastewater series…</p></div>
       <h2><span class="marker"></span>Environment: dust, PM2.5, heat</h2>
       <div class="card muted">Not connected in this prototype: the UAE data source is still being chosen.</div>
-      <div id="dashError" class="card error hidden"></div>
+      <div id="dashError" class="card error hidden" role="alert"></div>
     </section>
 
     <section id="view-about" class="view">

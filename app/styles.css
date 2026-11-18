@@ -19,12 +19,12 @@ body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--
 
 .top { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--ink); z-index: 2; }
 .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; padding-top: 10px; padding-bottom: 10px; }
-.brand { border: 0; background: none; padding: 0; font: 700 18px var(--sans); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.brand { border: 0; background: none; padding: 0; color: inherit; text-decoration: none; font: 700 18px var(--sans); display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .brand .sub { font-weight: 400; }
-.marker { display: inline-block; width: 10px; height: 10px; background: var(--ink); margin-right: 8px; }
+.marker { display: inline-block; flex: none; width: 10px; height: 10px; background: var(--ink); margin-right: 8px; }
 .brand .marker { margin-right: 0; }
 nav { display: flex; gap: 0; overflow-x: auto; }
-.tab { border: 1px solid var(--ink); margin-right: -1px; background: var(--bg); padding: 7px 7px; font: 400 12px var(--mono); white-space: nowrap; cursor: pointer; }
+.tab { border: 1px solid var(--ink); margin-right: -1px; background: var(--bg); min-height: 44px; display: inline-flex; align-items: center; padding: 0 6px; font: 400 12px var(--mono); white-space: nowrap; cursor: pointer; }
 .tab.active { background: var(--ink); color: var(--bg); }
 
 main { padding-top: 20px; padding-bottom: 40px; }
@@ -99,5 +99,15 @@ img.logo { display: block; height: 20px; width: auto; }
 #monitorMap svg { height: auto; border: 1px solid var(--ink); cursor: pointer; }
 #monitorMap path:hover { opacity: 0.75; }
 .sq { width: 14px; height: 14px; flex: none; display: inline-block; border: 1px solid var(--ink); }
-.sq.black { background: var(--ink); } .sq.white { background: var(--bg); }
+.sq.black { background: var(--ink); } .sq.white { background: var(--bg); } .sq.grey { background: var(--fill); border-color: #bdbdbd; }
 .sq.hatch { background: repeating-linear-gradient(45deg, var(--bg) 0 3px, var(--ink) 3px 4px); }
+
+/* keyboard focus: always visible, in the monochrome style */
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.tab:focus-visible, button.primary:focus-visible, a.button.primary:focus-visible { outline-offset: 3px; }
+
+/* phone width: tables wrap inside the page instead of pushing it sideways */
+@media (max-width: 480px) {
+  table { font-size: 12px; }
+  td, th { padding: 6px 3px; hyphens: auto; }
+}

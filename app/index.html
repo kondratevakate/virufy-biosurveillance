@@ -10,7 +10,7 @@
 <body>
   <header class="top">
     <div class="container bar">
-      <a class="brand" href="./" style="text-decoration:none;color:inherit"><img class="logo" src="img/virufy-logo.svg" alt="Virufy logo" width="68" height="20"><span class="sub">Biosurveillance</span></a>
+      <a class="brand" href="./"><img class="logo" src="img/virufy-logo.svg" alt="Virufy logo" width="68" height="20"><span class="sub">Biosurveillance</span></a>
       <nav>
         <a class="tab" href="#why">Why</a>
         <a class="tab" href="#how">How</a>
@@ -52,7 +52,7 @@
       <div class="grid">
         <div class="card"><p class="mono kicker">1 · PHONE</p><p>A phone counts coughs with an on-device sound model and forgets the audio within a second. Only counts per 15 minutes, the kind of place and a 1 km map cell are shared.</p></div>
         <div class="card"><p class="mono kicker">2 · ZONE</p><p>Each zone is compared with its own weekday baseline, adjusted for how many people are listening. Zones with fewer than 10 participants are hidden.</p></div>
-        <div class="card"><p class="mono kicker">3 · ALERT</p><p>A bank of Poisson CUSUM charts raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
+        <div class="card"><p class="mono kicker">3 · ALERT</p><p>A running sum of coughs above the baseline (a set of Poisson CUSUM charts) raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
         <div class="card"><p class="mono kicker">4 · BORDER SIGNAL</p><p>Aircraft wastewater series sit next to the zones as a second, independent signal of what is arriving.</p></div>
       </div>
       <h3>What we measured</h3>
@@ -76,8 +76,9 @@
             <li><span class="sq black"></span>Public national monitor opened and confirmed (number = monitors)</li>
             <li><span class="sq hatch"></span>Listed by the EU or WHO, not confirmed by us</li>
             <li><span class="sq white"></span>Not checked yet</li>
+            <li><span class="sq grey"></span>Outside the EU and EEA</li>
           </ul>
-          <div id="monitorDetail" class="card"><p class="small">Tap a country to see its monitors.</p></div>
+          <div id="monitorDetail" class="card"><p class="small">Tap a country to see its monitors. The same list is in the tables below.</p></div>
         </div>
       </div>
       <h3>EU level</h3>
