@@ -57,3 +57,10 @@ with s the detector sensitivity and phi its false-alarm rate per listening hour.
   (block 4 weeks, 2000 resamples). Weeks with fewer than 3 wastewater samples are dropped.
 - Reading: one season, about 40 weeks, aircraft from many origins against US clinical tests.
   A lag here is descriptive; it is not a validated lead time.
+
+## Amendment 1 (2026-11-18, before any E1 result beyond a 40-clip timing run with 0 events)
+
+The archives are sorted by scene: audio.1 holds only airport clips (694), so audio.1 and audio.2
+would give one scene and no "worst scene" rate for E2. Added before running E1: archives audio.7
+and audio.13, chosen by number only, to cover other indoor public places. All clips of the four
+archives are scored; scenes are reported as found. Everything else in E1 and E2 is unchanged.
