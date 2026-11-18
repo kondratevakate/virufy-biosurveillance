@@ -8,7 +8,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <header class="top">
@@ -64,7 +64,8 @@
         <div class="card"><p class="mono kicker">3 · ALERT</p><p>A running sum of coughs above the baseline (a set of Poisson CUSUM charts) raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
         <div class="card"><p class="mono kicker">4 · BORDER SIGNAL</p><p>Aircraft wastewater series sit next to the zones as a second, independent signal of what is arriving.</p></div>
       </div>
-      <h3>What we measured</h3>
+      <details class="more" open>
+        <summary>What we measured</summary>
       <table>
         <tr><th>Test</th><th>Result</th></tr>
         <tr><td>Detector on ESC-50 (2000 labelled sounds, 40 coughs)</td><td>ROC AUC 0.991; sensitivity 92.5%, specificity 91.2%</td></tr>
@@ -72,6 +73,7 @@
         <tr><td>Simulation, 192 settings, one false alarm per 180 days</td><td>A 50% rise flagged in 1.5 days at 200 listening hours a day; the simple day-against-last-week rule needs 66 days</td></tr>
         <tr><td>US aircraft wastewater against CDC clinical positivity, 39 weeks</td><td>Correlated (Spearman 0.53 to 0.71); a lead of wastewater is not shown</td></tr>
       </table>
+      </details>
       <p class="small">Prototype, not a medical device. Simulated counts use assumed background rates; see the Evidence tab in the prototype for the protocol and limits.</p>
     </section>
 
@@ -90,7 +92,7 @@
           </ul>
           <p class="mono kicker">SOURCES WE OPENED</p>
           <div id="uaeChips" class="chips" role="group" aria-label="UAE sources"></div>
-          <div id="uaeDetail" class="card detail" aria-live="polite"><p class="small">Pick a source on the map or in the list above.</p></div>
+          <div id="uaeDetail" class="card detail hidden" aria-live="polite"></div>
         </div>
       </div>
       <div class="grid two control">
@@ -125,9 +127,11 @@
           </ul>
           <p class="mono kicker">CONFIRMED COUNTRIES · NUMBER OF MONITORS</p>
           <div id="countryChips" class="chips" role="group" aria-label="Countries with a confirmed monitor"></div>
-          <div id="monitorDetail" class="card detail" aria-live="polite"><p class="small">Pick a country on the map or in the list above. The same list is in the tables below.</p></div>
+          <div id="monitorDetail" class="card detail hidden" aria-live="polite"></div>
         </div>
       </div>
+      <details class="more">
+        <summary>All monitors as a table: 9 at EU level, 8 national</summary>
       <h3>EU level</h3>
       <table>
         <tr><th>Monitor</th><th>Operator</th><th>Signal</th><th>Pathogens</th></tr>
@@ -154,6 +158,7 @@
         <tr><td>Spain</td><td><a href="https://miteco.maps.arcgis.com/apps/dashboards/75cbb6eb7043400da519089fd516d5bd" target="_blank" rel="noopener">VATar COVID-19</a></td><td>SARS-CoV-2</td></tr>
       </table>
       <p class="small">Not confirmed yet (page unreachable, behind login, or seen only in search): Finland, Ireland, Italy, Luxembourg, Sweden, Slovenia, Malta, Slovakia, Portugal, Poland, Hungary, Latvia, Lithuania, Greece, Liechtenstein, Norway. Not checked: Bulgaria, Croatia, Cyprus, Estonia, Iceland, Romania. A missing country does not mean it has no monitor.</p>
+      </details>
     </section>
 
     <section class="block" id="research">
@@ -168,7 +173,8 @@
     <section class="block" id="news">
       <h2><span class="marker"></span>Relevant studies</h2>
       <p class="small">Titles are summarised in plain words; each link goes to the original paper or press release.</p>
-      <h3>UAE: wastewater and the airport</h3>
+      <details class="more" open>
+        <summary>UAE: wastewater and the airport <span class="mono small">4</span></summary>
       <p class="small">What the UAE has already measured. Wastewater tracked clinical cases across the country and peaked before them, and aircraft arriving at Dubai Airport carried the virus. None of it is a running public data source; cough counts would add a signal for single venues.</p>
       <ul class="news">
         <li><span class="mono small">PROJECT · UAE</span> <a href="https://www.zawya.com/en/press-release/companies-news/birmingham-led-ai-and-bioinformatics-project-to-detect-emerging-public-health-risks-at-dubai-international-airport-357863" target="_blank" rel="noopener">PREVENT-DXB: sequencing of surfaces, air and wastewater at Dubai International Airport, funded by a Dubai RDI grant</a> <span class="small">Press release · University of Birmingham Dubai, Mohammed Bin Rashid University, Dubai Police</span></li>
@@ -176,19 +182,25 @@
         <li><span class="mono small">2021 · UAE</span> <a href="https://doi.org/10.1016/j.scitotenv.2020.143350" target="_blank" rel="noopener">SARS-CoV-2 found in wastewater of 13.6% of 198 aircraft arriving at Dubai Airport</a> <span class="small">Science of the Total Environment · Dubai Police</span></li>
         <li><span class="mono small">2021 · UAE</span> <a href="https://doi.org/10.1016/j.scitotenv.2020.142929" target="_blank" rel="noopener">SARS-CoV-2 RNA in 85% of untreated wastewater samples from 38 UAE sites, none in treated effluent</a> <span class="small">Science of the Total Environment · Khalifa University</span></li>
       </ul>
-      <h3>Coughs counted in public places</h3>
+      </details>
+          <details class="more">
+        <summary>Coughs counted in public places <span class="mono small">2</span></summary>
       <p class="small">The basis for our signal: cough counts in waiting areas followed laboratory-confirmed influenza and COVID-19 cases.</p>
       <ul class="news">
         <li><span class="mono small">2024</span> <a href="https://doi.org/10.3389/fpubh.2024.1279392" target="_blank" rel="noopener">Cough counts in an emergency waiting room correlated with COVID-19 cases better than fever counts</a> <span class="small">Frontiers in Public Health</span></li>
         <li><span class="mono small">2020</span> <a href="https://doi.org/10.1145/3381014" target="_blank" rel="noopener">FluSense: cough sensing in hospital waiting areas tracked laboratory-confirmed influenza</a> <span class="small">Proc. ACM IMWUT</span></li>
       </ul>
-      <h3>Airports and aviation elsewhere</h3>
+      </details>
+          <details class="more">
+        <summary>Airports and aviation elsewhere <span class="mono small">2</span></summary>
       <p class="small">Aircraft and airport sampling is being tested in the US and Europe as an early signal of what arrives at the border.</p>
       <ul class="news">
         <li><span class="mono small">2025</span> <a href="https://doi.org/10.1101/2025.09.22.25336185" target="_blank" rel="noopener">Air sampling in four US airports tracked wastewater, traveller swabs and clinical data</a> <span class="small">medRxiv preprint, not peer reviewed</span></li>
         <li><span class="mono small">2025</span> <a href="https://doi.org/10.1186/s40246-025-00725-w" target="_blank" rel="noopener">A proof of concept for a European wastewater network built on aviation samples</a> <span class="small">Human Genomics</span></li>
       </ul>
-      <h3>Pathogen genomics and detection methods in the Gulf</h3>
+      </details>
+          <details class="more">
+        <summary>Pathogen genomics and detection methods in the Gulf <span class="mono small">6</span></summary>
       <p class="small">Teams in Dubai and Abu Dhabi sequence pathogens and develop wastewater detection methods; their work defines what a confirmed signal would look like.</p>
       <ul class="news">
         <li><span class="mono small">2026 · UAE</span> <a href="https://doi.org/10.3389/fcimb.2026.1832677" target="_blank" rel="noopener">Whole genomes of 250 pneumococcal isolates from the UAE and Kuwait showed 51 serotypes and capsular switching</a> <span class="small">Frontiers in Cellular and Infection Microbiology · Mohammed Bin Rashid University, Dubai Health</span></li>
@@ -198,6 +210,7 @@
         <li><span class="mono small">2022</span> <a href="https://doi.org/10.1016/j.cscee.2022.100238" target="_blank" rel="noopener">Review of virus detection methods for wastewater epidemiology; digital PCR generally had lower detection limits than qPCR</a> <span class="small">Case Studies in Chemical and Environmental Engineering · with Khalifa University</span></li>
         <li><span class="mono small">NOV 2026</span> <a href="https://doi.org/10.1038/s44221-026-00735-5" target="_blank" rel="noopener">Wastewater from a 30,000-person campus showed an oxidative-stress marker rising during exam weeks</a> <span class="small">Nature Water</span></li>
       </ul>
+      </details>
     </section>
 
     <section class="block">
@@ -212,6 +225,6 @@
     </section>
   </main>
   <footer><div class="container small">Virufy biosurveillance prototype · not a medical device · monitor list checked 18 November 2026</div></footer>
-  <script type="module" src="landing.js"></script>
+  <script type="module" src="landing.js?v=12"></script>
 </body>
 </html>

@@ -56,3 +56,16 @@ def test_uae_sources_are_honest_and_linked():
     assert not any(m["status"] == "confirmed" for m in data["monitors"])
     html = (APP / "index.html").read_text(encoding="utf-8")
     assert html.index('id="uae"') < html.index('id="monitors"'), "UAE block comes before the EU block"
+
+
+def test_asset_version_matches_service_worker_cache():
+    # Cloudflare caches styles and scripts by URL; the ?v= number must move with every deploy,
+    # and it is tied to the service-worker cache name so one bump covers both.
+    sw = (APP / "sw.js").read_text(encoding="utf-8")
+    version = re.search(r'const CACHE = "virufy-v(\d+)"', sw).group(1)
+    for page in ("index.html", "app.html"):
+        html = (APP / page).read_text(encoding="utf-8")
+        refs = re.findall(r'(?:href|src)="(styles\.css|landing\.js|app\.js)(\?v=(\d+))?"', html)
+        assert refs, page
+        for name, _, v in refs:
+            assert v == version, f"{page}: {name} has ?v={v or 'none'}, service worker is v{version}"

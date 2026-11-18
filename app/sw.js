@@ -1,6 +1,8 @@
 // Offline fallback for the app shell, model and data. No audio is ever cached.
 // Network first, so a new deployment is picked up at once; the cache is used only when offline.
-const CACHE = "virufy-v11";
+// Pages load styles and scripts with ?v=N so the Cloudflare edge cache never serves an old build;
+// ignoreSearch lets the offline copy match those URLs.
+const CACHE = "virufy-v12";
 const ASSETS = [
   "./", "./index.html", "./app.html", "./landing.js", "./data/europe.json", "./data/monitors.json", "./data/uae_monitors.json", "./img/virufy-logo.svg", "./img/virufy-icon.png", "./styles.css", "./app.js", "./manifest.webmanifest",
   "./models/yamnet.tflite", "./data/wastewater.json", "./data/esc50_summary.json", "./data/detection.json", "./data/experiments.json", "./data/uae.json",
@@ -16,5 +18,5 @@ self.addEventListener("activate", (e) => {
 });
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
-  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request, { ignoreSearch: true })));
 });

@@ -49,6 +49,7 @@ async function renderMonitorMap() {
     const select = (a3) => {
       if (!byA3[a3]) return;
       $("monitorDetail").innerHTML = detail(byA3[a3], monitors);
+      $("monitorDetail").classList.remove("hidden");
       // draw the selected outline on top so its border is not hidden by neighbours
       const src = svg.querySelector(`.countries path[data-a3="${a3}"]`);
       svg.querySelectorAll(".is-selected").forEach((el) => el.classList.remove("is-selected"));
@@ -113,6 +114,7 @@ async function renderUaeMap() {
     const select = (i) => {
       if (!items[i]) return;
       $("uaeDetail").innerHTML = uaeDetail(items[i]);
+      $("uaeDetail").classList.remove("hidden");
       document.querySelectorAll("#uaeChips button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.i === String(i))));
     };
     $("uaeChips").addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) select(+b.dataset.i); });
