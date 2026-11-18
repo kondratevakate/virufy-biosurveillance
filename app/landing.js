@@ -72,6 +72,61 @@ async function renderMonitorMap() {
   }
 }
 
+// ---------- UAE: public monitors by emirate, and research projects ----------
+// Emirates come from the bundled Natural Earth outline (data/uae.json); monitors and
+// projects from data/uae_monitors.json, every entry opened and checked on its "checked" date.
+function uaeDetail(item) {
+  return `<h3>${esc(item.name)}</h3><p class="small">${esc(item.operator)} · ${esc(item.where)}</p>
+    <p>${esc(item.text)}</p><p><a href="${esc(item.url)}" target="_blank" rel="noopener">Open the source ↗</a></p>`;
+}
+
+async function renderUaeMap() {
+  const box = $("uaeMonitorMap");
+  try {
+    const [geo, data] = await Promise.all([getJson("data/uae.json"), getJson("data/uae_monitors.json")]);
+    const [lon0, lat0, lon1, lat1] = geo.bounds, k = 120, c = Math.cos((24.3 * Math.PI) / 180), pad = 8;
+    const X = (lon) => pad + (lon - lon0) * c * k, Y = (lat) => pad + (lat1 - lat) * k;
+    const W = X(lon1) + pad, H = Y(lat0) + pad;
+    const items = [...data.monitors, ...data.projects];
+    // an emirate is black when a monitor there publishes data, hatched when it is described only
+    const level = (name) => {
+      const here = data.monitors.filter((m) => m.emirate === name);
+      return here.some((m) => m.status === "confirmed") ? "ok" : here.length ? "unconfirmed" : "unchecked";
+    };
+    const paths = geo.emirates.map((e) => {
+      const d = e.rings.map((r) => `M${r.map(([lo, la]) => `${X(lo).toFixed(1)},${Y(la).toFixed(1)}`).join("L")}Z`).join("");
+      return `<path class="st-${e.name ? level(e.name) : "unchecked"}" d="${d}"><title>${esc(e.name || "UAE")}</title></path>`;
+    }).join("");
+    // studies and projects as numbered circles; entries at the same place are stacked
+    const seen = {};
+    const marks = data.projects.map((p, i) => {
+      const key = `${p.lat},${p.lon}`, n = (seen[key] = (seen[key] || 0) + 1) - 1;
+      const x = X(p.lon) + n * 22, y = Y(p.lat);
+      return `<g class="project" data-i="${data.monitors.length + i}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9"/>
+        <text x="${x.toFixed(1)}" y="${(y + 0.5).toFixed(1)}">${i + 1}</text><title>${esc(p.name)}</title></g>`;
+    }).join("");
+    box.innerHTML = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="Map of public monitors and projects in the UAE">
+      <defs><pattern id="hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="#fff"/><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-width="0.9"/></pattern></defs>
+      ${paths}${marks}</svg>`;
+    $("uaeChips").innerHTML = items.map((m, i) =>
+      `<button type="button" data-i="${i}" aria-pressed="false">${i >= data.monitors.length ? `<span class="num">${i - data.monitors.length + 1}</span>` : ""}${esc(m.short || m.name)}</button>`).join("");
+    const select = (i) => {
+      if (!items[i]) return;
+      $("uaeDetail").innerHTML = uaeDetail(items[i]);
+      document.querySelectorAll("#uaeChips button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.i === String(i))));
+    };
+    $("uaeChips").addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) select(+b.dataset.i); });
+    box.querySelector("svg").addEventListener("click", (ev) => { const g = ev.target.closest(".project"); if (g) select(+g.dataset.i); });
+    $("uaeChecked").textContent = data.checked_label;
+    $("uaeNBodies").textContent = data.monitors.length;
+    $("uaeNStudies").textContent = data.projects.length;
+    $("uaeNData").textContent = data.monitors.filter((m) => m.status === "confirmed").length;
+  } catch (e) {
+    box.innerHTML = `<div class="card error">The UAE map could not be loaded (${esc(e.message || e)}).</div>`;
+  }
+}
+renderUaeMap();
+
 // The map data (about 30 KB compressed) is fetched only when the map comes near the screen,
 // so it does not compete with the first screen.
 const mapBox = $("monitorMap");

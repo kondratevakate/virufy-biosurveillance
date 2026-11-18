@@ -1,0 +1,79 @@
+{
+  "checked": "2026-11-18",
+  "checked_label": "18 NOV 2026",
+  "note": "Every page opened on the checked date. No UAE source was found that publishes regularly updated infectious-disease or wastewater surveillance data. Study figures are from the PubMed abstracts.",
+  "monitors": [
+    {
+      "short": "ADPHC",
+      "name": "Infectious disease programmes",
+      "operator": "Abu Dhabi Public Health Centre",
+      "emirate": "Abu Dhabi",
+      "where": "Abu Dhabi",
+      "status": "programme",
+      "url": "https://www.adphc.gov.ae/Public-Health-Programs/Infectious-Disease",
+      "text": "Programme pages on infectious disease, seasonal influenza and antimicrobial resistance. We found no public surveillance data."
+    },
+    {
+      "short": "DoH open data",
+      "name": "Open data portal",
+      "operator": "Department of Health, Abu Dhabi",
+      "emirate": "Abu Dhabi",
+      "where": "Abu Dhabi",
+      "status": "programme",
+      "url": "https://www.doh.gov.ae/en/resources/opendata",
+      "text": "Open data portal of the Abu Dhabi health regulator. We found no infectious-disease or wastewater dataset on it."
+    },
+    {
+      "short": "DHA",
+      "name": "Dubai Health Authority",
+      "operator": "Dubai Health Authority",
+      "emirate": "Dubai",
+      "where": "Dubai",
+      "status": "programme",
+      "url": "https://www.dha.gov.ae/en",
+      "text": "Health regulator of Dubai. We could not find public surveillance statistics on its site."
+    },
+    {
+      "short": "MOHAP open data",
+      "name": "Open data and statistics",
+      "operator": "Ministry of Health and Prevention",
+      "emirate": "Federal",
+      "where": "Federal, all emirates",
+      "status": "programme",
+      "url": "https://mohap.gov.ae/en/open-data/mohap-open-data",
+      "text": "National health indicators such as maternal and child mortality and vaccination coverage. We found no notifiable-disease or wastewater dataset."
+    }
+  ],
+  "projects": [
+    {
+      "short": "DXB aircraft 2020",
+      "type": "study",
+      "name": "Aircraft and municipal wastewater in Dubai",
+      "operator": "Dubai Police research and development (Albastaki et al., Sci Total Environ 2021)",
+      "where": "Dubai Airport and 49 areas of Dubai",
+      "lat": 25.25, "lon": 55.36,
+      "url": "https://doi.org/10.1016/j.scitotenv.2020.143350",
+      "text": "Wastewater from 198 commercial aircraft arriving at Dubai Airport: 13.6% positive for SARS-CoV-2. More than 2,900 municipal samples from 49 areas: 28.6% positive. A published study, not a running data source."
+    },
+    {
+      "short": "PREVENT-DXB",
+      "type": "project",
+      "name": "PREVENT-DXB: metagenomic surveillance at Dubai International Airport",
+      "operator": "University of Birmingham Dubai with Mohammed Bin Rashid University (Dubai Health), Dubai Police and others",
+      "where": "Dubai International Airport",
+      "lat": 25.25, "lon": 55.36,
+      "url": "https://www.zawya.com/en/press-release/companies-news/birmingham-led-ai-and-bioinformatics-project-to-detect-emerging-public-health-risks-at-dubai-international-airport-357863",
+      "text": "Funded by a Dubai RDI grant of AED 1.5 million: samples from airport surfaces, air and wastewater are sequenced and fed to models that flag microbial and antimicrobial-resistance risks. We found no public data from it yet."
+    },
+    {
+      "short": "UAE wastewater 2020 to 2022",
+      "type": "study",
+      "name": "Long-term wastewater SARS-CoV-2 surveillance across the UAE",
+      "operator": "Khalifa University, Ministry of Interior, Abu Dhabi Department of Energy (Wadi et al., Sci Total Environ 2023)",
+      "where": "453 locations across the UAE",
+      "lat": 24.45, "lon": 54.38,
+      "url": "https://doi.org/10.1016/j.scitotenv.2023.163785",
+      "text": "16,858 samples from 453 locations, May 2020 to June 2022. Viral counts in wastewater peaked about one to two weeks before the peaks in clinical cases. Results are in the paper; there is no public dashboard."
+    }
+  ]
+}

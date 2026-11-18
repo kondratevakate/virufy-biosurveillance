@@ -43,3 +43,16 @@ def test_legend_text_is_one_flex_item():
     assert rows
     for li in rows:
         assert li.startswith("<span>") and li.endswith("</span>"), li
+
+
+def test_uae_sources_are_honest_and_linked():
+    import json
+    data = json.loads((APP / "data" / "uae_monitors.json").read_text(encoding="utf-8"))
+    for item in data["monitors"] + data["projects"]:
+        assert item["url"].startswith("https://"), item["name"]
+        text = json.dumps(item, ensure_ascii=False)
+        assert "–" not in text and "—" not in text, item["name"]
+    # no UAE source was found publishing surveillance data; the page must not imply one
+    assert not any(m["status"] == "confirmed" for m in data["monitors"])
+    html = (APP / "index.html").read_text(encoding="utf-8")
+    assert html.index('id="uae"') < html.index('id="monitors"'), "UAE block comes before the EU block"
