@@ -75,3 +75,14 @@ threshold (a deliberately hard mix of sounds). E1 also means the detector did no
 that 7.7 hours of crowded places must contain, so sensitivity for distant coughs is unknown and
 probably low. E2 is therefore run for s = 0.825 (ESC-50, close recordings) and for s = 0.2
 (assumed, to show the effect of a large loss); s = 0.2 is not a measurement.
+
+## Amendment 3 (2026-11-18, after the first E2 run; exploratory)
+
+First E2 run (kept in results/e2_v1): H1 failed. The CUSUM designed for a ratio of 1.5 was fastest
+in 108 of 192 cells and never alarmed in others. Reason, known for CUSUM charts: its drift under a
+true total-rate ratio rho is mu0 * (rho * ln 1.5 - 0.5), negative for rho < 1.233, and the effective
+ratio is rho = 1 + kappa * s b / (s b + phi), so small rises, low sensitivity or many false alarms push
+it below that value. Added after seeing this, and therefore exploratory: detector (d), a bank of
+CUSUMs with design ratios 1.05, 1.1, 1.2, 1.5 and 2.0; each is scaled by its own alarm level for
+ARL0 = 180 days, the statistic is the largest scaled value, and the bank is then calibrated to
+ARL0 = 180 days as a whole. The grid, seeds and other detectors are unchanged; the run is repeated in full.

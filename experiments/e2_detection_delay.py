@@ -39,13 +39,16 @@ def simulate(rng, n, T, E, b, phi, kappa=0.0, start=None, nb_size=None, sens=SEN
     return load, y
 
 
-def stat_cusum(load, y):
+BANK_RATIOS = (1.05, 1.1, 1.2, 1.5, 2.0)  # Amendment 3
+
+
+def stat_cusum(load, y, ratio=DESIGN_RATIO):
     """Poisson CUSUM with load offset; baseline rate per weekday estimated on the burn-in."""
     n, days = y.shape
     d = np.arange(days) % 7
     rate = np.stack([y[:, :BURN][:, d[:BURN] == k].sum(1) / load[:, :BURN][:, d[:BURN] == k].sum(1) for k in range(7)], 1)
     mu0 = load * rate[:, d]
-    inc = y * np.log(DESIGN_RATIO) - mu0 * (DESIGN_RATIO - 1)
+    inc = y * np.log(ratio) - mu0 * (ratio - 1)
     s, out = np.zeros(n), np.zeros((n, days - BURN))
     for t in range(BURN, days):
         s = np.maximum(0.0, s + inc[:, t])
@@ -95,6 +98,15 @@ def calibrate(stat):
     return (lo + hi) / 2
 
 
+def make_bank(load0, y0):
+    """CUSUM bank: each member scaled by its own ARL0 alarm level, found on in-control runs."""
+    levels = [calibrate(stat_cusum(load0, y0, r)) for r in BANK_RATIOS]
+
+    def stat(load, y):
+        return np.max([stat_cusum(load, y, r) / c for r, c in zip(BANK_RATIOS, levels)], axis=0)
+    return stat
+
+
 def kl_info(E, b, phi, kappa, sens=SENS_VALUES[0]):
     mu0 = E * DOW.mean() * (sens * b + phi)
     mu1 = E * DOW.mean() * (sens * b * (1 + kappa) + phi)
@@ -117,14 +129,15 @@ def main() -> int:
         for phi in phis:
             for E in loads:
                 load, y = simulate(rng, n_cal, T_CAL, E, b, phi, sens=sens)
-                h = {name: calibrate(f(load, y)) for name, f in DETECTORS.items()}
+                dets = dict(DETECTORS, cusum_bank=make_bank(load, y))
+                h = {name: calibrate(f(load, y)) for name, f in dets.items()}
                 # robustness: same thresholds under overdispersed counts
                 load_nb, y_nb = simulate(rng, n_cal, T_CAL, E, b, phi, nb_size=10, sens=sens)
-                arl_nb = {name: float((first_alarm(f(load_nb, y_nb), h[name]) + 1).mean()) for name, f in DETECTORS.items()}
+                arl_nb = {name: float((first_alarm(f(load_nb, y_nb), h[name]) + 1).mean()) for name, f in dets.items()}
                 for kappa in KAPPAS:
                     load, y = simulate(rng, n_run, PRE + POST, E, b, phi, kappa, start=PRE, sens=sens)
                     theory = float(np.log(ARL0) / kl_info(E, b, phi, kappa, sens))
-                    for name, f in DETECTORS.items():
+                    for name, f in dets.items():
                         fa = first_alarm(f(load, y), h[name])
                         ok = fa >= PRE                     # no false alarm before the outbreak
                         delay = np.minimum(fa[ok] - PRE + 1, POST)
