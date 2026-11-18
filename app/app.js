@@ -53,57 +53,84 @@ let classifier = null, audioCtx = null, stream = null, node = null;
 let total = 0, lastEventAt = 0, binStart = 0, binCount = 0, buffer = [], bufferLen = 0;
 const bins = []; // {zone, bin_start, coughs}
 
+// One classifier for the page, created once: repeated taps must not load the 10 MB model again.
+let classifierPromise = null;
+function loadClassifier() {
+  if (!classifierPromise) {
+    classifierPromise = FilesetResolver.forAudioTasks(WASM_PATH)
+      .then((fileset) => AudioClassifier.createFromOptions(fileset, { baseOptions: { modelAssetPath: MODEL_PATH }, maxResults: -1 }))
+      .catch((e) => { classifierPromise = null; throw e; });
+  }
+  return classifierPromise;
+}
+
+const SILENCE_RMS = 0.01;  // seconds quieter than this are not sent to the model (saves the phone's CPU)
+let starting = false;
+
 async function startListening() {
-  const err = $("phoneError");
+  if (starting || node) return;  // ignore repeated taps while loading or listening
+  const err = $("phoneError"), btn = $("start");
   err.classList.add("hidden");
   if (!navigator.mediaDevices?.getUserMedia) {
     showError(err, "This browser cannot access the microphone. Open the page over HTTPS in Chrome or Safari.");
     return;
   }
-  $("status").textContent = "Loading the cough detector…";
-  try {
-    if (!classifier) {
-      const fileset = await FilesetResolver.forAudioTasks(WASM_PATH);
-      classifier = await AudioClassifier.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: MODEL_PATH }, maxResults: -1,
-      });
-    }
-  } catch (e) {
-    showError(err, `The cough detector could not be loaded (${e.message || e}).`);
-    return;
-  }
+  starting = true; btn.disabled = true;
+  const fail = (msg) => { showError(err, msg); starting = false; btn.disabled = false; btn.textContent = "Continue as guest and start"; };
+  // iOS only lets audio start from inside the tap, so the context is created before any waiting.
+  try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+  catch (e) { fail(`Audio could not be started on this device (${e.message || e}).`); return; }
+  btn.textContent = "Asking for the microphone…";
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false } });
   } catch (e) {
-    showError(err, "Microphone permission was refused, so nothing is being counted.");
+    audioCtx.close(); audioCtx = null;
+    fail("Microphone permission was refused, so nothing is being counted.");
     return;
   }
-  audioCtx = new AudioContext();
+  btn.textContent = "Loading the cough detector (about 10 MB the first time)…";
+  try {
+    classifier = await loadClassifier();
+  } catch (e) {
+    stream.getTracks().forEach((t) => t.stop()); stream = null; audioCtx.close(); audioCtx = null;
+    fail(`The cough detector could not be loaded (${e.message || e}).`);
+    return;
+  }
+  try { await audioCtx.resume(); } catch { /* already running */ }
   const src = audioCtx.createMediaStreamSource(stream);
   node = audioCtx.createScriptProcessor(4096, 1, 1);
-  const zone = $("zone").value;
+  const zone = $("zone").value, rate = audioCtx.sampleRate;
   binStart = Math.floor(Date.now() / BIN_MS) * BIN_MS;
+  let busy = false;
   node.onaudioprocess = (ev) => {
     const chunk = new Float32Array(ev.inputBuffer.getChannelData(0));
     buffer.push(chunk); bufferLen += chunk.length;
-    if (bufferLen < audioCtx.sampleRate) return; // classify once per second of audio
+    if (bufferLen < rate) return; // one decision per second of audio
     const second = new Float32Array(bufferLen);
-    let off = 0; for (const c of buffer) { second.set(c, off); off += c.length; }
+    let off = 0, energy = 0;
+    for (const c of buffer) { second.set(c, off); off += c.length; }
     buffer = []; bufferLen = 0;
-    let score = 0;
-    try {
-      for (const r of classifier.classify(second, audioCtx.sampleRate)) {
-        const cat = r.classifications[0].categories.find((c) => c.categoryName === "Cough");
-        if (cat) score = Math.max(score, cat.score);
+    for (let i = 0; i < second.length; i += 1) energy += second[i] * second[i];
+    if (Math.sqrt(energy / second.length) < SILENCE_RMS || busy) { onScore(0, zone); return; }
+    busy = true;
+    // run the model outside the audio callback so the page stays responsive
+    setTimeout(() => {
+      let score = 0;
+      try {
+        for (const r of classifier.classify(second, rate)) {
+          const cat = r.classifications[0].categories.find((c) => c.categoryName === "Cough");
+          if (cat) score = Math.max(score, cat.score);
+        }
+      } catch (e) {
+        $("status").textContent = `Detector error: ${e.message || e}`;
       }
-    } catch (e) {
-      $("status").textContent = `Detector error: ${e.message || e}`;
-      return;
-    }
-    second.fill(0); // the audio is discarded here
-    onScore(score, zone);
+      second.fill(0); // the audio is discarded here
+      busy = false;
+      onScore(score, zone);
+    }, 0);
   };
   src.connect(node); node.connect(audioCtx.destination);
+  starting = false; btn.disabled = false; btn.textContent = "Continue as guest and start";
   $("consent").classList.add("hidden");
   $("listening").classList.remove("hidden");
   $("thresholdMark").style.left = `${COUGH_THRESHOLD * 100}%`;
@@ -123,8 +150,9 @@ function onScore(score, zone) {
 
 function stopListening() {
   try { node?.disconnect(); stream?.getTracks().forEach((t) => t.stop()); audioCtx?.close(); } catch { /* already stopped */ }
-  node = null; stream = null; audioCtx = null;
+  node = null; stream = null; audioCtx = null; buffer = []; bufferLen = 0;
   $("status").textContent = "Stopped. The microphone is off.";
+  $("listening").classList.add("hidden"); $("consent").classList.remove("hidden");
 }
 
 function shareCounts() {

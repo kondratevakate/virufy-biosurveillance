@@ -38,3 +38,4 @@ pre { white-space: pre-wrap; font-size: 12px; background: #f1f4f3; padding: 8px;
 .alert b { color: var(--alert); }
 svg { width: 100%; height: 70px; display: block; }
 table { border-collapse: collapse; font-size: 13px; } td, th { padding: 4px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+button:disabled { opacity: .6; }
