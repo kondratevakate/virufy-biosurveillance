@@ -608,6 +608,10 @@ function revealOnScroll(selector) {
 }
 revealOnScroll(".view > .section-title, #view-home .card, #view-about .card");
 
+// The check is the first screen, so its detector starts loading at once, not on scroll.
+// (Called here, at the end, because the detector state is declared further down the module.)
+ensureLoaded("phone");
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js").catch(() => { /* offline cache is optional */ });
 }
