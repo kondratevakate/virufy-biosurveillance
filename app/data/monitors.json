@@ -1,0 +1,18 @@
+{
+ "checked": "2026-11-18",
+ "note": "Each URL was opened on 2026-11-18. Countries marked not_confirmed may have a public monitor that could not be reached; not_checked were not searched.",
+ "national": {
+  "AUT": [{"name": "AGES wastewater monitoring", "url": "https://abwasser.ages.at/en/", "signal": "Wastewater", "pathogens": "SARS-CoV-2, influenza A/B, RSV"}],
+  "BEL": [{"name": "Sciensano wastewater dashboard", "url": "https://wastewater.sciensano.be/dashboard/covid19/en/", "signal": "Wastewater", "pathogens": "SARS-CoV-2, influenza, RSV"}],
+  "CZE": [{"name": "Pathogen Portal CZ, wastewater", "url": "https://pathogens.vm.cesnet.cz/en/dashboards/wastewater-monitoring/", "signal": "Wastewater", "pathogens": "SARS-CoV-2, poliovirus"},
+          {"name": "Nextstrain Europe (Czech mirror)", "url": "https://pathogens.vm.cesnet.cz/en/dashboards/nextstrain-sarscov2/", "signal": "Genomic", "pathogens": "SARS-CoV-2"}],
+  "DNK": [{"name": "Statens Serum Institut, wastewater", "url": "https://en.ssi.dk/surveillance-and-preparedness/surveillance-in-denmark/national-wastewater-surveillance-of-sars-cov-2-and-influenza-a", "signal": "Wastewater", "pathogens": "SARS-CoV-2, influenza A"},
+          {"name": "EuroMOMO (hosted by SSI)", "url": "https://www.euromomo.eu/graphs-and-maps/", "signal": "Excess mortality", "pathogens": "All causes"}],
+  "FRA": [{"name": "SUM'Eau, archived open data", "url": "https://www.data.gouv.fr/datasets/surveillance-du-sars-cov-2-dans-les-eaux-usees-sumeau", "signal": "Wastewater", "pathogens": "SARS-CoV-2"}],
+  "DEU": [{"name": "AMELAG open data (RKI, UBA)", "url": "https://github.com/robert-koch-institut/Abwassersurveillance_AMELAG", "signal": "Wastewater", "pathogens": "SARS-CoV-2, influenza A/B, RSV"}],
+  "NLD": [{"name": "RIVM wastewater research", "url": "https://www.rivm.nl/rioolwateronderzoek/covid-19", "signal": "Wastewater", "pathogens": "SARS-CoV-2; Schiphol airport data not published"}],
+  "ESP": [{"name": "VATar COVID-19", "url": "https://miteco.maps.arcgis.com/apps/dashboards/75cbb6eb7043400da519089fd516d5bd", "signal": "Wastewater", "pathogens": "SARS-CoV-2"}]
+ },
+ "not_confirmed": ["FIN", "IRL", "ITA", "LUX", "SWE", "SVN", "MLT", "SVK", "PRT", "POL", "HUN", "LVA", "LTU", "GRC", "LIE", "NOR"],
+ "not_checked": ["BGR", "HRV", "CYP", "EST", "ISL", "ROU"]
+}

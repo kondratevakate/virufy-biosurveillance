@@ -1,7 +1,7 @@
 {
   "name": "Virufy Biosurveillance",
   "short_name": "Virufy",
-  "start_url": "./index.html",
+  "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#f6f8f7",
   "theme_color": "#0f5c4d",

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Virufy Biosurveillance</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="container bar">
+      <a class="brand" href="./"><img class="logo" src="img/virufy-logo.svg" alt="Virufy logo" width="68" height="20"><span class="sub">Biosurveillance</span></a>
+      <nav>
+        <button class="tab active" data-view="home">Start</button>
+        <button class="tab" data-view="phone">Count</button>
+        <button class="tab" data-view="map">My map</button>
+        <button class="tab" data-view="dashboard">Dashboard</button>
+        <button class="tab" data-view="about">Evidence</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Start: who is this for -->
+    <section id="view-home" class="view active">
+      <p class="mono kicker">PROTOTYPE · NOT A MEDICAL DEVICE</p>
+      <h1>Coughs counted on your phone.<br>Outbreaks seen on a map.</h1>
+      <p class="lead">The phone listens, counts coughs and forgets the sound. Only the count and a map cell of about 1 km are shared.</p>
+      <div class="grid two">
+        <div class="card">
+          <p class="mono kicker">I AM GOING TO A PUBLIC PLACE</p>
+          <h3>Count coughs around me</h3>
+          <ol class="steps">
+            <li>Say where you are: airport, mall, station.</li>
+            <li>Leave the phone listening for a few minutes.</li>
+            <li>See your visit on the map of the UAE.</li>
+          </ol>
+          <button class="primary" data-go="phone">Start a visit →</button>
+        </div>
+        <div class="card">
+          <p class="mono kicker">I WATCH OVER A SITE OR A DISTRICT</p>
+          <h3>See where coughing is rising</h3>
+          <ol class="steps">
+            <li>Each zone is compared with its own baseline.</li>
+            <li>A sustained rise raises one alert, with the reason.</li>
+            <li>Aircraft wastewater is shown as a second signal.</li>
+          </ol>
+          <button data-go="dashboard">Open the dashboard →</button>
+        </div>
+      </div>
+      <p class="small">Judges and reviewers: every screen works without a login. Test results are under <button class="link" data-go="about">Evidence</button>.</p>
+    </section>
+
+    <!-- Participant flow: place, count, share -->
+    <section id="view-phone" class="view">
+      <div id="consent">
+        <h2><span class="marker"></span>Step 1. Where are you?</h2>
+        <div class="card">
+          <label>Kind of place
+            <select id="zone">
+              <option value="AIRPORT">Airport</option>
+              <option value="MALL">Shopping mall</option>
+              <option value="METRO">Metro or bus station</option>
+              <option value="CLINIC">Clinic waiting room</option>
+              <option value="WORKSITE">Worksite</option>
+              <option value="OTHER">Other public place</option>
+            </select>
+          </label>
+          <div class="row">
+            <button id="useLocation">Use my location</button>
+            <button data-go="map">Tap it on the map</button>
+          </div>
+          <p class="mono small" id="placeLabelPhone">No place set yet.</p>
+          <p class="small">The position is rounded to a cell of about 1 km before it is stored. You can skip this step; the visit then stays off the map.</p>
+        </div>
+        <h2><span class="marker"></span>Step 2. Count</h2>
+        <div class="card">
+          <p>The microphone audio is analysed <b>on this phone</b> and discarded within a second. Nothing is recorded or uploaded.
+             The model hears coughs near the phone, about a table away, not across a hall.</p>
+          <button id="start" class="primary">Continue as guest and start</button>
+          <p class="small">It does not tell you whether you are ill.</p>
+        </div>
+      </div>
+
+      <div id="listening" class="hidden">
+        <h2><span class="marker"></span>Step 2. Counting</h2>
+        <div class="card">
+          <div class="row stats">
+            <div><div class="mono kicker">COUGHS COUNTED</div><div id="count" class="big">0</div></div>
+            <div><div class="mono kicker">THIS 15-MINUTE WINDOW</div><div id="binCount" class="big">0</div></div>
+          </div>
+          <div class="mono kicker">COUGH SCORE, LAST SECOND</div>
+          <div class="meter"><div id="meter"></div><div id="thresholdMark"></div></div>
+          <p id="status" class="small">Starting…</p>
+        </div>
+        <h2><span class="marker"></span>Step 3. Put it on your map</h2>
+        <div class="card">
+          <div class="row">
+            <button id="share" class="primary">Share counts and open my map</button>
+            <button id="stop">Stop</button>
+          </div>
+          <details>
+            <summary>What is sent</summary>
+            <pre id="payload" class="mono">Nothing yet.</pre>
+          </details>
+        </div>
+      </div>
+
+      <div id="phoneError" class="card error hidden"></div>
+    </section>
+
+    <!-- Map of the UAE: where the user counted, and the demo zones -->
+    <section id="view-map" class="view">
+      <h2><span class="marker"></span>My map</h2>
+      <div class="card">
+        <p class="small">Tap the map to set where you are. <span id="placeLabel" class="mono">No place set yet.</span></p>
+        <div id="uaeMap"></div>
+        <ul class="legend small">
+          <li><span class="dot solid"></span>Your visits: bigger for longer listening; green, amber, red for more coughs per hour</li>
+          <li><span class="dot dashed"></span>Demo zones with <b>synthetic</b> data; red when above the alarm level</li>
+          <li><span class="dot pin"></span>The place set for your next visit</li>
+        </ul>
+        <div id="visits"></div>
+        <div class="row">
+          <button class="primary" data-go="phone">Start a visit →</button>
+          <button id="clearVisits">Clear my visits</button>
+        </div>
+        <p class="small">Your place and visits are kept on this phone. The exact position is never stored.</p>
+        <div id="mapError" class="card error hidden"></div>
+      </div>
+    </section>
+
+    <!-- Officer view: zones, wastewater and alerts -->
+    <section id="view-dashboard" class="view">
+      <p class="mono kicker">GUEST MODE · ZONE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
+      <h2><span class="marker"></span>Alerts</h2>
+      <div id="alerts"></div>
+      <h2><span class="marker"></span>Zones: cough detections per listening hour</h2>
+      <div id="zones" class="grid"></div>
+      <h2><span class="marker"></span>Aircraft wastewater: share of positive samples per week</h2>
+      <div class="row">
+        <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
+      </div>
+      <div id="wastewater" class="grid"></div>
+      <h2><span class="marker"></span>Environment: dust, PM2.5, heat</h2>
+      <div class="card muted">Not connected in this prototype: the UAE data source is still being chosen.</div>
+      <div id="dashError" class="card error hidden"></div>
+    </section>
+
+    <section id="view-about" class="view">
+      <h2><span class="marker"></span>How it works</h2>
+      <div class="card">
+        <ol class="steps">
+          <li>The phone runs a cough detector (YAMNet audio classifier, MediaPipe) in the browser.</li>
+          <li>Only cough counts per 15 minutes, the kind of place and a map cell of about 1 km leave the phone.</li>
+          <li>Zones with fewer than 10 participants are hidden.</li>
+          <li>An outbreak is defined as a sustained rise of the cough rate above the zone's own baseline, after accounting for how many people are listening. Each zone runs a bank of Poisson CUSUMs (tuned for rises from 5% to 100%) against its weekday baseline, with the alarm level set by simulation for about one false alarm in 180 days.</li>
+          <li>Aircraft wastewater series are the second signal; weeks above their recent baseline are marked.</li>
+        </ol>
+      </div>
+      <h2><span class="marker"></span>Detector check on ESC-50 (2000 labelled sounds, 40 coughs)</h2>
+      <div class="card"><div id="evalBox">Loading…</div></div>
+      <h2><span class="marker"></span>Experiments</h2>
+      <div class="card"><div id="expBox">Loading…</div></div>
+      <h2><span class="marker"></span>Team</h2>
+      <div class="card">
+        <ul class="orgs">
+          <li><span class="org logo-box"><img src="img/virufy-icon.png" alt="" width="34" height="30"></span>Virufy</li>
+          <li><span class="mono org">UM</span>Maastricht University</li>
+          <li><span class="mono org">UF</span>University of Fukui</li>
+          <li><span class="mono org">UAEU</span>United Arab Emirates University</li>
+        </ul>
+        <p class="small">Affiliations of the team members. The institutions have not reviewed or endorsed this prototype.</p>
+      </div>
+      <p class="small">Data: ESC-50 and TAU Urban Acoustic Scenes 2019 (non-commercial licences); aircraft wastewater qPCR (Zenodo, doi:10.5281/zenodo.18432347, CC BY 4.0);
+        CDC percent of tests positive; map outline from Natural Earth (public domain).</p>
+    </section>
+  </main>
+
+  <footer><div class="container small">Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
