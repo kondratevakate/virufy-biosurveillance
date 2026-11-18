@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#000000">
   <title>Virufy Biosurveillance: early warning from coughs and wastewater</title>
+  <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,8 +25,8 @@
     </div>
   </header>
 
-  <main class="container">
-    <section>
+  <main class="container landing">
+    <section class="hero">
       <p class="mono kicker">BIOSURVEILLANCE · FUTURE HEALTH DIGITAL INNOVATION CHALLENGE 2026 · CHALLENGE 06</p>
       <h1>Hear an outbreak before the clinics fill up.</h1>
       <p class="lead">Coughs counted on phones in public places, aircraft wastewater at the border, and one rule that says when a rise is real.</p>
@@ -31,9 +34,15 @@
         <a class="button primary" href="app.html">Try the prototype →</a>
         <a class="button" href="https://virufy.org/demo/" target="_blank" rel="noopener">Virufy cough screening demo ↗</a>
       </div>
+      <ul class="stats-strip">
+        <li><a href="#how"><span class="stat mono">0.991</span><span class="small">ROC AUC of the cough detector on ESC-50</span></a></li>
+        <li><a href="#how"><span class="stat mono">1.5 days</span><span class="small">to flag a 50% rise in simulation, at 200 listening hours a day</span></a></li>
+        <li><a href="#how"><span class="stat mono">0</span><span class="small">detections in 7.7 h of airports, metro, squares and a mall</span></a></li>
+        <li><a href="#monitors"><span class="stat mono">0 of 17</span><span class="small">EU monitors we checked publish airport wastewater or air sampling</span></a></li>
+      </ul>
     </section>
 
-    <section id="why">
+    <section class="block" id="why">
       <h2><span class="marker"></span>Why</h2>
       <div class="grid two">
         <div class="card">
@@ -47,9 +56,9 @@
       </div>
     </section>
 
-    <section id="how">
+    <section class="block" id="how">
       <h2><span class="marker"></span>How it works</h2>
-      <div class="grid">
+      <div class="grid four">
         <div class="card"><p class="mono kicker">1 · PHONE</p><p>A phone counts coughs with an on-device sound model and forgets the audio within a second. Only counts per 15 minutes, the kind of place and a 1 km map cell are shared.</p></div>
         <div class="card"><p class="mono kicker">2 · ZONE</p><p>Each zone is compared with its own weekday baseline, adjusted for how many people are listening. Zones with fewer than 10 participants are hidden.</p></div>
         <div class="card"><p class="mono kicker">3 · ALERT</p><p>A running sum of coughs above the baseline (a set of Poisson CUSUM charts) raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
@@ -66,7 +75,7 @@
       <p class="small">Prototype, not a medical device. Simulated counts use assumed background rates; see the Evidence tab in the prototype for the protocol and limits.</p>
     </section>
 
-    <section id="monitors">
+    <section class="block" id="monitors">
       <h2><span class="marker"></span>Public infectious-disease monitors in the EU</h2>
       <p class="small mono">CHECKED 18 NOV 2026 · 17 SOURCES OPENED · COVERAGE IS INCOMPLETE, SEE BELOW</p>
       <div class="grid two map-grid">
@@ -109,7 +118,7 @@
       <p class="small">Not confirmed yet (page unreachable, behind login, or seen only in search): Finland, Ireland, Italy, Luxembourg, Sweden, Slovenia, Malta, Slovakia, Portugal, Poland, Hungary, Latvia, Lithuania, Greece, Liechtenstein, Norway. Not checked: Bulgaria, Croatia, Cyprus, Estonia, Iceland, Romania. A missing country does not mean it has no monitor.</p>
     </section>
 
-    <section id="research">
+    <section class="block" id="research">
       <h2><span class="marker"></span>Our research</h2>
       <div class="grid">
         <div class="card"><p class="mono kicker">IN PREPARATION</p><h3>Detecting outbreaks from cough counts: a load-adjusted Poisson model</h3><p class="small">Daily cough counts are modelled as Poisson(listening time × (share of people ill × cough rate + detector false alarms)). A bank of Poisson CUSUMs, calibrated to one false alarm per 180 days, is compared with EARS C2 and a median/MAD rule; detection delay is set against its Kullback-Leibler lower bound, and the count stream against airport wastewater. In simulation, a 50% rise is caught in 1.5 days at 200 listening hours a day.</p></div>
@@ -118,7 +127,7 @@
       </div>
     </section>
 
-    <section id="news">
+    <section class="block" id="news">
       <h2><span class="marker"></span>Recent work in the field</h2>
       <ul class="news">
         <li><span class="mono small">NOV 2026</span> <a href="https://doi.org/10.1038/s44221-026-00735-5" target="_blank" rel="noopener">Wastewater from a 30,000-person campus showed an oxidative-stress marker rising during exam weeks</a> <span class="small">Nature Water</span></li>
@@ -129,7 +138,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="block">
       <h2><span class="marker"></span>Team</h2>
       <ul class="orgs">
         <li><span class="org logo-box"><img src="img/virufy-icon.png" alt="" width="34" height="30"></span>Virufy, a California nonprofit (The Covid Detection Foundation)</li>

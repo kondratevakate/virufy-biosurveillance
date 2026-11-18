@@ -49,6 +49,7 @@ document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () 
   if (b.dataset.view === "dashboard") renderDashboard();
   if (b.dataset.view === "about") renderAbout();
   if (b.dataset.view === "map") renderMap();
+  if (b.dataset.view === "phone") warmUpDetector();
 }));
 
 // Buttons with data-go open a view, the same as tapping its tab.
@@ -70,6 +71,17 @@ function loadClassifier() {
       .catch((e) => { classifierPromise = null; throw e; });
   }
   return classifierPromise;
+}
+
+// Start downloading the detector (model and runtime, about 6 MB compressed) as soon as the Count
+// screen opens, so "Start" does not wait for it. A failure here is shown, and Start retries.
+function warmUpDetector() {
+  const el = $("modelState");
+  if (classifier) return;
+  el.textContent = "Cough detector: loading (about 6 MB the first time)…";
+  loadClassifier()
+    .then((c) => { classifier = c; el.textContent = "Cough detector: ready. It runs on this phone."; })
+    .catch((e) => { el.textContent = `Cough detector: could not load (${e.message || e}). Start will try again.`; });
 }
 
 const SILENCE_RMS = 0.01;  // seconds quieter than this are not sent to the model (saves the phone's CPU)
@@ -96,9 +108,10 @@ async function startListening() {
     fail("Microphone permission was refused, so nothing is being counted.");
     return;
   }
-  btn.textContent = "Loading the cough detector (about 10 MB the first time)…";
+  btn.textContent = classifier ? "Starting…" : "Loading the cough detector…";
   try {
     classifier = await loadClassifier();
+    $("modelState").textContent = "Cough detector: ready. It runs on this phone.";
   } catch (e) {
     stream.getTracks().forEach((t) => t.stop()); stream = null; audioCtx.close(); audioCtx = null;
     fail(`The cough detector could not be loaded (${e.message || e}).`);

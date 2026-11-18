@@ -54,4 +54,14 @@ async function renderMonitorMap() {
   }
 }
 
-renderMonitorMap();
+// The map data (about 30 KB compressed) is fetched only when the map comes near the screen,
+// so it does not compete with the first screen.
+const mapBox = $("monitorMap");
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) { io.disconnect(); renderMonitorMap(); }
+  }, { rootMargin: "800px 0px" });
+  io.observe(mapBox);
+} else {
+  renderMonitorMap();
+}

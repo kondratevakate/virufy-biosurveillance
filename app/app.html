@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#000000">
   <title>Virufy Biosurveillance</title>
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -82,6 +85,7 @@
           <p>The microphone audio is analysed <b>on this phone</b> and discarded within a second. Nothing is recorded or uploaded.
              The model hears coughs near the phone, about a table away, not across a hall.</p>
           <button id="start" class="primary">Continue as guest and start</button>
+          <p id="modelState" class="small mono" aria-live="polite">Cough detector: not loaded yet.</p>
           <p class="small">It does not tell you whether you are ill.</p>
         </div>
       </div>
