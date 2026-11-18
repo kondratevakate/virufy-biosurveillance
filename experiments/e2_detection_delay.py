@@ -15,7 +15,7 @@ from pathlib import Path
 
 import numpy as np
 
-SENS = 0.825                       # ESC-50, app threshold 0.5
+SENS_VALUES = (0.825, 0.2)         # ESC-50 at app threshold 0.5; 0.2 is ASSUMED (Amendment 2)
 LOADS = (50, 200, 1000, 5000)      # person-hours per day
 KAPPAS = (0.1, 0.2, 0.5, 1.0)
 BACKGROUNDS = (0.5, 2.0)           # coughs per person-hour, ASSUMED
@@ -26,7 +26,7 @@ ARL0, DESIGN_RATIO = 180.0, 1.5
 N_CAL, T_CAL, N_RUN, SEED = 1000, 1500, 2000, 20261118
 
 
-def simulate(rng, n, T, E, b, phi, kappa=0.0, start=None, nb_size=None):
+def simulate(rng, n, T, E, b, phi, kappa=0.0, start=None, nb_size=None, sens=SENS_VALUES[0]):
     """Return loads and counts, shape (n, BURN + T). The outbreak starts at index BURN + start."""
     days = BURN + T
     dow = DOW[np.arange(days) % 7]
@@ -34,7 +34,7 @@ def simulate(rng, n, T, E, b, phi, kappa=0.0, start=None, nb_size=None):
     r = np.ones(days)
     if start is not None:
         r[BURN + start:] = 1 + kappa
-    mu = load * (SENS * b * r + phi)
+    mu = load * (sens * b * r + phi)
     y = rng.poisson(mu) if nb_size is None else rng.negative_binomial(nb_size, nb_size / (nb_size + mu))
     return load, y
 
@@ -95,9 +95,9 @@ def calibrate(stat):
     return (lo + hi) / 2
 
 
-def kl_info(E, b, phi, kappa):
-    mu0 = E * DOW.mean() * (SENS * b + phi)
-    mu1 = E * DOW.mean() * (SENS * b * (1 + kappa) + phi)
+def kl_info(E, b, phi, kappa, sens=SENS_VALUES[0]):
+    mu0 = E * DOW.mean() * (sens * b + phi)
+    mu1 = E * DOW.mean() * (sens * b * (1 + kappa) + phi)
     return mu1 * np.log(mu1 / mu0) - (mu1 - mu0)
 
 
@@ -112,23 +112,24 @@ def main() -> int:
     n_cal, n_run = (100, 200) if args.smoke else (N_CAL, N_RUN)
 
     rows = []
-    for b in bgs:
+    for sens in (SENS_VALUES[:1] if args.smoke else SENS_VALUES):
+     for b in bgs:
         for phi in phis:
             for E in loads:
-                load, y = simulate(rng, n_cal, T_CAL, E, b, phi)
+                load, y = simulate(rng, n_cal, T_CAL, E, b, phi, sens=sens)
                 h = {name: calibrate(f(load, y)) for name, f in DETECTORS.items()}
                 # robustness: same thresholds under overdispersed counts
-                load_nb, y_nb = simulate(rng, n_cal, T_CAL, E, b, phi, nb_size=10)
+                load_nb, y_nb = simulate(rng, n_cal, T_CAL, E, b, phi, nb_size=10, sens=sens)
                 arl_nb = {name: float((first_alarm(f(load_nb, y_nb), h[name]) + 1).mean()) for name, f in DETECTORS.items()}
                 for kappa in KAPPAS:
-                    load, y = simulate(rng, n_run, PRE + POST, E, b, phi, kappa, start=PRE)
-                    theory = float(np.log(ARL0) / kl_info(E, b, phi, kappa))
+                    load, y = simulate(rng, n_run, PRE + POST, E, b, phi, kappa, start=PRE, sens=sens)
+                    theory = float(np.log(ARL0) / kl_info(E, b, phi, kappa, sens))
                     for name, f in DETECTORS.items():
                         fa = first_alarm(f(load, y), h[name])
                         ok = fa >= PRE                     # no false alarm before the outbreak
                         delay = np.minimum(fa[ok] - PRE + 1, POST)
                         rows.append({
-                            "background": b, "phi": phi, "load": E, "kappa": kappa, "detector": name,
+                            "sensitivity": sens, "background": b, "phi": phi, "load": E, "kappa": kappa, "detector": name,
                             "threshold": round(float(h[name]), 4), "arl0_nb_size10": round(arl_nb[name], 1),
                             "n_runs": int(ok.sum()), "add_days": round(float(delay.mean()), 2),
                             "median_delay": float(np.median(delay)),
@@ -137,7 +138,7 @@ def main() -> int:
                             "share_undetected_120d": round(float((fa[ok] >= PRE + POST).mean()), 3),
                             "cusum_theory_days": round(theory, 2),
                         })
-                print(f"b={b} phi={phi:g} E={E}: done", flush=True)
+                print(f"s={sens} b={b} phi={phi:g} E={E}: done", flush=True)
 
     args.out.mkdir(parents=True, exist_ok=True)
     name = "e2_smoke" if args.smoke else "e2_results"
@@ -146,7 +147,7 @@ def main() -> int:
         w.writeheader()
         w.writerows(rows)
     (args.out / f"{name}_meta.json").write_text(json.dumps({
-        "sensitivity": SENS, "phi_values": list(phis), "arl0_days": ARL0, "design_ratio": DESIGN_RATIO,
+        "sensitivity_values": list(SENS_VALUES), "phi_values": list(phis), "arl0_days": ARL0, "design_ratio": DESIGN_RATIO,
         "assumed": {"background_coughs_per_person_hour": list(BACKGROUNDS), "dow_factors": DOW.tolist(), "load_sd": LOAD_SD},
         "n_calibration_runs": n_cal, "n_runs_per_cell": n_run, "seed": SEED}, indent=1))
     return 0

@@ -1,0 +1,76 @@
+{
+ "model_sha256": "4d8b4a53282dc83ef04e3e7dbc4fbc98082e34e44ed798e16c3a0cdd4c584faf",
+ "archives": [
+  "TAU-urban-acoustic-scenes-2019-development.audio.2.zip"
+ ],
+ "n_clips": 694,
+ "hours": 1.9277777199074075,
+ "by_threshold": {
+  "0.3": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     1.9135398319112822
+    ]
+   },
+   "by_scene": {
+    "airport": {
+     "clips": 694,
+     "hours": 1.9277777199074075,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      1.9135398319112822
+     ]
+    }
+   }
+  },
+  "0.5": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     1.9135398319112822
+    ]
+   },
+   "by_scene": {
+    "airport": {
+     "clips": 694,
+     "hours": 1.9277777199074075,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      1.9135398319112822
+     ]
+    }
+   }
+  },
+  "0.7": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     1.9135398319112822
+    ]
+   },
+   "by_scene": {
+    "airport": {
+     "clips": 694,
+     "hours": 1.9277777199074075,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      1.9135398319112822
+     ]
+    }
+   }
+  }
+ }
+}

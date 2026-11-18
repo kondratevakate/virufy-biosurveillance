@@ -1,0 +1,199 @@
+{
+ "model_sha256": "4d8b4a53282dc83ef04e3e7dbc4fbc98082e34e44ed798e16c3a0cdd4c584faf",
+ "archives": [
+  "TAU-urban-acoustic-scenes-2019-development.audio.1.zip",
+  "TAU-urban-acoustic-scenes-2019-development.audio.13.zip",
+  "TAU-urban-acoustic-scenes-2019-development.audio.2.zip",
+  "TAU-urban-acoustic-scenes-2019-development.audio.7.zip"
+ ],
+ "n_clips": 2776,
+ "hours": 7.7111109143518535,
+ "by_threshold": {
+  "0.3": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     0.4783849558237095
+    ]
+   },
+   "by_scene": {
+    "airport": {
+     "clips": 1388,
+     "hours": 3.8555554108796306,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      0.956769923136011
+     ]
+    },
+    "metro": {
+     "clips": 156,
+     "hours": 0.43333333333333335,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      8.512798740262927
+     ]
+    },
+    "metro_station": {
+     "clips": 538,
+     "hours": 1.4944444155092595,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      2.4683952215491947
+     ]
+    },
+    "public_square": {
+     "clips": 312,
+     "hours": 0.8666666724537037,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      4.256399341709995
+     ]
+    },
+    "shopping_mall": {
+     "clips": 382,
+     "hours": 1.0611110821759262,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      3.47643099396293
+     ]
+    }
+   }
+  },
+  "0.5": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     0.4783849558237095
+    ]
+   },
+   "by_scene": {
+    "airport": {
+     "clips": 1388,
+     "hours": 3.8555554108796306,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      0.956769923136011
+     ]
+    },
+    "metro": {
+     "clips": 156,
+     "hours": 0.43333333333333335,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      8.512798740262927
+     ]
+    },
+    "metro_station": {
+     "clips": 538,
+     "hours": 1.4944444155092595,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      2.4683952215491947
+     ]
+    },
+    "public_square": {
+     "clips": 312,
+     "hours": 0.8666666724537037,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      4.256399341709995
+     ]
+    },
+    "shopping_mall": {
+     "clips": 382,
+     "hours": 1.0611110821759262,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      3.47643099396293
+     ]
+    }
+   }
+  },
+  "0.7": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     0.4783849558237095
+    ]
+   },
+   "by_scene": {
+    "airport": {
+     "clips": 1388,
+     "hours": 3.8555554108796306,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      0.956769923136011
+     ]
+    },
+    "metro": {
+     "clips": 156,
+     "hours": 0.43333333333333335,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      8.512798740262927
+     ]
+    },
+    "metro_station": {
+     "clips": 538,
+     "hours": 1.4944444155092595,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      2.4683952215491947
+     ]
+    },
+    "public_square": {
+     "clips": 312,
+     "hours": 0.8666666724537037,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      4.256399341709995
+     ]
+    },
+    "shopping_mall": {
+     "clips": 382,
+     "hours": 1.0611110821759262,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      3.47643099396293
+     ]
+    }
+   }
+  }
+ }
+}

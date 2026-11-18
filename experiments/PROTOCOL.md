@@ -64,3 +64,14 @@ The archives are sorted by scene: audio.1 holds only airport clips (694), so aud
 would give one scene and no "worst scene" rate for E2. Added before running E1: archives audio.7
 and audio.13, chosen by number only, to cover other indoor public places. All clips of the four
 archives are scored; scenes are reported as found. Everything else in E1 and E2 is unchanged.
+
+## Amendment 2 (2026-11-18, after E1, before E2)
+
+E1 gave 0 detections in 7.71 h (2,776 clips; airport, metro, metro station, public square,
+shopping mall) at all three thresholds; the highest cough score was 0.11. So the planned E2 values
+"E1 overall" and "E1 worst scene" are both 0. E2 therefore uses phi in {0, 0.48, 3.3} per listening
+hour: 0.48 is the upper 95% bound from E1, and 3.3 is the rate on ESC-50 non-cough clips at the app
+threshold (a deliberately hard mix of sounds). E1 also means the detector did not pick up the coughs
+that 7.7 hours of crowded places must contain, so sensitivity for distant coughs is unknown and
+probably low. E2 is therefore run for s = 0.825 (ESC-50, close recordings) and for s = 0.2
+(assumed, to show the effect of a large loss); s = 0.2 is not a measurement.

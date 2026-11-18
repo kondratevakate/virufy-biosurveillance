@@ -1,0 +1,106 @@
+{
+ "model_sha256": "4d8b4a53282dc83ef04e3e7dbc4fbc98082e34e44ed798e16c3a0cdd4c584faf",
+ "archives": [
+  "TAU-urban-acoustic-scenes-2019-development.audio.13.zip"
+ ],
+ "n_clips": 694,
+ "hours": 1.92777775462963,
+ "by_threshold": {
+  "0.3": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     1.9135397974455064
+    ]
+   },
+   "by_scene": {
+    "public_square": {
+     "clips": 312,
+     "hours": 0.8666666724537037,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      4.256399341709995
+     ]
+    },
+    "shopping_mall": {
+     "clips": 382,
+     "hours": 1.0611110821759262,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      3.47643099396293
+     ]
+    }
+   }
+  },
+  "0.5": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     1.9135397974455064
+    ]
+   },
+   "by_scene": {
+    "public_square": {
+     "clips": 312,
+     "hours": 0.8666666724537037,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      4.256399341709995
+     ]
+    },
+    "shopping_mall": {
+     "clips": 382,
+     "hours": 1.0611110821759262,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      3.47643099396293
+     ]
+    }
+   }
+  },
+  "0.7": {
+   "overall": {
+    "events": 0,
+    "per_hour": 0.0,
+    "ci95": [
+     0.0,
+     1.9135397974455064
+    ]
+   },
+   "by_scene": {
+    "public_square": {
+     "clips": 312,
+     "hours": 0.8666666724537037,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      4.256399341709995
+     ]
+    },
+    "shopping_mall": {
+     "clips": 382,
+     "hours": 1.0611110821759262,
+     "events": 0,
+     "per_hour": 0.0,
+     "ci95": [
+      0.0,
+      3.47643099396293
+     ]
+    }
+   }
+  }
+ }
+}
