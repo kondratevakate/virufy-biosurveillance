@@ -1,0 +1,45 @@
+{
+ "sensitivity": 0.825,
+ "phi": 0.48,
+ "background": 0.5,
+ "ratios": [
+  1.05,
+  1.1,
+  1.2,
+  1.5,
+  2.0
+ ],
+ "bank_by_load": {
+  "50": {
+   "levels": [
+    1.9101,
+    2.8196,
+    3.5606,
+    3.5486,
+    0.2829
+   ],
+   "alarm": 1.9667
+  },
+  "200": {
+   "levels": [
+    2.7604,
+    3.5501,
+    3.7611,
+    1e-06,
+    1e-06
+   ],
+   "alarm": 1.0684
+  },
+  "1000": {
+   "levels": [
+    3.6235,
+    3.6116,
+    1e-06,
+    1e-06,
+    1e-06
+   ],
+   "alarm": 0.9336
+  }
+ },
+ "note": "CUSUM bank calibrated by simulation, as in experiment E2, for one false alarm per 180 days."
+}

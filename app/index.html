@@ -64,7 +64,7 @@
         Aviation wastewater series are <b>real</b> (US and UK, 2024 to 2025, Zenodo, CC BY 4.0).</div>
       <h2>Alerts</h2>
       <div id="alerts"></div>
-      <h2>Zones: coughs per participant-hour</h2>
+      <h2>Zones: cough detections per listening hour</h2>
       <div id="zones" class="grid"></div>
       <h2>Aviation wastewater: share of positive samples per week</h2>
       <div class="row">
@@ -83,11 +83,13 @@
           <li>The phone runs a cough detector (YAMNet audio classifier, MediaPipe) in the browser.</li>
           <li>Only cough counts per 15 minutes and a zone code leave the phone.</li>
           <li>Zones with fewer than 10 participants are hidden.</li>
-          <li>Each zone is compared with its own previous 8 periods; a rise of more than 2 robust standard deviations raises an alert.</li>
-          <li>The same rule runs on aviation wastewater series, the second signal.</li>
+          <li>An outbreak is defined as a sustained rise of the cough rate above the zone's own baseline, after accounting for how many people are listening. Each zone runs a bank of Poisson CUSUMs (tuned for rises from 5% to 100%) against its weekday baseline, with the alarm level set by simulation for about one false alarm in 180 days.</li>
+          <li>Aviation wastewater series are the second signal; weeks above their recent baseline are marked.</li>
         </ol>
         <h3>Detector check on ESC-50 (2000 labelled sounds, 40 coughs)</h3>
         <div id="evalBox">Loading…</div>
+        <h3>Experiments</h3>
+        <div id="expBox">Loading…</div>
         <p class="small">Data: ESC-50 (CC BY-NC 3.0); aviation wastewater qPCR (Zenodo, doi:10.5281/zenodo.18432347, CC BY 4.0).
           Not a medical device.</p>
       </div>

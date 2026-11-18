@@ -1,11 +1,20 @@
-// Offline cache for the app shell, model and data. No audio is ever cached.
-const CACHE = "virufy-v1";
+// Offline fallback for the app shell, model and data. No audio is ever cached.
+// Network first, so a new deployment is picked up at once; the cache is used only when offline.
+const CACHE = "virufy-v3";
 const ASSETS = [
   "./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest",
-  "./models/yamnet.tflite", "./data/wastewater.json", "./data/esc50_summary.json",
+  "./models/yamnet.tflite", "./data/wastewater.json", "./data/esc50_summary.json", "./data/detection.json", "./data/experiments.json",
   "./vendor/tasks-audio/audio_bundle.mjs",
 ];
-self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS))));
+self.addEventListener("install", (e) => {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+});
+self.addEventListener("activate", (e) => {
+  e.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+    .then(() => self.clients.claim()));
+});
 self.addEventListener("fetch", (e) => {
-  e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request)));
+  if (e.request.method !== "GET") return;
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });

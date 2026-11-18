@@ -16,29 +16,37 @@ import matplotlib.pyplot as plt
 SCENE_NAMES = {"airport": "Airport", "bus": "Bus", "metro": "Metro (in train)", "metro_station": "Metro station",
                "park": "Park", "public_square": "Public square", "shopping_mall": "Shopping mall",
                "street_pedestrian": "Pedestrian street", "street_traffic": "Street with traffic", "tram": "Tram"}
-DETECTOR_NAMES = {"cusum": "Poisson CUSUM with load offset", "mad_rule": "Prototype rule (median and MAD, 8 days)",
+DETECTOR_NAMES = {"cusum": "Poisson CUSUM, designed for a 50% rise", "cusum_bank": "Bank of CUSUMs (5% to 100% rises)", "mad_rule": "Prototype rule (median and MAD, 8 days)",
                   "ears_c2": "EARS C2-style rule (7-day mean and SD)"}
 
 
-def fig_e1(res, out):
-    by = res["by_threshold"]["0.5"]["by_scene"]
-    scenes = sorted(by, key=lambda s: by[s]["per_hour"])
-    rate = [by[s]["per_hour"] for s in scenes]
-    err = [[r - by[s]["ci95"][0] for r, s in zip(rate, scenes)], [by[s]["ci95"][1] - r for r, s in zip(rate, scenes)]]
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.barh([SCENE_NAMES.get(s, s) for s in scenes], rate, xerr=err, color="#0f5c4d", ecolor="#555", capsize=3)
-    ax.set_xlabel("Cough detections per hour of audio (score at least 0.5), with 95% interval")
-    ax.set_title(f"Detector firing rate in public places ({res['hours']:.1f} h of TAU Urban Acoustic Scenes 2019)", fontsize=10)
-    fig.tight_layout(); fig.savefig(out / "e1_detections_per_hour.png", dpi=200); plt.close(fig)
+def fig_e1(res, results_dir, out):
+    """Highest cough score per clip: public-space recordings against ESC-50 coughs and non-coughs."""
+    tau = [float(r["max_cough_score"]) for r in csv.DictReader(open(results_dir / "e1" / "e1_clip_scores.csv", encoding="utf-8"))]
+    esc = list(csv.DictReader(open(results_dir.parent.parent / "eval" / "results" / "esc50_scores.csv", encoding="utf-8")))
+    cough = [float(r["cough_score"]) for r in esc if r["category"] == "coughing"]
+    other = [float(r["cough_score"]) for r in esc if r["category"] != "coughing"]
+    bins = [i / 20 for i in range(21)]
+    fig, ax = plt.subplots(figsize=(7.5, 4))
+    for data, label, color in ((tau, f"Public places, TAU 2019 ({len(tau)} clips, {res['hours']:.1f} h)", "#0f5c4d"),
+                               (other, f"ESC-50 sounds that are not coughs ({len(other)} clips)", "#8a9a95"),
+                               (cough, f"ESC-50 coughs, recorded close to the microphone ({len(cough)} clips)", "#e07a2f")):
+        ax.hist(data, bins=bins, weights=[1 / len(data)] * len(data), histtype="step", lw=2, label=label, color=color)
+    ax.axvline(0.5, color="k", ls="--", lw=1); ax.text(0.51, 0.6, "app threshold 0.5", fontsize=8)
+    ax.set_yscale("log"); ax.set_xlabel("Highest cough score in the clip"); ax.set_ylabel("Share of clips (log scale)")
+    ax.set_title("No public-place clip comes near the threshold: no false alarms, and no distant coughs caught", fontsize=9)
+    ax.legend(fontsize=8)
+    fig.tight_layout(); fig.savefig(out / "e1_score_distributions.png", dpi=200); plt.close(fig)
 
 
 def fig_e2(rows, out):
+    rows = [r for r in rows if float(r["sensitivity"]) == max(float(x["sensitivity"]) for x in rows)]
     phis = sorted({float(r["phi"]) for r in rows})
     b = min(float(r["background"]) for r in rows)
     fig, axes = plt.subplots(1, len(phis), figsize=(4.6 * len(phis), 4), sharey=True)
     axes = [axes] if len(phis) == 1 else list(axes)
     for ax, phi in zip(axes, phis):
-        for det, style in (("cusum", "-o"), ("ears_c2", "--s"), ("mad_rule", ":^")):
+        for det, style in (("cusum", "-o"), ("cusum_bank", "-D"), ("ears_c2", "--s"), ("mad_rule", ":^")):
             sel = sorted((r for r in rows if float(r["phi"]) == phi and float(r["background"]) == b
                           and float(r["kappa"]) == 0.5 and r["detector"] == det), key=lambda r: float(r["load"]))
             ax.plot([float(r["load"]) for r in sel], [float(r["add_days"]) for r in sel], style, label=DETECTOR_NAMES[det])
@@ -50,7 +58,7 @@ def fig_e2(rows, out):
         ax.set_xlabel("Load: person-hours of listening per day")
         ax.set_title(f"Detector false alarms: {phi:g} per listening hour", fontsize=10)
     axes[0].set_ylabel("Average days to detect a 50% rise in cough rate")
-    axes[0].legend(fontsize=7, loc="upper right")
+    axes[0].legend(fontsize=6.5, loc="lower left")
     fig.suptitle(f"Simulated detection delay at one false alarm per 180 days (background {b:g} coughs per person-hour, assumed)", fontsize=10)
     fig.tight_layout(); fig.savefig(out / "e2_delay_vs_load.png", dpi=200); plt.close(fig)
 
@@ -82,7 +90,7 @@ def main() -> int:
     args.out.mkdir(parents=True, exist_ok=True)
     done = []
     if (p := args.results / "e1" / "e1_summary.json").exists():
-        fig_e1(json.loads(p.read_text()), args.out); done.append("e1")
+        fig_e1(json.loads(p.read_text()), args.results, args.out); done.append("e1")
     if (p := args.results / "e2" / "e2_results.csv").exists():
         fig_e2(list(csv.DictReader(open(p, encoding="utf-8"))), args.out); done.append("e2")
     if (p := args.results / "e3" / "e3_summary.json").exists():

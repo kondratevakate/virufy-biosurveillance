@@ -26,22 +26,6 @@ function saveShared(list) {
   catch { return false; }
 }
 
-// Robust early-warning rule shared by zones and wastewater:
-// flag when the value exceeds the median of the previous `win` points by more than
-// `zLimit` scaled MADs and by at least `absLimit`.
-function flagSeries(values, { win = 8, minPrior = 4, zLimit = 2, absLimit = 0 } = {}) {
-  return values.map((v, i) => {
-    const prior = values.slice(Math.max(0, i - win), i).filter((x) => x != null);
-    if (v == null || prior.length < minPrior) return { flag: false };
-    const sorted = [...prior].sort((a, b) => a - b);
-    const med = sorted[Math.floor(sorted.length / 2)];
-    const dev = prior.map((x) => Math.abs(x - med)).sort((a, b) => a - b);
-    const mad = dev[Math.floor(dev.length / 2)] * 1.4826;
-    const z = mad > 0 ? (v - med) / mad : (v > med ? Infinity : 0);
-    return { flag: z > zLimit && v - med >= absLimit, baseline: med, z };
-  });
-}
-
 function sparkline(values, flags, { max } = {}) {
   const w = 280, h = 70, pad = 4;
   const vals = values.map((v) => (v == null ? null : v));
@@ -168,20 +152,64 @@ const ACTIONS = {
   "District school cluster": ["Notify school health service; reinforce sick-day guidance", "District public health officer"],
   "Clinic waiting room": ["Separate respiratory patients in waiting area", "Clinic infection control lead"],
 };
-function syntheticZones() {
-  const r = rng(42), days = 28;
-  const spec = [
-    ["Airport arrivals hall", 140, 0.55, 4], ["Worksite A", 60, 0.7, 0], ["Labour accommodation B", 45, 0.8, 0],
-    ["District school cluster", 90, 0.45, 0], ["Clinic waiting room", 7, 1.1, 0],
+// Synthetic zones follow the model of the paper and of experiment E2:
+// daily count Y ~ Poisson(load * weekday factor * (sensitivity * background * r + phi)),
+// with r = 1.5 in the airport zone for the last 6 days (a synthetic outbreak). Detector error is set to
+// the measured values: sensitivity from ESC-50, false alarms at the upper bound from experiment E1.
+const BURN_DAYS = 56, SHOWN_DAYS = 28, OUTBREAK_RATIO = 1.5, DOW = [1, 1, 1, 1, 1, 0.8, 0.8];
+function poisson(r, mu) {
+  if (mu > 50) {  // normal approximation is enough for a demo series
+    const u = Math.max(r(), 1e-12), v = r();
+    return Math.max(0, Math.round(mu + Math.sqrt(mu) * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v)));
+  }
+  let k = 0, p = 1; const L = Math.exp(-mu);
+  do { k += 1; p *= r(); } while (p > L);
+  return k - 1;
+}
+function syntheticZones(det) {
+  const r = rng(42), days = BURN_DAYS + SHOWN_DAYS;
+  const spec = [  // name, participants, person-hours per day, outbreak days at the end
+    ["Airport arrivals hall", 140, 1000, 6], ["Worksite A", 60, 200, 0], ["Labour accommodation B", 45, 200, 0],
+    ["District school cluster", 90, 1000, 0], ["Clinic waiting room", 7, 50, 0],
   ];
-  return spec.map(([name, participants, base, riseDays]) => {
-    const vals = Array.from({ length: days }, (_, i) => {
-      const noise = (r() - 0.5) * 0.18 * base * 2;
-      const rise = riseDays && i >= days - riseDays ? base * 0.35 * (i - (days - riseDays) + 1) : 0;
-      return Math.max(0, +(base + noise + rise).toFixed(3));
+  return spec.map(([name, participants, load, outbreakDays]) => {
+    const E = [], Y = [];
+    for (let t = 0; t < days; t += 1) {
+      const e = load * DOW[t % 7] * (0.85 + 0.3 * r());
+      const ratio = outbreakDays && t >= days - outbreakDays ? OUTBREAK_RATIO : 1;
+      E.push(e); Y.push(poisson(r, e * (det.sensitivity * det.background * ratio + det.phi)));
+    }
+    // baseline rate per weekday from the burn-in, then a bank of Poisson CUSUMs with the load as offset;
+    // each member is scaled by its own alarm level and the largest scaled value is compared with the bank's level
+    const rate = DOW.map((_, k) => {
+      let y = 0, e = 0;
+      for (let t = k; t < BURN_DAYS; t += 7) { y += Y[t]; e += E[t]; }
+      return y / e;
     });
-    return { name, participants, vals };
+    const bank = det.bank_by_load[String(load)], h = bank.alarm;
+    const S = det.ratios.map(() => 0), flags = [], vals = [], cusum = [];
+    for (let t = BURN_DAYS; t < days; t += 1) {
+      const mu0 = E[t] * rate[t % 7];
+      let stat = 0;
+      det.ratios.forEach((ratio, i) => {
+        S[i] = Math.max(0, S[i] + Y[t] * Math.log(ratio) - mu0 * (ratio - 1));
+        stat = Math.max(stat, S[i] / bank.levels[i]);
+      });
+      vals.push(Y[t] / E[t]); cusum.push(stat); flags.push({ flag: stat > h });
+    }
+    const firstAlarm = flags.findIndex((f) => f.flag);
+    return { name, participants, load, vals, flags, cusum, h, baseline: rate.reduce((x, y) => x + y, 0) / 7,
+             outbreakStart: outbreakDays ? SHOWN_DAYS - outbreakDays : -1, firstAlarm };
   });
+}
+
+let detection = null;
+async function loadDetection() {
+  if (detection) return detection;
+  const res = await fetch("./data/detection.json");
+  if (!res.ok) throw new Error(`detection settings: HTTP ${res.status}`);
+  detection = await res.json();
+  return detection;
 }
 
 let wastewater = null;
@@ -194,19 +222,23 @@ async function loadWastewater() {
 }
 
 async function renderDashboard() {
-  const zones = syntheticZones();
+  let zones = [];
+  try {
+    zones = syntheticZones(await loadDetection());
+  } catch (e) {
+    showError($("dashError"), `Zone settings could not be loaded (${e.message || e}).`);
+  }
   const alerts = [];
   $("zones").innerHTML = zones.map((z) => {
     if (z.participants < MIN_PARTICIPANTS) {
       return `<div class="card zone suppressed"><h4>${z.name}</h4>
         <div class="meta">Hidden: ${z.participants} participants, below the minimum of ${MIN_PARTICIPANTS}.</div></div>`;
     }
-    const fl = flagSeries(z.vals, { absLimit: 0.25 });
-    const last = fl.length - 1;
-    if (fl[last].flag) alerts.push({ z, f: fl[last] });
+    const last = z.vals.length - 1;
+    if (z.flags[last].flag) alerts.push({ z });
     return `<div class="card zone"><h4>${z.name}</h4>
-      <div class="meta">${z.participants} participants · last 28 days · today ${z.vals[last].toFixed(2)}</div>
-      ${sparkline(z.vals, fl)}</div>`;
+      <div class="meta">${z.participants} participants · ${z.load} listening hours per day · last 28 days · today ${z.vals[last].toFixed(2)}</div>
+      ${sparkline(z.vals, z.flags)}</div>`;
   }).join("");
 
   const shared = loadShared();
@@ -233,17 +265,21 @@ async function renderDashboard() {
     showError($("dashError"), `Wastewater data could not be loaded (${e.message || e}).`);
   }
 
-  $("alerts").innerHTML = alerts.length ? alerts.map(({ z, f }) => {
+  $("alerts").innerHTML = alerts.length ? alerts.map(({ z }) => {
     const [action, role] = ACTIONS[z.name] || ["Review the zone", "Public health officer"];
+    const last = z.vals.length - 1;
     // The zones are synthetic and the wastewater series are real data from 2024 to 2025,
     // so the two are reported side by side, never as the same period.
     const ww = wwFlags.length
       ? `Second signal (real data, different period): the last 4 weeks of the aviation wastewater series were flagged for ${wwFlags.map(esc).join(", ")}.`
       : "Second signal (real data, different period): no flag in the last 4 weeks of the aviation wastewater series.";
-    return `<div class="card alert"><b>${z.name}</b>: cough rate ${z.vals[z.vals.length - 1].toFixed(2)} per participant-hour,
-      baseline ${f.baseline.toFixed(2)} (previous 8 days), ${Number.isFinite(f.z) ? f.z.toFixed(1) : ">10"} robust SD above.<br>
+    const delay = z.outbreakStart >= 0 && z.firstAlarm >= z.outbreakStart
+      ? ` The synthetic rise of 50% began ${last - z.outbreakStart + 1} days ago and was flagged on day ${z.firstAlarm - z.outbreakStart + 1}.` : "";
+    return `<div class="card alert"><b>${z.name}</b>: detections ${z.vals[last].toFixed(2)} per listening hour against a baseline of
+      ${z.baseline.toFixed(2)}. The sustained-rise statistic (a bank of CUSUMs) is above its alarm level, which is set for about
+      one false alarm in 180 days.${delay}<br>
       ${ww}<br>Suggested action: ${action}. Responsible: ${role}. A person decides; the system only recommends.</div>`;
-  }).join("") : `<div class="card muted">No zone is above its baseline today.</div>`;
+  }).join("") : `<div class="card muted">No zone is above its alarm level today.</div>`;
 }
 $("wwCountry").addEventListener("change", renderDashboard);
 
@@ -263,6 +299,14 @@ async function renderAbout() {
       sensitivity 82.5% at 3.3 false alarms per hour. That choice was made on the same clips, so it is exploratory.</p>`;
   } catch (e) {
     $("evalBox").textContent = `Evaluation summary could not be loaded (${e.message || e}).`;
+  }
+  try {
+    const res = await fetch("./data/experiments.json");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const items = await res.json();
+    $("expBox").innerHTML = items.map((x) => `<p><b>${esc(x.title)}</b><br>${esc(x.text)}</p>`).join("");
+  } catch (e) {
+    $("expBox").textContent = `Experiment summary could not be loaded (${e.message || e}).`;
   }
 }
 

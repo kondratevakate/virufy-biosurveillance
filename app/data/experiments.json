@@ -1,0 +1,14 @@
+[
+ {
+  "title": "E1. The detector in real public places",
+  "text": "7.7 hours of TAU Urban Acoustic Scenes 2019 recordings (2776 clips: airport, metro, metro station, public square, shopping mall): 0 detections, so at most 0.48 per hour (95% bound). No false alarms from crowd noise, but the coughs these crowds must contain were not caught either: the off-the-shelf model hears coughs close to the microphone, not across a hall. Phone counting is supported; fixed microphones in public places need a model trained for distant coughs."
+ },
+ {
+  "title": "E2. How fast a sustained rise is detected (simulation)",
+  "text": "192 settings, each calibrated to one false alarm per 180 days. For a 50% rise in cough rate, a bank of Poisson CUSUMs needs on average 1.5 days at 200 listening hours per day and 1.0 at 1000; the simple day-against-last-week rule needs 66 days at 200 hours and misses 37% of rises within 120 days. A single CUSUM tuned for a 50% rise goes blind when detector false alarms dilute the rise (average delay 120 days at 3.3 false alarms per hour); the bank does not. If the detector catches only 20% of coughs, the delay at 200 hours grows to 7.2 days. Counts are simulated; the background cough rate (0.5 per person-hour) is assumed. With counts more variable than Poisson the false-alarm budget is not kept, so the alarm level must be calibrated on real data."
+ },
+ {
+  "title": "E3. Aviation wastewater against US clinical positivity (real data)",
+  "text": "Weekly series, March 2024 to January 2025. Best lag (positive means wastewater first) with 95% interval: SARS-CoV-2 +3 weeks (-1 to +6), rho 0.71; Influenza A +0 weeks (-4 to +5), rho 0.53; RSV -2 weeks (-4 to +6), rho 0.64. The series move together, but one season is too short to show that wastewater leads."
+ }
+]

@@ -1,7 +1,12 @@
 {
- "sensitivity": 0.825,
+ "sensitivity_values": [
+  0.825,
+  0.2
+ ],
  "phi_values": [
-  0.0
+  0.0,
+  0.48,
+  3.3
  ],
  "arl0_days": 180.0,
  "design_ratio": 1.5,
@@ -21,7 +26,7 @@
   ],
   "load_sd": 0.2
  },
- "n_calibration_runs": 100,
- "n_runs_per_cell": 200,
+ "n_calibration_runs": 1000,
+ "n_runs_per_cell": 2000,
  "seed": 20261118
 }
