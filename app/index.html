@@ -59,7 +59,7 @@
     <section class="block" id="how">
       <h2><span class="marker"></span>How it works</h2>
       <div class="grid four">
-        <div class="card"><p class="mono kicker">1 · PHONE</p><p>A phone counts coughs with an on-device sound model and forgets the audio within a second. Only counts per 15 minutes, the kind of place and a 1 km map cell are shared.</p></div>
+        <div class="card"><p class="mono kicker">1 · PHONE</p><p>A phone counts coughs with an on-device sound model and forgets the audio within a second. Only counts per 15 minutes, the kind of place and a 1 km map cell are shared, with an aggregator run under the health authority.</p></div>
         <div class="card"><p class="mono kicker">2 · ZONE</p><p>Each zone is compared with its own weekday baseline, adjusted for how many people are listening. Zones with fewer than 10 participants are hidden.</p></div>
         <div class="card"><p class="mono kicker">3 · ALERT</p><p>A running sum of coughs above the baseline (a set of Poisson CUSUM charts) raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
         <div class="card"><p class="mono kicker">4 · BORDER SIGNAL</p><p>Aircraft wastewater series sit next to the zones as a second, independent signal of what is arriving.</p></div>
@@ -77,7 +77,8 @@
 
     <section class="block" id="uae">
       <h2><span class="marker"></span>Infectious-disease surveillance in the UAE</h2>
-      <p class="small mono">CHECKED <span id="uaeChecked">18 NOV 2026</span> · PUBLIC HEALTH BODIES AND PUBLISHED WASTEWATER STUDIES</p>
+      <p class="lead">The UAE measured what Europe still does not publish. Dubai tested wastewater from arriving aircraft in 2020 (<a href="https://doi.org/10.1016/j.scitotenv.2020.143350" target="_blank" rel="noopener">Albastaki et al.</a>), and a national programme sampled 453 sites for two years, while most wastewater studies elsewhere were short and small (<a href="https://doi.org/10.1016/j.scitotenv.2023.163785" target="_blank" rel="noopener">Wadi et al.</a>).</p>
+      <p class="small mono">CHECKED <span id="uaeChecked">18 NOV 2026</span> · PUBLIC HEALTH BODIES AND PUBLISHED WASTEWATER STUDIES · NONE OF 17 EU MONITORS WE CHECKED PUBLISHES AIRPORT WASTEWATER</p>
       <div class="map-grid">
         <div id="uaeMonitorMap" class="map-frame"><p class="small">Loading the map…</p></div>
         <div class="monitor-side">
@@ -92,7 +93,22 @@
           <div id="uaeDetail" class="card detail" aria-live="polite"><p class="small">Pick a source on the map or in the list above.</p></div>
         </div>
       </div>
-      <p class="small">The UAE has published large wastewater studies, including one on aircraft arriving at Dubai Airport, and an airport sequencing project is funded. We found no public, regularly updated surveillance data. MOHAP is federal and is not tied to one emirate on the map.</p>
+      <div class="grid two control">
+        <div class="card">
+          <p class="mono kicker">THE UAE DECIDES WHAT LEAVES THE NETWORK</p>
+          <ul class="checks">
+            <li>Phones send counts only. Audio never leaves the phone.</li>
+            <li>In a pilot, counts go to an aggregator hosted in the UAE and run under the health authority, not by Virufy.</li>
+            <li>The authority chooses which zones are watched, how often counts arrive, and what, if anything, is published.</li>
+            <li>Nothing is shared in real time with anyone outside unless the authority turns it on.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <p class="mono kicker">WHAT IT ADDS</p>
+          <p>The studies on the map show that wastewater worked in the UAE, but none of them is a running signal, and wastewater covers a city, not a hall. A daily count of coughs per venue, held by the authority, adds a signal for single arrivals halls, worksites and clinics, next to the wastewater it already trusts.</p>
+          <p class="small">We found no public, regularly updated UAE surveillance data, which fits this model: the data stay with the authority. MOHAP is federal and is not tied to one emirate on the map.</p>
+        </div>
+      </div>
     </section>
 
     <section class="block" id="monitors">

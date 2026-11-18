@@ -182,3 +182,9 @@ img.logo { display: block; height: 20px; width: auto; }
 .chips .num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--bg); font: 700 11px var(--mono); }
 .chips button[aria-pressed="true"] .num { background: var(--bg); color: var(--ink); }
 #research .grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+.control { margin-top: 32px; }
+.checks { list-style: none; padding: 0; margin: 0; }
+.checks li { position: relative; padding: 8px 0 8px 24px; border-bottom: 1px solid var(--fill); }
+.checks li:last-child { border-bottom: 0; }
+.checks li::before { content: ""; position: absolute; left: 0; top: 15px; width: 10px; height: 10px; background: var(--ink); }
