@@ -78,16 +78,18 @@
     <section class="block" id="monitors">
       <h2><span class="marker"></span>Public infectious-disease monitors in the EU</h2>
       <p class="small mono">CHECKED 18 NOV 2026 · 17 SOURCES OPENED · COVERAGE IS INCOMPLETE, SEE BELOW</p>
-      <div class="grid two map-grid">
-        <div id="monitorMap"><p class="small">Loading the map…</p></div>
-        <div>
-          <ul class="legend small">
-            <li><span class="sq black"></span>Public national monitor opened and confirmed (number = monitors)</li>
-            <li><span class="sq hatch"></span>Listed by the EU or WHO, not confirmed by us</li>
-            <li><span class="sq white"></span>Not checked yet</li>
-            <li><span class="sq grey"></span>Outside the EU and EEA</li>
+      <div class="map-grid">
+        <div id="monitorMap" class="map-frame"><p class="small">Loading the map…</p></div>
+        <div class="monitor-side">
+          <ul class="legend-stats">
+            <li><span class="sq black"></span><span class="stat mono" id="nOk">8</span><span class="small">countries with a public national monitor we opened and confirmed</span></li>
+            <li><span class="sq hatch"></span><span class="stat mono" id="nUnconfirmed">16</span><span class="small">listed by the EU or WHO, not confirmed by us</span></li>
+            <li><span class="sq white"></span><span class="stat mono" id="nUnchecked">6</span><span class="small">not checked yet</span></li>
+            <li><span class="sq grey"></span><span class="small">outside the EU and EEA</span></li>
           </ul>
-          <div id="monitorDetail" class="card"><p class="small">Tap a country to see its monitors. The same list is in the tables below.</p></div>
+          <p class="mono kicker">CONFIRMED COUNTRIES · NUMBER OF MONITORS</p>
+          <div id="countryChips" class="chips" role="group" aria-label="Countries with a confirmed monitor"></div>
+          <div id="monitorDetail" class="card detail" aria-live="polite"><p class="small">Pick a country on the map or in the list above. The same list is in the tables below.</p></div>
         </div>
       </div>
       <h3>EU level</h3>
