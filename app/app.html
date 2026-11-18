@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
   <header class="top">
@@ -26,7 +26,7 @@
 
   <main class="container">
     <!-- Start: who is this for -->
-    <section id="view-home" class="view active">
+    <section id="view-home" class="view">
       <p class="mono kicker">PROTOTYPE · NOT A MEDICAL DEVICE</p>
       <h1>Cough counters in public places.<br>One map of where coughing rises.</h1>
       <p class="lead">In a pilot, listening devices in arrivals halls, clinics, worksites and malls count coughs and forget the sound. This phone app does the same for one spot: a quick check of the cough load where you are.</p>
@@ -57,6 +57,8 @@
 
     <!-- Participant flow: place, count, share -->
     <section id="view-phone" class="view">
+      <p class="mono kicker">CHECK HERE</p>
+      <h2 class="section-title">Check the cough load where you are</h2>
       <div id="phoneNote" class="card hidden" role="status"></div>
       <div id="recs" class="card hidden">
         <p class="mono kicker">WHAT YOU CAN DO · EXAMPLE CONTENT, NOT MEDICAL ADVICE</p>
@@ -107,7 +109,7 @@
       </div>
 
       <div id="listening" class="hidden">
-        <h2><span class="marker"></span>Step 2. Listening</h2>
+        <h2><span class="marker"></span>Step 2. Listening <span class="live" aria-hidden="true"></span></h2>
         <div class="card">
           <div class="row stats">
             <div><div class="mono kicker">COUGHS COUNTED</div><div id="count" class="big">0</div></div>
@@ -135,6 +137,8 @@
 
     <!-- Officer view: zones, wastewater and alerts -->
     <section id="view-dashboard" class="view">
+      <p class="mono kicker">NETWORK</p>
+      <h2 class="section-title">Sites, alerts and the second signal</h2>
       <p class="mono kicker">GUEST MODE · SITE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
       <h2><span class="marker"></span>Sensor network</h2>
       <div class="card">
@@ -166,6 +170,8 @@
     </section>
 
     <section id="view-about" class="view">
+      <p class="mono kicker">EVIDENCE</p>
+      <h2 class="section-title">How it works and what we measured</h2>
       <h2><span class="marker"></span>How it works</h2>
       <div class="card">
         <ol class="steps">
@@ -197,6 +203,6 @@
 
   <footer><div class="container small">Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=13"></script>
+  <script type="module" src="app.js?v=14"></script>
 </body>
 </html>

@@ -144,3 +144,17 @@ if ("IntersectionObserver" in window) {
 } else {
   startMap();
 }
+
+// Cards and blocks fade in as they scroll into view. The class is added here, so without
+// JavaScript or with reduced motion everything is simply visible.
+function revealOnScroll(selector) {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  const els = [...document.querySelectorAll(selector)];
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { rootMargin: "0px 0px -8% 0px" });
+  els.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
+  // never leave content hidden if the observer does not fire (background tab, old browser)
+  window.addEventListener("load", () => setTimeout(() => els.forEach((el) => el.classList.add("in")), 2500));
+}
+revealOnScroll(".block > h2, .card, .stats-strip li, .legend-stats, details.more, .map-frame");

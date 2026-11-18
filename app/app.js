@@ -42,18 +42,59 @@ function sparkline(values, flags, { max } = {}) {
     <path d="${d}" fill="none" stroke="#000000" stroke-width="2"/>${dots}</svg>`;
 }
 
-// ---------- tabs ----------
+// ---------- one scrolling page: the tabs are anchors ----------
+// Every section is on the page; a tab scrolls to it, and the tab of the section on screen is highlighted.
+// Heavy parts (detector, maps, dashboard, evidence) load when their section comes near the screen.
+const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+function scrollToView(view) {
+  document.getElementById(`view-${view}`)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+}
+const loaders = {
+  phone: () => warmUpDetector(),
+  dashboard: () => { renderDashboard(); renderMap("network"); },
+  about: () => renderAbout(),
+};
+const loaded = new Set();
+function ensureLoaded(view) {
+  if (loaded.has(view) || !loaders[view]) return;
+  loaded.add(view);
+  loaders[view]();
+}
 document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => {
-  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t === b));
-  document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${b.dataset.view}`));
-  if (b.dataset.view === "dashboard") { renderDashboard(); renderMap("network"); }
-  if (b.dataset.view === "about") renderAbout();
-  if (b.dataset.view === "phone") warmUpDetector();
+  ensureLoaded(b.dataset.view);
+  scrollToView(b.dataset.view);
 }));
-
-// Buttons with data-go open a view, the same as tapping its tab.
-function go(view) { document.querySelector(`.tab[data-view="${view}"]`)?.click(); window.scrollTo(0, 0); }
+// Buttons with data-go jump to a section, the same as tapping its tab.
+function go(view) { ensureLoaded(view); scrollToView(view); }
 document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => go(b.dataset.go)));
+
+if ("IntersectionObserver" in window) {
+  // load a section shortly before it scrolls into view
+  const near = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) ensureLoaded(e.target.id.replace("view-", ""));
+  }), { rootMargin: "600px 0px" });
+  // highlight the tab of the section that crosses the upper third of the screen
+  const spy = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const view = e.target.id.replace("view-", "");
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.view === view));
+  }), { rootMargin: "-30% 0px -65% 0px" });
+  document.querySelectorAll(".view").forEach((v) => { near.observe(v); spy.observe(v); });
+} else {
+  Object.keys(loaders).forEach(ensureLoaded);
+}
+
+// ---------- haptics and motion ----------
+// A short vibration where the phone supports it (Android Chrome; iOS Safari has no Vibration API).
+// Nothing happens when the user asked the system for reduced motion.
+function buzz(pattern) {
+  if (reduceMotion) return;
+  try { navigator.vibrate?.(pattern); } catch { /* not supported */ }
+}
+function bump(el) {
+  if (reduceMotion || !el) return;
+  el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump");
+}
 
 // ---------- participant: on-device counting ----------
 let classifier = null, audioCtx = null, stream = null, node = null;
@@ -155,6 +196,7 @@ async function startListening() {
   starting = false; btn.disabled = false; btn.textContent = "Continue as guest and start";
   $("consent").classList.add("hidden");
   $("listening").classList.remove("hidden");
+  buzz(20);
   $("thresholdMark").style.left = `${COUGH_THRESHOLD * 100}%`;
   $("status").textContent = `Listening at: ${placeName}. Audio stays on this phone.`;
 }
@@ -170,6 +212,7 @@ function onScore(score, zone) {
   if (score >= COUGH_THRESHOLD && now - lastEventAt > REFRACTORY_MS) {
     lastEventAt = now; total += 1; binCount += 1;
     $("count").textContent = total;
+    bump($("count")); buzz(40);
   }
   // coughs per listening hour for this spot check, shown once a minute of audio is in
   if (listenedSeconds >= 60) $("perHour").textContent = (total / (listenedSeconds / 3600)).toFixed(1);
@@ -211,14 +254,15 @@ function shareCounts() {
   $("recs").classList.remove("hidden");
   $("toNetwork").classList.toggle("hidden", !placed);
   $("consent").classList.add("hidden");
-  window.scrollTo(0, 0);
+  buzz([30, 60, 30]);
+  scrollToView("phone");
 }
 
 $("start").addEventListener("click", startListening);
 $("stop").addEventListener("click", stopListening);
 $("share").addEventListener("click", shareCounts);
 $("checkAgain").addEventListener("click", () => {
-  showNote(""); $("recs").classList.add("hidden"); $("consent").classList.remove("hidden"); window.scrollTo(0, 0);
+  showNote(""); $("recs").classList.add("hidden"); $("consent").classList.remove("hidden"); scrollToView("phone");
 });
 
 // ---------- dashboard ----------
@@ -473,6 +517,7 @@ async function renderMap(mode = "network") {
       const box = ev.currentTarget.getBoundingClientRect();
       const x = ((ev.clientX - box.left) / box.width) * W, y = ((ev.clientY - box.top) / box.height) * H;
       savePlace(lat1 - (y - pad) / MAP_SCALE, lon0 + (x - pad) / (COS_LAT * MAP_SCALE));
+      buzz(10);
       renderMap("picker");
     });
     return;
@@ -500,6 +545,20 @@ $("clearVisits").addEventListener("click", () => {
 });
 showPlace(loadPlace());
 document.querySelector("details.picker").addEventListener("toggle", (ev) => { if (ev.currentTarget.open) renderMap("picker"); });
+
+// Cards and blocks fade in as they scroll into view. The class is added here, so without
+// JavaScript or with reduced motion everything is simply visible.
+function revealOnScroll(selector) {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  const els = [...document.querySelectorAll(selector)];
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { rootMargin: "0px 0px -8% 0px" });
+  els.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
+  // never leave content hidden if the observer does not fire (background tab, old browser)
+  window.addEventListener("load", () => setTimeout(() => els.forEach((el) => el.classList.add("in")), 2500));
+}
+revealOnScroll(".view > .section-title, #view-home .card, #view-about .card");
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js").catch(() => { /* offline cache is optional */ });
