@@ -1,0 +1,27 @@
+{
+ "sensitivity": 0.825,
+ "phi_values": [
+  0.0
+ ],
+ "arl0_days": 180.0,
+ "design_ratio": 1.5,
+ "assumed": {
+  "background_coughs_per_person_hour": [
+   0.5,
+   2.0
+  ],
+  "dow_factors": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   0.8,
+   0.8
+  ],
+  "load_sd": 0.2
+ },
+ "n_calibration_runs": 100,
+ "n_runs_per_cell": 200,
+ "seed": 20261118
+}
