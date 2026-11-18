@@ -35,9 +35,9 @@ function sparkline(values, flags, { max } = {}) {
   let d = "";
   vals.forEach((v, i) => { if (v != null) d += `${d ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; });
   const dots = vals.map((v, i) => (flags[i]?.flag && v != null)
-    ? `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#b3261e"/>` : "").join("");
+    ? `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#ef4444"/>` : "").join("");
   return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img">
-    <path d="${d}" fill="none" stroke="#0f5c4d" stroke-width="2"/>${dots}</svg>`;
+    <path d="${d}" fill="none" stroke="#000000" stroke-width="2"/>${dots}</svg>`;
 }
 
 // ---------- tabs ----------
@@ -46,11 +46,16 @@ document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () 
   document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${b.dataset.view}`));
   if (b.dataset.view === "dashboard") renderDashboard();
   if (b.dataset.view === "about") renderAbout();
+  if (b.dataset.view === "map") renderMap();
 }));
+
+// Buttons with data-go open a view, the same as tapping its tab.
+function go(view) { document.querySelector(`.tab[data-view="${view}"]`)?.click(); window.scrollTo(0, 0); }
+document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => go(b.dataset.go)));
 
 // ---------- participant: on-device counting ----------
 let classifier = null, audioCtx = null, stream = null, node = null;
-let total = 0, lastEventAt = 0, binStart = 0, binCount = 0, buffer = [], bufferLen = 0;
+let total = 0, lastEventAt = 0, binStart = 0, binCount = 0, binSeconds = 0, buffer = [], bufferLen = 0;
 const bins = []; // {zone, bin_start, coughs}
 
 // One classifier for the page, created once: repeated taps must not load the 10 MB model again.
@@ -141,11 +146,19 @@ function onScore(score, zone) {
   const now = Date.now();
   $("meter").style.width = `${Math.round(score * 100)}%`;
   const bin = Math.floor(now / BIN_MS) * BIN_MS;
-  if (bin !== binStart) { bins.push({ zone, bin_start: new Date(binStart).toISOString(), coughs: binCount }); binStart = bin; binCount = 0; }
+  if (bin !== binStart) { bins.push(binRecord(zone)); binStart = bin; binCount = 0; binSeconds = 0; }
+  binSeconds += 1;
   if (score >= COUGH_THRESHOLD && now - lastEventAt > REFRACTORY_MS) {
     lastEventAt = now; total += 1; binCount += 1;
     $("count").textContent = total; $("binCount").textContent = binCount;
   }
+}
+
+// What leaves the phone for one 15-minute bin: kind of place, a map cell of about 1 km, counts. No audio.
+function binRecord(zone) {
+  const place = loadPlace();
+  return { zone, cell: place ? [place.lat, place.lon] : null, bin_start: new Date(binStart).toISOString(),
+           coughs: binCount, listening_seconds: binSeconds };
 }
 
 function stopListening() {
@@ -157,13 +170,16 @@ function stopListening() {
 
 function shareCounts() {
   const zone = $("zone").value;
-  const payload = [...bins, { zone, bin_start: new Date(binStart).toISOString(), coughs: binCount }];
+  const payload = [...bins, binRecord(zone)];
   $("payload").textContent = JSON.stringify(payload, null, 1);
   const ok = saveShared([...loadShared(), ...payload]);
   $("status").textContent = ok
     ? "Counts shared with the demo aggregator on this device (in a pilot they go to the aggregator over HTTPS)."
     : "Could not store the counts on this device (storage is blocked); nothing was shared.";
-  bins.length = 0;
+  bins.length = 0; binCount = 0; binSeconds = 0;
+  $("binCount").textContent = 0;
+  stopListening();  // a visit ends when it is shared: the microphone goes off
+  if (ok && loadPlace()) go("map");  // the visit is now a circle on the map
 }
 
 $("start").addEventListener("click", startListening);
@@ -197,10 +213,11 @@ function poisson(r, mu) {
 function syntheticZones(det) {
   const r = rng(42), days = BURN_DAYS + SHOWN_DAYS;
   const spec = [  // name, participants, person-hours per day, outbreak days at the end
-    ["Airport arrivals hall", 140, 1000, 6], ["Worksite A", 60, 200, 0], ["Labour accommodation B", 45, 200, 0],
-    ["District school cluster", 90, 1000, 0], ["Clinic waiting room", 7, 50, 0],
+    ["Airport arrivals hall", 140, 1000, 6, "Dubai", 25.25, 55.36], ["Worksite A", 60, 200, 0, "Jebel Ali", 25.01, 55.06],
+    ["Labour accommodation B", 45, 200, 0, "Mussafah", 24.35, 54.5], ["District school cluster", 90, 1000, 0, "Al Ain", 24.21, 55.75],
+    ["Clinic waiting room", 7, 50, 0, "Sharjah", 25.35, 55.4],
   ];
-  return spec.map(([name, participants, load, outbreakDays]) => {
+  return spec.map(([name, participants, load, outbreakDays, city, lat, lon]) => {
     const E = [], Y = [];
     for (let t = 0; t < days; t += 1) {
       const e = load * DOW[t % 7] * (0.85 + 0.3 * r());
@@ -226,7 +243,7 @@ function syntheticZones(det) {
       vals.push(Y[t] / E[t]); cusum.push(stat); flags.push({ flag: stat > h });
     }
     const firstAlarm = flags.findIndex((f) => f.flag);
-    return { name, participants, load, vals, flags, cusum, h, baseline: rate.reduce((x, y) => x + y, 0) / 7,
+    return { name, city, lat, lon, participants, load, vals, flags, cusum, h, baseline: rate.reduce((x, y) => x + y, 0) / 7,
              outbreakStart: outbreakDays ? SHOWN_DAYS - outbreakDays : -1, firstAlarm };
   });
 }
@@ -259,12 +276,12 @@ async function renderDashboard() {
   const alerts = [];
   $("zones").innerHTML = zones.map((z) => {
     if (z.participants < MIN_PARTICIPANTS) {
-      return `<div class="card zone suppressed"><h4>${z.name}</h4>
+      return `<div class="card zone suppressed"><h4>${z.name}, ${z.city}</h4>
         <div class="meta">Hidden: ${z.participants} participants, below the minimum of ${MIN_PARTICIPANTS}.</div></div>`;
     }
     const last = z.vals.length - 1;
     if (z.flags[last].flag) alerts.push({ z });
-    return `<div class="card zone"><h4>${z.name}</h4>
+    return `<div class="card zone"><h4>${z.name}, ${z.city}</h4>
       <div class="meta">${z.participants} participants · ${z.load} listening hours per day · last 28 days · today ${z.vals[last].toFixed(2)}</div>
       ${sparkline(z.vals, z.flags)}</div>`;
   }).join("");
@@ -303,7 +320,7 @@ async function renderDashboard() {
       : "Second signal (real data, different period): no flag in the last 4 weeks of the aviation wastewater series.";
     const delay = z.outbreakStart >= 0 && z.firstAlarm >= z.outbreakStart
       ? ` The synthetic rise of 50% began ${last - z.outbreakStart + 1} days ago and was flagged on day ${z.firstAlarm - z.outbreakStart + 1}.` : "";
-    return `<div class="card alert"><b>${z.name}</b>: detections ${z.vals[last].toFixed(2)} per listening hour against a baseline of
+    return `<div class="card alert"><b>${z.name}, ${z.city}</b>: detections ${z.vals[last].toFixed(2)} per listening hour against a baseline of
       ${z.baseline.toFixed(2)}. The sustained-rise statistic (a bank of CUSUMs) is above its alarm level, which is set for about
       one false alarm in 180 days.${delay}<br>
       ${ww}<br>Suggested action: ${action}. Responsible: ${role}. A person decides; the system only recommends.</div>`;
@@ -337,6 +354,106 @@ async function renderAbout() {
     $("expBox").textContent = `Experiment summary could not be loaded (${e.message || e}).`;
   }
 }
+
+// ---------- map of the UAE ----------
+// The outline is bundled with the app (Natural Earth, public domain): no map tiles are requested,
+// so no third party learns where the user is looking. A place is stored as a cell of 0.01 degrees
+// (about 1 km), on this device only, and only after the user taps the map or allows location.
+const PLACE_KEY = "virufy_place_v1", CELL = 0.01, COS_LAT = Math.cos((24.3 * Math.PI) / 180), MAP_SCALE = 150;
+const roundCell = (v) => Math.round(v / CELL) * CELL;
+function loadPlace() {
+  try { return JSON.parse(localStorage.getItem(PLACE_KEY) || "null"); } catch { return null; }
+}
+function savePlace(lat, lon) {
+  const place = { lat: +roundCell(lat).toFixed(2), lon: +roundCell(lon).toFixed(2) };
+  try { localStorage.setItem(PLACE_KEY, JSON.stringify(place)); } catch { /* storage blocked: the place is kept for this page only */ }
+  showPlace(place);
+  return place;
+}
+function showPlace(place) {
+  const text = place ? `Place set: cell ${place.lat.toFixed(2)}, ${place.lon.toFixed(2)} (about 1 km)` : "No place set yet.";
+  $("placeLabel").textContent = text; $("placeLabelPhone").textContent = text;
+}
+
+let uae = null;
+async function loadUae() {
+  if (uae) return uae;
+  const res = await fetch("./data/uae.json");
+  if (!res.ok) throw new Error(`map outline: HTTP ${res.status}`);
+  uae = await res.json();
+  return uae;
+}
+function rateColor(perHour) {  // detections per listening hour
+  if (perHour >= 4) return "#ef4444";
+  if (perHour >= 1.5) return "#db7706";
+  return "#1a9e4b";
+}
+
+async function renderMap() {
+  const errBox = $("mapError");
+  errBox.classList.add("hidden");
+  let geo, det;
+  try { [geo, det] = await Promise.all([loadUae(), loadDetection()]); }
+  catch (e) { showError(errBox, `The map could not be loaded (${e.message || e}).`); return; }
+  const [lon0, lat0, lon1, lat1] = geo.bounds, pad = 8;
+  const X = (lon) => pad + (lon - lon0) * COS_LAT * MAP_SCALE, Y = (lat) => pad + (lat1 - lat) * MAP_SCALE;
+  const W = X(lon1) + pad, H = Y(lat0) + pad;
+  const land = geo.emirates.map((e) => e.rings.map((r) =>
+    `<path d="M${r.map(([lon, lat]) => `${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("L")}Z" fill="#f5f5f5" stroke="#000000" stroke-width="0.6"/>`).join("")).join("");
+
+  const zones = syntheticZones(det).filter((z) => z.participants >= MIN_PARTICIPANTS);
+  const zoneMarks = zones.map((z) => {
+    const last = z.vals.length - 1, alarm = z.flags[last].flag;
+    return `<circle cx="${X(z.lon)}" cy="${Y(z.lat)}" r="${4 + Math.sqrt(z.load) / 6}" fill="${alarm ? "#ef4444" : "#000000"}" fill-opacity="0.35"
+      stroke="${alarm ? "#ef4444" : "#000000"}" stroke-dasharray="3 2"/><text x="${X(z.lon) + 9}" y="${Y(z.lat) + 3}" font-size="9" fill="#000000">${esc(z.city)}</text>`;
+  }).join("");
+
+  // own shared counts, added up per map cell
+  const cells = new Map();
+  for (const b of loadShared()) {
+    if (!Array.isArray(b.cell)) continue;
+    const key = b.cell.join(","), c = cells.get(key) || { lat: Number(b.cell[0]), lon: Number(b.cell[1]), coughs: 0, seconds: 0 };
+    c.coughs += Number(b.coughs) || 0; c.seconds += Number(b.listening_seconds) || 0;
+    cells.set(key, c);
+  }
+  const visits = [...cells.values()].filter((c) => c.seconds > 0);
+  const visitMarks = visits.map((c) => {
+    const perHour = c.coughs / (c.seconds / 3600);
+    return `<circle cx="${X(c.lon)}" cy="${Y(c.lat)}" r="${5 + Math.min(Math.sqrt(c.seconds / 60), 10)}" fill="${rateColor(perHour)}" stroke="#fff" stroke-width="1.5"/>`;
+  }).join("");
+  const place = loadPlace();
+  const pin = place ? `<circle cx="${X(place.lon)}" cy="${Y(place.lat)}" r="4" fill="#fff" stroke="#000000" stroke-width="2"/>` : "";
+
+  $("uaeMap").innerHTML = `<svg id="uaeSvg" viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" style="height:auto" role="img"
+    aria-label="Map of the United Arab Emirates">${land}${zoneMarks}${visitMarks}${pin}</svg>`;
+  $("uaeSvg").addEventListener("click", (ev) => {
+    const box = ev.currentTarget.getBoundingClientRect();
+    const x = ((ev.clientX - box.left) / box.width) * W, y = ((ev.clientY - box.top) / box.height) * H;
+    savePlace(lat1 - (y - pad) / MAP_SCALE, lon0 + (x - pad) / (COS_LAT * MAP_SCALE));
+    renderMap();
+  });
+  showPlace(place);
+  $("visits").innerHTML = visits.length ? `<table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
+    `<tr><td>${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}</td><td>${c.seconds < 90 ? `${c.seconds} s` : `${Math.round(c.seconds / 60)} min`}</td><td>${c.coughs}</td>
+     <td>${(c.coughs / (c.seconds / 3600)).toFixed(1)}</td></tr>`).join("")}</table>`
+    : `<p class="small">No visits yet. Set a place, count on the "My phone" tab, then press Share counts.</p>`;
+}
+
+function useMyLocation() {
+  const errBox = $("mapError");
+  errBox.classList.add("hidden");
+  if (!navigator.geolocation) { showError(errBox, "This browser cannot give a location. Tap the map instead."); return; }
+  navigator.geolocation.getCurrentPosition(
+    (pos) => { savePlace(pos.coords.latitude, pos.coords.longitude); renderMap(); },
+    () => showError(errBox, "Location was not shared. Tap the map to set the place instead."),
+    { enableHighAccuracy: false, maximumAge: 600000, timeout: 15000 });
+}
+$("useLocation").addEventListener("click", useMyLocation);
+$("clearVisits").addEventListener("click", () => {
+  try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(PLACE_KEY); } catch { /* nothing stored */ }
+  renderMap();
+});
+showPlace(loadPlace());
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js").catch(() => { /* offline cache is optional */ });

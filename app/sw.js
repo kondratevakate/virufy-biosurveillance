@@ -1,9 +1,9 @@
 // Offline fallback for the app shell, model and data. No audio is ever cached.
 // Network first, so a new deployment is picked up at once; the cache is used only when offline.
-const CACHE = "virufy-v3";
+const CACHE = "virufy-v5";
 const ASSETS = [
   "./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest",
-  "./models/yamnet.tflite", "./data/wastewater.json", "./data/esc50_summary.json", "./data/detection.json", "./data/experiments.json",
+  "./models/yamnet.tflite", "./data/wastewater.json", "./data/esc50_summary.json", "./data/detection.json", "./data/experiments.json", "./data/uae.json",
   "./vendor/tasks-audio/audio_bundle.mjs",
 ];
 self.addEventListener("install", (e) => {
