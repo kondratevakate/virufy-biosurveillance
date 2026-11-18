@@ -46,9 +46,8 @@ function sparkline(values, flags, { max } = {}) {
 document.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => {
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t === b));
   document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${b.dataset.view}`));
-  if (b.dataset.view === "dashboard") renderDashboard();
+  if (b.dataset.view === "dashboard") { renderDashboard(); renderMap("network"); }
   if (b.dataset.view === "about") renderAbout();
-  if (b.dataset.view === "map") renderMap();
   if (b.dataset.view === "phone") warmUpDetector();
 }));
 
@@ -90,7 +89,7 @@ let starting = false;
 async function startListening() {
   if (starting || node) return;  // ignore repeated taps while loading or listening
   const err = $("phoneError"), btn = $("start");
-  err.classList.add("hidden"); showNote("");
+  err.classList.add("hidden"); showNote(""); $("recs").classList.add("hidden");
   if (!navigator.mediaDevices?.getUserMedia) {
     showError(err, "This browser cannot access the microphone. Open the page over HTTPS in Chrome or Safari.");
     return;
@@ -121,7 +120,8 @@ async function startListening() {
   const src = audioCtx.createMediaStreamSource(stream);
   node = audioCtx.createScriptProcessor(4096, 1, 1);
   const zone = $("zone").value, rate = audioCtx.sampleRate;
-  placeName = $("zone").selectedOptions[0]?.textContent || zone; listenedSeconds = 0;
+  placeName = $("zone").selectedOptions[0]?.textContent || zone; listenedSeconds = 0; total = 0;
+  $("count").textContent = "0"; $("perHour").textContent = "…";
   binStart = Math.floor(Date.now() / BIN_MS) * BIN_MS;
   let busy = false;
   node.onaudioprocess = (ev) => {
@@ -169,8 +169,10 @@ function onScore(score, zone) {
   $("status").textContent = `Listening at: ${placeName} for ${mm}:${ss}. Audio stays on this phone.`;
   if (score >= COUGH_THRESHOLD && now - lastEventAt > REFRACTORY_MS) {
     lastEventAt = now; total += 1; binCount += 1;
-    $("count").textContent = total; $("binCount").textContent = binCount;
+    $("count").textContent = total;
   }
+  // coughs per listening hour for this spot check, shown once a minute of audio is in
+  if (listenedSeconds >= 60) $("perHour").textContent = (total / (listenedSeconds / 3600)).toFixed(1);
 }
 
 // What leaves the phone for one 15-minute bin: kind of place, a map cell of about 1 km, counts. No audio.
@@ -193,23 +195,31 @@ function shareCounts() {
   $("payload").textContent = JSON.stringify(payload, null, 1);
   const ok = saveShared([...loadShared(), ...payload]);
   const coughs = payload.reduce((a, b) => a + b.coughs, 0);
+  // a per-hour rate from under a minute of audio means little, so it is not shown
+  const duration = listenedSeconds < 90 ? `${listenedSeconds} s` : `about ${Math.round(listenedSeconds / 60)} min`;
+  const rate = listenedSeconds >= 60 ? `${(coughs / (listenedSeconds / 3600)).toFixed(1)} per hour` : "too short for a per-hour rate";
   bins.length = 0; binCount = 0; binSeconds = 0;
-  $("binCount").textContent = 0;
-  stopListening();  // a visit ends when it is shared: the microphone goes off
-  // The listening card is hidden now, so the outcome is shown on the Count screen itself.
+  stopListening();  // a check ends when it is added: the microphone goes off
+  // The listening card is hidden now, so the result and what to do are shown on this screen.
   if (!ok) {
     showError($("phoneError"), "Could not store the counts on this device (storage is blocked); nothing was shared.");
-  } else if (loadPlace()) {
-    go("map");  // the visit is now a circle on the map
-  } else {
-    showNote(`Shared ${coughs} cough${coughs === 1 ? "" : "s"} for this visit (demo: kept on this phone). No place was set, so the visit is not on the map. Set a place in Step 1 before your next visit.`);
-    window.scrollTo(0, 0);
+    return;
   }
+  const placed = Boolean(loadPlace());
+  showNote(`Check finished: ${coughs} cough${coughs === 1 ? "" : "s"} in ${duration}, ${rate} (demo: kept on this phone). `
+    + (placed ? "It is on the network map." : "No place was set, so it is not on the network map; set one in Step 1 before the next check."));
+  $("recs").classList.remove("hidden");
+  $("toNetwork").classList.toggle("hidden", !placed);
+  $("consent").classList.add("hidden");
+  window.scrollTo(0, 0);
 }
 
 $("start").addEventListener("click", startListening);
 $("stop").addEventListener("click", stopListening);
 $("share").addEventListener("click", shareCounts);
+$("checkAgain").addEventListener("click", () => {
+  showNote(""); $("recs").classList.add("hidden"); $("consent").classList.remove("hidden"); window.scrollTo(0, 0);
+});
 
 // ---------- dashboard ----------
 // Synthetic zones: seeded so every judge sees the same series.
@@ -400,7 +410,7 @@ function savePlace(lat, lon) {
 }
 function showPlace(place) {
   const text = place ? `Place set: cell ${place.lat.toFixed(2)}, ${place.lon.toFixed(2)} (about 1 km)` : "No place set yet.";
-  $("placeLabel").textContent = text; $("placeLabelPhone").textContent = text;
+  $("placeLabelPhone").textContent = text;
 }
 
 let uae = null;
@@ -417,8 +427,11 @@ function rateColor(perHour) {  // detections per listening hour
   return "#1a9e4b";
 }
 
-async function renderMap() {
-  const errBox = $("mapError");
+// Two uses of the same outline: "network" shows the sites and this phone's spot checks;
+// "picker" is the small map in Step 1 where a tap sets the place of the next check.
+async function renderMap(mode = "network") {
+  const picker = mode === "picker";
+  const target = $(picker ? "placeMap" : "uaeMap"), errBox = $(picker ? "phoneError" : "mapError");
   errBox.classList.add("hidden");
   let geo, det;
   try { [geo, det] = await Promise.all([loadUae(), loadDetection()]); }
@@ -452,19 +465,22 @@ async function renderMap() {
   const place = loadPlace();
   const pin = place ? `<circle cx="${X(place.lon)}" cy="${Y(place.lat)}" r="4" fill="#fff" stroke="#000000" stroke-width="2"/>` : "";
 
-  $("uaeMap").innerHTML = `<svg id="uaeSvg" viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" style="height:auto" role="img"
-    aria-label="Map of the United Arab Emirates">${land}${zoneMarks}${visitMarks}${pin}</svg>`;
-  $("uaeSvg").addEventListener("click", (ev) => {
-    const box = ev.currentTarget.getBoundingClientRect();
-    const x = ((ev.clientX - box.left) / box.width) * W, y = ((ev.clientY - box.top) / box.height) * H;
-    savePlace(lat1 - (y - pad) / MAP_SCALE, lon0 + (x - pad) / (COS_LAT * MAP_SCALE));
-    renderMap();
-  });
+  target.innerHTML = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" style="height:auto" role="img"
+    aria-label="${picker ? "Tap to set the place of this check" : "Map of sites and spot checks in the UAE"}">${land}${picker ? "" : zoneMarks + visitMarks}${pin}</svg>`;
   showPlace(place);
-  $("visits").innerHTML = visits.length ? `<table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
+  if (picker) {
+    target.querySelector("svg").addEventListener("click", (ev) => {
+      const box = ev.currentTarget.getBoundingClientRect();
+      const x = ((ev.clientX - box.left) / box.width) * W, y = ((ev.clientY - box.top) / box.height) * H;
+      savePlace(lat1 - (y - pad) / MAP_SCALE, lon0 + (x - pad) / (COS_LAT * MAP_SCALE));
+      renderMap("picker");
+    });
+    return;
+  }
+  $("visits").innerHTML = visits.length ? `<p class="mono kicker">YOUR SPOT CHECKS</p><table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
     `<tr><td>${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}</td><td>${c.seconds < 90 ? `${c.seconds} s` : `${Math.round(c.seconds / 60)} min`}</td><td>${c.coughs}</td>
      <td>${(c.coughs / (c.seconds / 3600)).toFixed(1)}</td></tr>`).join("")}</table>`
-    : `<p class="small">No visits yet. Set a place, count on the "Count" tab, then press "Share counts and open my map".</p>`;
+    : `<p class="small">No spot checks from this phone yet. Set a place on the "Check here" tab, listen, then press "Add this check to the network".</p>`;
 }
 
 function useMyLocation() {
@@ -472,17 +488,18 @@ function useMyLocation() {
   errBox.classList.add("hidden");
   if (!navigator.geolocation) { showError(errBox, "This browser cannot give a location. Use \"Tap it on the map\" instead."); return; }
   navigator.geolocation.getCurrentPosition(
-    (pos) => { savePlace(pos.coords.latitude, pos.coords.longitude); },
+    (pos) => { savePlace(pos.coords.latitude, pos.coords.longitude); if (document.querySelector("details.picker")?.open) renderMap("picker"); },
     () => showError(errBox, "Location was not shared. Use \"Tap it on the map\" to set the place instead."),
     { enableHighAccuracy: false, maximumAge: 600000, timeout: 15000 });
 }
 $("useLocation").addEventListener("click", useMyLocation);
 $("clearVisits").addEventListener("click", () => {
-  if (!window.confirm("Delete your visits and saved place from this phone? This cannot be undone.")) return;
+  if (!window.confirm("Delete your spot checks and saved place from this phone? This cannot be undone.")) return;
   try { localStorage.removeItem(STORE_KEY); localStorage.removeItem(PLACE_KEY); } catch { /* nothing stored */ }
-  renderMap();
+  renderMap("network");
 });
 showPlace(loadPlace());
+document.querySelector("details.picker").addEventListener("toggle", (ev) => { if (ev.currentTarget.open) renderMap("picker"); });
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js").catch(() => { /* offline cache is optional */ });

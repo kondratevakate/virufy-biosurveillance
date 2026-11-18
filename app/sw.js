@@ -2,7 +2,7 @@
 // Network first, so a new deployment is picked up at once; the cache is used only when offline.
 // Pages load styles and scripts with ?v=N so the Cloudflare edge cache never serves an old build;
 // ignoreSearch lets the offline copy match those URLs.
-const CACHE = "virufy-v12";
+const CACHE = "virufy-v13";
 const ASSETS = [
   "./", "./index.html", "./app.html", "./landing.js", "./data/europe.json", "./data/monitors.json", "./data/uae_monitors.json", "./img/virufy-logo.svg", "./img/virufy-icon.png", "./styles.css", "./app.js", "./manifest.webmanifest",
   "./models/yamnet.tflite", "./data/wastewater.json", "./data/esc50_summary.json", "./data/detection.json", "./data/experiments.json", "./data/uae.json",

@@ -69,3 +69,19 @@ def test_asset_version_matches_service_worker_cache():
         assert refs, page
         for name, _, v in refs:
             assert v == version, f"{page}: {name} has ?v={v or 'none'}, service worker is v{version}"
+
+
+def test_scripts_parse_as_es_modules():
+    # `node --check file.js` can pass a file that fails as an ES module in the browser
+    # (an extra brace broke app.js on 2026-11-18); check the way the browser loads it.
+    import shutil
+    import subprocess
+    import pytest
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node is not installed")
+    for name in ("app.js", "landing.js", "sw.js"):
+        src = (APP / name).read_text(encoding="utf-8")
+        res = subprocess.run([node, "--input-type=module", "--check"], input=src, text=True,
+                             capture_output=True, encoding="utf-8")
+        assert res.returncode == 0, f"{name}: {res.stderr.strip().splitlines()[-1] if res.stderr else ''}"

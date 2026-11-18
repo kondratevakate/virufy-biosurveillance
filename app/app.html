@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body>
   <header class="top">
@@ -17,9 +17,8 @@
       <a class="brand" href="./"><img class="logo" src="img/virufy-logo.svg" alt="Virufy logo" width="68" height="20"><span class="sub">Biosurveillance</span></a>
       <nav>
         <button class="tab active" data-view="home">Start</button>
-        <button class="tab" data-view="phone">Count</button>
-        <button class="tab" data-view="map">My map</button>
-        <button class="tab" data-view="dashboard">Dashboard</button>
+        <button class="tab" data-view="phone">Check here</button>
+        <button class="tab" data-view="dashboard">Network</button>
         <button class="tab" data-view="about">Evidence</button>
       </nav>
     </div>
@@ -29,28 +28,28 @@
     <!-- Start: who is this for -->
     <section id="view-home" class="view active">
       <p class="mono kicker">PROTOTYPE · NOT A MEDICAL DEVICE</p>
-      <h1>Coughs counted on your phone.<br>Outbreaks seen on a map.</h1>
-      <p class="lead">The phone listens, counts coughs and forgets the sound. Only the count and a map cell of about 1 km are shared.</p>
+      <h1>Cough counters in public places.<br>One map of where coughing rises.</h1>
+      <p class="lead">In a pilot, listening devices in arrivals halls, clinics, worksites and malls count coughs and forget the sound. This phone app does the same for one spot: a quick check of the cough load where you are.</p>
       <div class="grid two">
         <div class="card">
-          <p class="mono kicker">I AM GOING TO A PUBLIC PLACE</p>
-          <h3>Count coughs around me</h3>
-          <ol class="steps">
-            <li>Say where you are: airport, mall, station.</li>
-            <li>Leave the phone listening for a few minutes.</li>
-            <li>See your visit on the map of the UAE.</li>
-          </ol>
-          <button class="primary" data-go="phone">Start a visit →</button>
-        </div>
-        <div class="card">
           <p class="mono kicker">I WATCH OVER A SITE OR A DISTRICT</p>
-          <h3>See where coughing is rising</h3>
+          <h3>See the sensor network</h3>
           <ol class="steps">
-            <li>Each zone is compared with its own baseline.</li>
+            <li>Every site is compared with its own baseline.</li>
             <li>A sustained rise raises one alert, with the reason.</li>
             <li>Aircraft wastewater is shown as a second signal.</li>
           </ol>
-          <button data-go="dashboard">Open the dashboard →</button>
+          <button class="primary" data-go="dashboard">Open the network →</button>
+        </div>
+        <div class="card">
+          <p class="mono kicker">I AM AT A PUBLIC PLACE</p>
+          <h3>Check the cough load here</h3>
+          <ol class="steps">
+            <li>Say what kind of place it is.</li>
+            <li>Leave the phone listening for a few minutes.</li>
+            <li>See coughs per hour, and add the check to the network map.</li>
+          </ol>
+          <button data-go="phone">Check this place →</button>
         </div>
       </div>
       <p class="small">Judges and reviewers: every screen works without a login. Test results are under <button class="link" data-go="about">Evidence</button>.</p>
@@ -59,9 +58,23 @@
     <!-- Participant flow: place, count, share -->
     <section id="view-phone" class="view">
       <div id="phoneNote" class="card hidden" role="status"></div>
+      <div id="recs" class="card hidden">
+        <p class="mono kicker">WHAT YOU CAN DO · EXAMPLE CONTENT, NOT MEDICAL ADVICE</p>
+        <ul class="checks">
+          <li>In crowded indoor places, consider wearing a mask.</li>
+          <li>Clean your hands often, with soap or a hand sanitiser.</li>
+          <li>If you feel unwell, stay home and avoid crowded places.</li>
+        </ul>
+        <p class="mono kicker">IN YOUR AREA · SEASONAL</p>
+        <p class="small">Seasonal vaccines, such as the flu vaccine, and where to get them near you. In a pilot, this text and the clinic links come from the health authority.</p>
+        <div class="row">
+          <button id="toNetwork" class="primary hidden" data-go="dashboard">See this check on the network map →</button>
+          <button id="checkAgain">Check again</button>
+        </div>
+      </div>
       <div id="phoneError" class="card error hidden" role="alert"></div>
       <div id="consent">
-        <h2><span class="marker"></span>Step 1. Where are you?</h2>
+        <h2><span class="marker"></span>Step 1. What place is this?</h2>
         <div class="card">
           <label>Kind of place
             <select id="zone">
@@ -75,12 +88,15 @@
           </label>
           <div class="row">
             <button id="useLocation">Use my location</button>
-            <button data-go="map">Tap it on the map</button>
           </div>
+          <details class="picker">
+            <summary>Or tap it on the map</summary>
+            <div id="placeMap"><p class="small">Loading the map…</p></div>
+          </details>
           <p class="mono small" id="placeLabelPhone">No place set yet.</p>
-          <p class="small">The position is rounded to a cell of about 1 km before it is stored. You can skip this step; the visit then stays off the map.</p>
+          <p class="small">The position is rounded to a cell of about 1 km before it is stored. You can skip this step; the check then stays off the network map.</p>
         </div>
-        <h2><span class="marker"></span>Step 2. Count</h2>
+        <h2><span class="marker"></span>Step 2. Listen</h2>
         <div class="card">
           <p>The microphone audio is analysed <b>on this phone</b> and discarded within a second. Nothing is recorded or uploaded.
              The model hears coughs near the phone, about a table away, not across a hall.</p>
@@ -91,20 +107,21 @@
       </div>
 
       <div id="listening" class="hidden">
-        <h2><span class="marker"></span>Step 2. Counting</h2>
+        <h2><span class="marker"></span>Step 2. Listening</h2>
         <div class="card">
           <div class="row stats">
             <div><div class="mono kicker">COUGHS COUNTED</div><div id="count" class="big">0</div></div>
-            <div><div class="mono kicker">THIS 15-MINUTE WINDOW</div><div id="binCount" class="big">0</div></div>
+            <div><div class="mono kicker">COUGHS PER HOUR HERE</div><div id="perHour" class="big">…</div></div>
           </div>
           <div class="mono kicker">COUGH SCORE, LAST SECOND</div>
           <div class="meter"><div id="meter"></div><div id="thresholdMark"></div></div>
           <p id="status" class="small" aria-live="polite">Starting…</p>
+          <p class="small">Coughs per hour appears after the first minute. A few minutes give a steadier number.</p>
         </div>
-        <h2><span class="marker"></span>Step 3. Put it on your map</h2>
+        <h2><span class="marker"></span>Step 3. Finish the check</h2>
         <div class="card">
           <div class="row">
-            <button id="share" class="primary">Share counts and open my map</button>
+            <button id="share" class="primary">Add this check to the network</button>
             <button id="stop">Stop</button>
           </div>
           <details>
@@ -116,33 +133,27 @@
 
     </section>
 
-    <!-- Map of the UAE: where the user counted, and the demo zones -->
-    <section id="view-map" class="view">
-      <h2><span class="marker"></span>My map</h2>
+    <!-- Officer view: zones, wastewater and alerts -->
+    <section id="view-dashboard" class="view">
+      <p class="mono kicker">GUEST MODE · SITE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
+      <h2><span class="marker"></span>Sensor network</h2>
       <div class="card">
-        <p class="small">Tap the map to set where you are. <span id="placeLabel" class="mono">No place set yet.</span></p>
         <div id="uaeMap"><p class="small">Loading the map…</p></div>
         <ul class="legend small">
-          <li><span class="dot solid"></span><span>Your visits: bigger for longer listening; green, amber, red for more coughs per hour</span></li>
-          <li><span class="dot dashed"></span><span>Demo zones with <b>synthetic</b> data; red when above the alarm level</span></li>
-          <li><span class="dot pin"></span><span>The place set for your next visit</span></li>
+          <li><span class="dot dashed"></span><span>Sites with listening devices, <b>synthetic</b> data; red when above the alarm level</span></li>
+          <li><span class="dot solid"></span><span>Spot checks from this phone: bigger for longer listening; green, amber, red for more coughs per hour</span></li>
         </ul>
         <div id="visits"></div>
         <div class="row">
-          <button class="primary" data-go="phone">Start a visit →</button>
-          <button id="clearVisits">Clear my visits</button>
+          <button data-go="phone">Check a place →</button>
+          <button id="clearVisits">Delete my checks</button>
         </div>
-        <p class="small">Your place and visits are kept on this phone. The exact position is never stored.</p>
+        <p class="small">Spot checks are kept on this phone in this demo. The exact position is never stored.</p>
         <div id="mapError" class="card error hidden" role="alert"></div>
       </div>
-    </section>
-
-    <!-- Officer view: zones, wastewater and alerts -->
-    <section id="view-dashboard" class="view">
-      <p class="mono kicker">GUEST MODE · ZONE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
       <h2><span class="marker"></span>Alerts</h2>
       <div id="alerts"><p class="small">Loading alerts…</p></div>
-      <h2><span class="marker"></span>Zones: cough detections per listening hour</h2>
+      <h2><span class="marker"></span>Sites: cough detections per listening hour</h2>
       <div id="zones" class="grid"><p class="small">Loading zones…</p></div>
       <h2><span class="marker"></span>Aircraft wastewater: share of positive samples per week</h2>
       <div class="row">
@@ -186,6 +197,6 @@
 
   <footer><div class="container small">Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=12"></script>
+  <script type="module" src="app.js?v=13"></script>
 </body>
 </html>
