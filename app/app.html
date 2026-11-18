@@ -9,15 +9,14 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <header class="top">
     <div class="container bar">
       <a class="brand" href="./"><img class="logo" src="img/virufy-logo.svg" alt="Virufy logo" width="68" height="20"><span class="sub">Biosurveillance</span></a>
       <nav>
-        <button class="tab active" data-view="home">Start</button>
-        <button class="tab" data-view="phone">Check here</button>
+        <button class="tab active" data-view="phone">Check here</button>
         <button class="tab" data-view="dashboard">Network</button>
         <button class="tab" data-view="about">Evidence</button>
       </nav>
@@ -25,40 +24,11 @@
   </header>
 
   <main class="container">
-    <!-- Start: who is this for -->
-    <section id="view-home" class="view">
-      <p class="mono kicker">PROTOTYPE · NOT A MEDICAL DEVICE</p>
-      <h1>Cough counters in public places.<br>One map of where coughing rises.</h1>
-      <p class="lead">In a pilot, listening devices in arrivals halls, clinics, worksites and malls count coughs and forget the sound. This phone app does the same for one spot: a quick check of the cough load where you are.</p>
-      <div class="grid two">
-        <div class="card">
-          <p class="mono kicker">I WATCH OVER A SITE OR A DISTRICT</p>
-          <h3>See the sensor network</h3>
-          <ol class="steps">
-            <li>Every site is compared with its own baseline.</li>
-            <li>A sustained rise raises one alert, with the reason.</li>
-            <li>Aircraft wastewater is shown as a second signal.</li>
-          </ol>
-          <button class="primary" data-go="dashboard">Open the network →</button>
-        </div>
-        <div class="card">
-          <p class="mono kicker">I AM AT A PUBLIC PLACE</p>
-          <h3>Check the cough load here</h3>
-          <ol class="steps">
-            <li>Say what kind of place it is.</li>
-            <li>Leave the phone listening for a few minutes.</li>
-            <li>See coughs per hour, and add the check to the network map.</li>
-          </ol>
-          <button data-go="phone">Check this place →</button>
-        </div>
-      </div>
-      <p class="small">Judges and reviewers: every screen works without a login. Test results are under <button class="link" data-go="about">Evidence</button>.</p>
-    </section>
-
     <!-- Participant flow: place, count, share -->
     <section id="view-phone" class="view">
-      <p class="mono kicker">CHECK HERE</p>
-      <h2 class="section-title">Check the cough load where you are</h2>
+      <p class="mono kicker">PROTOTYPE · NOT A MEDICAL DEVICE</p>
+      <h1>Check the cough load where you are</h1>
+      <p class="lead">The phone listens for a few minutes, counts coughs and forgets the sound. In a pilot, devices at many sites do the same and feed one <button class="link" data-go="dashboard">network map</button>.</p>
       <div id="phoneNote" class="card hidden" role="status"></div>
       <div id="recs" class="card hidden">
         <p class="mono kicker">WHAT YOU CAN DO · EXAMPLE CONTENT, NOT MEDICAL ADVICE</p>
@@ -76,8 +46,7 @@
       </div>
       <div id="phoneError" class="card error hidden" role="alert"></div>
       <div id="consent">
-        <h2><span class="marker"></span>Step 1. What place is this?</h2>
-        <div class="card">
+        <div class="card start-card">
           <label>Kind of place
             <select id="zone">
               <option value="AIRPORT">Airport</option>
@@ -88,39 +57,28 @@
               <option value="OTHER">Other public place</option>
             </select>
           </label>
-          <div class="row">
-            <button id="useLocation">Use my location</button>
-          </div>
-          <details class="picker">
-            <summary>Or tap it on the map</summary>
-            <div id="placeMap"><p class="small">Loading the map…</p></div>
-          </details>
-          <p class="mono small" id="placeLabelPhone">No place set yet.</p>
-          <p class="small">The position is rounded to a cell of about 1 km before it is stored. You can skip this step; the check then stays off the network map.</p>
-        </div>
-        <h2><span class="marker"></span>Step 2. Listen</h2>
-        <div class="card">
-          <p>The microphone audio is analysed <b>on this phone</b> and discarded within a second. Nothing is recorded or uploaded.
-             The model hears coughs near the phone, about a table away, not across a hall.</p>
-          <button id="start" class="primary">Continue as guest and start</button>
+          <button id="start" class="primary start-btn">Start listening</button>
           <p id="modelState" class="small mono" aria-live="polite">Cough detector: not loaded yet.</p>
-          <p class="small">It does not tell you whether you are ill.</p>
+          <p class="small">Audio is analysed <b>on this phone</b> and discarded within a second; nothing is recorded or uploaded. It hears coughs about a table away, not across a hall, and it does not tell you whether you are ill.</p>
         </div>
       </div>
 
       <div id="listening" class="hidden">
-        <h2><span class="marker"></span>Step 2. Listening <span class="live" aria-hidden="true"></span></h2>
+        <h2><span class="marker"></span>Listening <span class="live" aria-hidden="true"></span></h2>
         <div class="card">
           <div class="row stats">
             <div><div class="mono kicker">COUGHS COUNTED</div><div id="count" class="big">0</div></div>
             <div><div class="mono kicker">COUGHS PER HOUR HERE</div><div id="perHour" class="big">…</div></div>
           </div>
-          <div class="mono kicker">COUGH SCORE, LAST SECOND</div>
-          <div class="meter"><div id="meter"></div><div id="thresholdMark"></div></div>
+          <div class="mono kicker">SOUND AROUND THE PHONE</div>
+          <div id="eq" class="eq" aria-hidden="true"></div>
+          <div class="mono kicker">HOW COUGH-LIKE EACH SECOND SOUNDED · LAST 30 S</div>
+          <div id="scoreBars" class="score-bars" role="img" aria-label="Cough score of each of the last 30 seconds; red bars were counted as coughs"></div>
+          <p class="small">Bars above the dashed line count as a cough. This is the model's score for "cough", not a test for any disease.</p>
           <p id="status" class="small" aria-live="polite">Starting…</p>
           <p class="small">Coughs per hour appears after the first minute. A few minutes give a steadier number.</p>
         </div>
-        <h2><span class="marker"></span>Step 3. Finish the check</h2>
+        <h2><span class="marker"></span>Finish the check</h2>
         <div class="card">
           <div class="row">
             <button id="share" class="primary">Add this check to the network</button>
@@ -133,6 +91,19 @@
         </div>
       </div>
 
+      <details class="more" id="placeBox">
+        <summary>Optional: put this check on the map</summary>
+        <div class="row">
+          <button id="useLocation">Use my location</button>
+        </div>
+        <details class="picker">
+          <summary>Or tap it on the map</summary>
+          <div id="placeMap"><p class="small">Loading the map…</p></div>
+        </details>
+        <p class="mono small" id="placeLabelPhone">No place set yet.</p>
+        <p class="small">The position is rounded to a cell of about 1 km before it is stored. Without a place the check stays off the network map.</p>
+      </details>
+      <p class="small">Judges and reviewers: every screen works without a login. Below: the <button class="link" data-go="dashboard">sensor network</button> and the <button class="link" data-go="about">evidence</button>.</p>
     </section>
 
     <!-- Officer view: zones, wastewater and alerts -->
@@ -203,6 +174,6 @@
 
   <footer><div class="container small">Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=14"></script>
+  <script type="module" src="app.js?v=15"></script>
 </body>
 </html>

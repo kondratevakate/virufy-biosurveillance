@@ -136,7 +136,7 @@ async function startListening() {
     return;
   }
   starting = true; btn.disabled = true;
-  const fail = (msg) => { showError(err, msg); starting = false; btn.disabled = false; btn.textContent = "Continue as guest and start"; };
+  const fail = (msg) => { showError(err, msg); starting = false; btn.disabled = false; btn.textContent = "Start listening"; };
   // iOS only lets audio start from inside the tap, so the context is created before any waiting.
   try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
   catch (e) { fail(`Audio could not be started on this device (${e.message || e}).`); return; }
@@ -193,17 +193,20 @@ async function startListening() {
     }, 0);
   };
   src.connect(node); node.connect(audioCtx.destination);
-  starting = false; btn.disabled = false; btn.textContent = "Continue as guest and start";
+  // live level bars: the analyser reads the same stream in memory, nothing is kept
+  analyser = audioCtx.createAnalyser(); analyser.fftSize = 128; analyser.smoothingTimeConstant = 0.7;
+  src.connect(analyser);
+  startVisuals();
+  starting = false; btn.disabled = false; btn.textContent = "Start listening";
   $("consent").classList.add("hidden");
   $("listening").classList.remove("hidden");
   buzz(20);
-  $("thresholdMark").style.left = `${COUGH_THRESHOLD * 100}%`;
   $("status").textContent = `Listening at: ${placeName}. Audio stays on this phone.`;
 }
 
 function onScore(score, zone) {
   const now = Date.now();
-  $("meter").style.width = `${Math.round(score * 100)}%`;
+  pushScore(score);
   const bin = Math.floor(now / BIN_MS) * BIN_MS;
   if (bin !== binStart) { bins.push(binRecord(zone)); binStart = bin; binCount = 0; binSeconds = 0; }
   binSeconds += 1; listenedSeconds += 1;
@@ -218,6 +221,50 @@ function onScore(score, zone) {
   if (listenedSeconds >= 60) $("perHour").textContent = (total / (listenedSeconds / 3600)).toFixed(1);
 }
 
+// ---------- visuals while listening ----------
+// An equalizer of the sound around the phone (frequency bands, drawn from memory, never stored)
+// and one bar per second with the model's cough score; red bars were counted as coughs.
+const EQ_BARS = 24, SCORE_BARS = 30;
+let analyser = null, eqFrame = 0, eqEls = [], scoreEls = [];
+const scores = [];
+function startVisuals() {
+  $("eq").innerHTML = Array.from({ length: EQ_BARS }, () => "<span></span>").join("");
+  eqEls = [...$("eq").children];
+  $("scoreBars").innerHTML = Array.from({ length: SCORE_BARS }, () => "<span></span>").join("")
+    + `<i class="threshold" style="bottom:${COUGH_THRESHOLD * 100}%"></i>`;
+  scoreEls = [...$("scoreBars").querySelectorAll("span")];
+  scores.length = 0;
+  const bins = new Uint8Array(analyser.frequencyBinCount);
+  const draw = () => {
+    if (!analyser) return;
+    analyser.getByteFrequencyData(bins);
+    // the lower two thirds of the spectrum hold speech and coughs; group them into bars
+    const used = Math.floor(bins.length * 0.66), per = Math.max(1, Math.floor(used / EQ_BARS));
+    eqEls.forEach((el, i) => {
+      let m = 0;
+      for (let k = i * per; k < (i + 1) * per; k += 1) m = Math.max(m, bins[k]);
+      el.style.transform = `scaleY(${Math.max(0.04, m / 255).toFixed(3)})`;
+    });
+    eqFrame = requestAnimationFrame(draw);
+  };
+  eqFrame = requestAnimationFrame(draw);
+}
+function stopVisuals() {
+  cancelAnimationFrame(eqFrame);
+  try { analyser?.disconnect(); } catch { /* already gone */ }
+  analyser = null;
+}
+function pushScore(score) {
+  scores.push(score);
+  if (scores.length > SCORE_BARS) scores.shift();
+  const offset = SCORE_BARS - scores.length;
+  scoreEls.forEach((el, i) => {
+    const v = i >= offset ? scores[i - offset] : 0;
+    el.style.height = `${Math.max(2, Math.round(v * 100))}%`;
+    el.classList.toggle("hit", v >= COUGH_THRESHOLD);
+  });
+}
+
 // What leaves the phone for one 15-minute bin: kind of place, a map cell of about 1 km, counts. No audio.
 function binRecord(zone) {
   const place = loadPlace();
@@ -226,6 +273,7 @@ function binRecord(zone) {
 }
 
 function stopListening() {
+  stopVisuals();
   try { node?.disconnect(); stream?.getTracks().forEach((t) => t.stop()); audioCtx?.close(); } catch { /* already stopped */ }
   node = null; stream = null; audioCtx = null; buffer = []; bufferLen = 0;
   $("status").textContent = "Stopped. The microphone is off.";
