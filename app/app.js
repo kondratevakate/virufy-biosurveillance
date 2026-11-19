@@ -504,11 +504,15 @@ const WORLD_STATUS_LABEL = {
   programme: "Authority pages, no public surveillance data found",
   past: "Real data from a past period only", studies: "Published studies, no running data",
 };
-function worldDetail(name, entry) {
-  if (!entry) return `<h3>${esc(name)}</h3><p class="small">No public signal listed here. That does not mean the country has none.</p>`;
-  return `<h3>${esc(name)}</h3><p class="mono kicker">${esc(WORLD_STATUS_LABEL[entry.status] || "")}</p><ul class="news">${entry.items.map((it) =>
+function worldItems(entry) {
+  return `<p class="mono kicker">${esc(WORLD_STATUS_LABEL[entry.status] || "")}</p><ul class="news">${entry.items.map((it) =>
     `<li><b>${esc(it.name)}</b><br><span class="small">${esc(it.kind)} · ${esc(it.detail)}</span><br>
      <span class="mono small">${esc(it.date)}</span>${it.url ? ` · <a href="${esc(it.url)}" target="_blank" rel="noopener">source ↗</a>` : ""}</li>`).join("")}</ul>`;
+}
+// One country can have both: dated respiratory measurements and a dashboard listing.
+function worldDetail(name, signals, dashboards) {
+  if (!signals && !dashboards) return `<h3>${esc(name)}</h3><p class="small">No public signal listed here. That does not mean the country has none.</p>`;
+  return `<h3>${esc(name)}</h3>${signals ? `<h4>Respiratory signals</h4>${worldItems(signals)}` : ""}${dashboards ? `<h4>Dashboards and data pages</h4>${worldItems(dashboards)}` : ""}`;
 }
 async function renderWorld() {
   const box = $("worldMap");
@@ -521,54 +525,41 @@ async function renderWorld() {
     const X = (lon) => (lon - lon0) * k, Y = (lat) => (lat1 - lat) * k;
     const W = X(lon1), H = Y(lat0);
     const byA3 = Object.fromEntries(geo.countries.map((c) => [c.a3, c]));
-    const drawLayer = (layer) => {
-      const countries = sig.layers[layer];
-      const dashboards = layer === "dashboards";
-      $("worldDetail").classList.add("hidden");
-      $("worldDetail").innerHTML = "";
-      $("worldLayerNote").textContent = dashboards
-        ? "Public dashboards, data portals and authority pages found so far. Availability is not disease activity. This is not a complete global inventory."
-        : "Dated respiratory measurements and research sources. These are saved snapshots, not a live feed; measures and geographic coverage differ. Colour shows source availability, not disease burden.";
-      $("wLiveLabel").textContent = dashboards ? "countries with a public dashboard or data page" : "countries with dated surveillance measurements";
-      $("wOtherLabel").textContent = dashboards ? "authority pages, no surveillance data found" : "published studies, no running data";
-      $("worldEu").hidden = !dashboards;
-      document.querySelectorAll("#worldLayers button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.layer === layer)));
-      const paths = geo.countries.map((c) => {
-        const st = countries[c.a3]?.status || "none";
-        const d = c.rings.map((r) => `M${r.map(([lo, la]) => `${X(lo).toFixed(1)},${Y(la).toFixed(1)}`).join("L")}Z`).join("");
-        return `<path data-a3="${esc(c.a3)}" class="w-${st}" d="${d}"><title>${esc(c.name)}</title></path>`;
-      }).join("");
-      box.innerHTML = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="World map: ${dashboards ? "epidemiological dashboards" : "respiratory signals"}">
-        <defs><pattern id="hatchW" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="#fff"/><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-width="1"/></pattern></defs>
-        <g class="countries">${paths}</g><g class="sel"></g></svg>`;
-      const svg = box.querySelector("svg"), sel = svg.querySelector(".sel");
-      const select = (a3) => {
-        const c = byA3[a3];
-        if (!c) return;
-        $("worldDetail").innerHTML = worldDetail(c.name, countries[a3]);
-        $("worldDetail").classList.remove("hidden");
-        const src = svg.querySelector(`.countries path[data-a3="${a3}"]`);
-        sel.innerHTML = src ? `<path class="selected" d="${src.getAttribute("d")}"/>` : "";
-        document.querySelectorAll("#worldChips button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.a3 === a3)));
-        buzz(10);
-      };
-      svg.addEventListener("click", (ev) => select(ev.target.getAttribute && ev.target.getAttribute("data-a3")));
-      const withData = Object.entries(countries).filter(([a3, e]) => byA3[a3] && e.status !== "listed")
-        .sort((a, b) => byA3[a[0]].name.localeCompare(byA3[b[0]].name));
-      $("worldChips").innerHTML = withData.map(([a3]) =>
-        `<button type="button" data-a3="${esc(a3)}" aria-pressed="false">${esc(byA3[a3].name)}</button>`).join("");
-      $("worldChips").onclick = (ev) => { const b = ev.target.closest("button"); if (b) select(b.dataset.a3); };
-      const count = (st) => Object.values(countries).filter((e) => e.status === st).length;
-      $("wLive").textContent = count("live"); $("wListed").textContent = count("listed"); $("wPast").textContent = count("past");
-      $("wOther").textContent = count(dashboards ? "programme" : "studies");
-      $("wListed").closest("li").hidden = !dashboards;
-      $("wPast").closest("li").hidden = dashboards;
+    const dash = sig.layers.dashboards, resp = sig.layers.respiratory;
+    // Both layers on one map, so nothing moves: colour marks dated measurements,
+    // black / hatch / outline keep the dashboard status.
+    const statusOf = (a3) => (resp[a3]?.status === "live" ? "signal" : dash[a3]?.status || resp[a3]?.status || "none");
+    const paths = geo.countries.map((c) => {
+      const d = c.rings.map((r) => `M${r.map(([lo, la]) => `${X(lo).toFixed(1)},${Y(la).toFixed(1)}`).join("L")}Z`).join("");
+      return `<path data-a3="${esc(c.a3)}" class="w-${statusOf(c.a3)}" d="${d}"><title>${esc(c.name)}</title></path>`;
+    }).join("");
+    box.innerHTML = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="World map of epidemiological dashboards and respiratory signals">
+      <defs><pattern id="hatchW" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="#fff"/><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-width="1"/></pattern></defs>
+      <g class="countries">${paths}</g><g class="sel"></g></svg>`;
+    const svg = box.querySelector("svg"), sel = svg.querySelector(".sel");
+    const select = (a3) => {
+      const c = byA3[a3];
+      if (!c) return;
+      $("worldDetail").innerHTML = worldDetail(c.name, resp[a3], dash[a3]);
+      $("worldDetail").classList.remove("hidden");
+      const src = svg.querySelector(`.countries path[data-a3="${a3}"]`);
+      sel.innerHTML = src ? `<path class="selected" d="${src.getAttribute("d")}"/>` : "";
+      document.querySelectorAll("#worldChips button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.a3 === a3)));
+      buzz(10);
     };
-    $("worldLayers").onclick = (ev) => {
-      const button = ev.target.closest("button[data-layer]");
-      if (button) drawLayer(button.dataset.layer);
-    };
-    drawLayer("dashboards");
+    svg.addEventListener("click", (ev) => select(ev.target.getAttribute && ev.target.getAttribute("data-a3")));
+    const withData = [...new Set([...Object.keys(dash), ...Object.keys(resp)])]
+      .filter((a3) => byA3[a3] && statusOf(a3) !== "listed")
+      .sort((x, y) => (statusOf(y) === "signal") - (statusOf(x) === "signal") || byA3[x].name.localeCompare(byA3[y].name));
+    $("worldChips").innerHTML = withData.map((a3) =>
+      `<button type="button" data-a3="${esc(a3)}" aria-pressed="false">${statusOf(a3) === "signal" ? '<span class="sq green"></span>' : ""}${esc(byA3[a3].name)}</button>`).join("");
+    $("worldChips").onclick = (ev) => { const b = ev.target.closest("button"); if (b) select(b.dataset.a3); };
+    // Count from the source list, not from the outline: small countries (Malta, Liechtenstein)
+    // are listed but too small for the 1:110m map.
+    const listedKeys = [...new Set([...Object.keys(dash), ...Object.keys(resp)])];
+    const count = (st) => listedKeys.filter((a3) => statusOf(a3) === st).length;
+    $("wSignal").textContent = count("signal"); $("wLive").textContent = count("live");
+    $("wListed").textContent = count("listed"); $("wOther").textContent = count("programme") + count("studies");
     $("worldChecked").textContent = new Date(`${sig.checked}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }).toUpperCase();
     $("euLevel").innerHTML = sig.eu_level.map((m) =>
       `<li><a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.name)} ↗</a> <span class="small">${esc(m.operator)} · ${esc(m.detail)}</span></li>`).join("");

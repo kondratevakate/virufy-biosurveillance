@@ -47,7 +47,7 @@ The UKHSA snapshot is recorded explicitly in `eval/build_world_signals.py`.
 
 Validation: 14 tests passed; both layers, country details, selection reset and
 390 px mobile layout checked in a local browser. No horizontal overflow was
-observed. Service-worker and asset versions are v19. No detector, experiment,
+observed. Service-worker and asset versions were v19 at that point (v20 since the single-map change). No detector, experiment,
 server or nginx configuration changes were made.
 
 This continuation is local only, not pushed, merged or deployed. Next: deploy

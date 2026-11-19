@@ -118,3 +118,13 @@ def test_dashboard_availability_is_not_a_respiratory_measurement():
     assert all("England" in item["detail"] for item in uk if "UKHSA" in item["name"])
     assert any("2026-11-04" in item["date"] for item in uk)
     assert any("2026-10-31" in item["date"] for item in uk)
+
+
+def test_world_map_is_one_view_without_a_layer_toggle():
+    # Switching layers made the page jump; both layers are drawn on one map instead.
+    html = (APP / "app.html").read_text(encoding="utf-8")
+    js = (APP / "app.js").read_text(encoding="utf-8")
+    assert "worldLayers" not in html and "worldLayers" not in js
+    for element_id in ("wSignal", "wLive", "wListed", "wOther"):
+        assert f'id="{element_id}"' in html and f'$("{element_id}")' in js
+    assert ".w-signal" in (APP / "styles.css").read_text(encoding="utf-8")

@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=19">
+  <link rel="stylesheet" href="styles.css?v=20">
 </head>
 <body>
   <header class="top">
@@ -53,21 +53,17 @@
       <p class="mono kicker">WORLD · REAL PUBLIC DATA ONLY</p>
       <h2 class="section-title">Epidemiological dashboards and respiratory signals</h2>
       <p class="small mono">LAST SOURCE CHECK <span id="worldChecked">18 NOV 2026</span> · EVERY SIGNAL SHOWS ITS SOURCE AND DATE · NO SYNTHETIC DATA</p>
-      <div id="worldLayers" class="chips" role="group" aria-label="World map layer">
-        <button type="button" data-layer="dashboards" aria-pressed="true">Epidemiological dashboards</button>
-        <button type="button" data-layer="respiratory" aria-pressed="false">Respiratory signals</button>
-      </div>
-      <p id="worldLayerNote" class="small" aria-live="polite"></p>
+      <p class="small">Green: countries where we saved dated respiratory measurements. Black and hatched: where a public dashboard exists. These are saved snapshots, not a live feed. Colour shows that a source exists, not how much disease there is.</p>
       <div class="map-grid">
         <div id="worldMap" class="map-frame"><p class="small">Loading the map…</p></div>
         <div class="monitor-side">
           <ul class="legend-stats">
-            <li><span class="sq black"></span><span class="stat mono" id="wLive">0</span><span class="small"><span id="wLiveLabel">countries with a public dashboard or data page</span></span></li>
+            <li><span class="sq green"></span><span class="stat mono" id="wSignal">0</span><span class="small">countries with dated respiratory measurements</span></li>
+            <li><span class="sq black"></span><span class="stat mono" id="wLive">0</span><span class="small">more countries with a public dashboard or data page</span></li>
             <li><span class="sq hatch"></span><span class="stat mono" id="wListed">0</span><span class="small">listed by the EU or WHO, not confirmed by us</span></li>
-            <li><span class="sq dark"></span><span class="stat mono" id="wPast">0</span><span class="small">real data from a past period only</span></li>
-            <li><span class="sq outline"></span><span class="stat mono" id="wOther">0</span><span class="small" id="wOtherLabel">authority pages, no surveillance data found</span></li>
+            <li><span class="sq outline"></span><span class="stat mono" id="wOther">0</span><span class="small">authority pages or published studies only</span></li>
           </ul>
-          <p class="small"><span class="sq grey"></span> <span id="worldEmptyLabel">Grey: no entry in this layer. This is not a complete global inventory.</span></p>
+          <p class="small"><span class="sq grey"></span> Grey: nothing listed here yet. This is not a complete global inventory.</p>
           <p class="mono kicker">COUNTRIES WITH SOURCES</p>
           <div id="worldChips" class="chips" role="group" aria-label="Countries with a public signal"></div>
           <div id="worldDetail" class="card detail hidden" aria-live="polite"></div>
@@ -231,6 +227,6 @@
 
   <footer><div class="container small">Audio never leaves your phone. We count page visits with Cloudflare Web Analytics, without cookies.<br>Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=19"></script>
+  <script type="module" src="app.js?v=20"></script>
 </body>
 </html>
