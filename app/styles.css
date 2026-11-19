@@ -280,3 +280,18 @@ button:active, a.button:active { transform: scale(0.97); }
 #view-world .legend-stats li:last-child { grid-template-rows: auto auto; }
 #view-world .legend-stats li:last-child .small { grid-column: 1 / -1; grid-row: 2; }
 @media (max-width: 700px) { #view-world .legend-stats { grid-template-columns: 1fr 1fr; } }
+
+/* Network view: real data, simulation and plans never share a block. */
+.block-real, .block-sim, .block-planned { padding: 20px; margin: 0 0 24px; }
+.block-real { border: 2px solid var(--ink); }
+.block-sim { border: 2px dashed var(--muted); background: repeating-linear-gradient(135deg, var(--bg) 0 14px, var(--fill) 14px 15px); }
+.block-planned { border: 1px dotted var(--muted); color: var(--muted); }
+.block-planned ul { margin: 0; padding-left: 18px; }
+.tag { display: inline-block; margin: 0 0 4px; padding: 4px 8px; font-size: 12px; letter-spacing: 0.04em; }
+.tag-real { background: var(--ink); color: var(--bg); }
+.tag-sim { border: 1px dashed var(--ink); background: var(--bg); }
+.tag-planned { border: 1px dotted var(--muted); }
+.card.sim { border-style: dashed; }
+.sim-label { margin: 0 0 6px; font-size: 11px; color: var(--muted); }
+.card.alert.sim { border: 2px dashed var(--danger); }
+@media (max-width: 700px) { .block-real, .block-sim, .block-planned { padding: 12px; } }

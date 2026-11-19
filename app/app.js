@@ -414,31 +414,27 @@ async function renderDashboard() {
   const alerts = [];
   $("zones").innerHTML = zones.map((z) => {
     if (z.participants < MIN_PARTICIPANTS) {
-      return `<div class="card zone suppressed"><h4>${z.name}, ${z.city}</h4>
-        <div class="meta">Hidden: ${z.participants} participants, below the minimum of ${MIN_PARTICIPANTS}.</div></div>`;
+      return `<div class="card zone sim suppressed"><p class="mono sim-label">SIMULATED</p><h4>${z.name}, ${z.city}</h4>
+        <div class="meta">Hidden: fewer than ${MIN_PARTICIPANTS} participants.</div></div>`;
     }
     const last = z.vals.length - 1;
     if (z.flags[last].flag) alerts.push({ z });
-    return `<div class="card zone"><h4>${z.name}, ${z.city}</h4>
-      <div class="meta">${z.participants} participants · ${z.load} listening hours per day · last 28 days · today ${z.vals[last].toFixed(2)}</div>
+    return `<div class="card zone sim"><p class="mono sim-label">SIMULATED</p><h4>${z.name}, ${z.city}</h4>
+      <div class="meta">${z.vals[last].toFixed(2)} coughs per hour today · 28 days</div>
       ${sparkline(z.vals, z.flags)}</div>`;
   }).join("");
 
+  // Counts shared from this device are real, so they sit in the real block, not among the simulated sites.
   const shared = loadShared();
-  if (shared.length) {
-    const sum = shared.reduce((a, b) => a + (Number(b.coughs) || 0), 0);
-    $("zones").innerHTML += `<div class="card zone"><h4>Your shared counts (this device)</h4>
-      <div class="meta">${shared.length} bins · ${sum} coughs · zone ${esc(shared[shared.length - 1].zone)}</div></div>`;
-  }
+  const sum = shared.reduce((a, b) => a + (Number(b.coughs) || 0), 0);
+  $("sharedCounts").textContent = shared.length
+    ? `Shared from this device: ${sum} ${sum === 1 ? "cough" : "coughs"} in ${shared.length} ${shared.length === 1 ? "interval" : "intervals"} of 15 minutes.` : "";
 
-  let wwFlags = [];
   try {
     const ww = await loadWastewater();
     const country = $("wwCountry").value;
     const series = ww.series.filter((s) => s.country === country);
     $("wastewater").innerHTML = series.map((s) => {
-      const recent = s.flags.slice(-4).some((f) => f.flag);
-      if (recent) wwFlags.push(`${s.target} (${country})`);
       return `<div class="card ww"><h4>${esc(s.target)}</h4>
         <div class="meta">${esc(s.weeks[0])} to ${esc(s.weeks[s.weeks.length - 1])} · ${s.n.reduce((a, b) => a + b, 0)} samples ·
         ${Number(s.n_flagged_weeks)} flagged weeks</div>
@@ -452,18 +448,14 @@ async function renderDashboard() {
   $("alerts").innerHTML = alerts.length ? alerts.map(({ z }) => {
     const [action, role] = ACTIONS[z.name] || ["Review the zone", "Public health officer"];
     const last = z.vals.length - 1;
-    // The zones are synthetic and the wastewater series are real data from 2024 to 2025,
-    // so the two are reported side by side, never as the same period.
-    const ww = wwFlags.length
-      ? `Second signal (real data, different period): the last 4 weeks of the aviation wastewater series were flagged for ${wwFlags.map(esc).join(", ")}.`
-      : "Second signal (real data, different period): no flag in the last 4 weeks of the aviation wastewater series.";
-    const delay = z.outbreakStart >= 0 && z.firstAlarm >= z.outbreakStart
-      ? ` The synthetic rise of 50% began ${last - z.outbreakStart + 1} days ago and was flagged on day ${z.firstAlarm - z.outbreakStart + 1}.` : "";
-    return `<div class="card alert"><b>${z.name}, ${z.city}</b>: detections ${z.vals[last].toFixed(2)} per listening hour against a baseline of
-      ${z.baseline.toFixed(2)}. The running sum of coughs above the baseline (CUSUM) is above its alarm level, which is set for about
-      one false alarm in 180 days.${delay}<br>
-      ${ww}<br>Suggested action: ${action}. Responsible: ${role}. A person decides; the system only recommends.</div>`;
-  }).join("") : zonesOk ? `<div class="card muted">No zone is above its alarm level today.</div>`
+    // The alert belongs to the simulation only; real wastewater flags are shown in their own block.
+    const day = z.outbreakStart >= 0 && z.firstAlarm >= z.outbreakStart
+      ? ` · flagged on day ${z.firstAlarm - z.outbreakStart + 1} of the added rise` : "";
+    return `<div class="card alert sim"><p class="mono sim-label">SIMULATED ALERT</p>
+      <b>${z.name}, ${z.city}</b><br>
+      ${z.vals[last].toFixed(2)} coughs per hour, usual ${z.baseline.toFixed(2)}${day}<br>
+      <span class="small">Suggested: ${action}. Decided by: ${role}.</span></div>`;
+  }).join("") : zonesOk ? `<div class="card muted">No simulated site is above its alarm level today.</div>`
     : `<div class="card muted">Alerts are unavailable because the zone settings did not load.</div>`;
 }
 $("wwCountry").addEventListener("change", renderDashboard);
@@ -617,12 +609,8 @@ async function renderMap(mode = "network") {
   const land = geo.emirates.map((e) => e.rings.map((r) =>
     `<path d="M${r.map(([lon, lat]) => `${X(lon).toFixed(1)},${Y(lat).toFixed(1)}`).join("L")}Z" fill="#f5f5f5" stroke="#000000" stroke-width="0.6"/>`).join("")).join("");
 
-  const zones = syntheticZones(det).filter((z) => z.participants >= MIN_PARTICIPANTS);
-  const zoneMarks = zones.map((z) => {
-    const last = z.vals.length - 1, alarm = z.flags[last].flag;
-    return `<circle cx="${X(z.lon)}" cy="${Y(z.lat)}" r="${4 + Math.sqrt(z.load) / 6}" fill="${alarm ? "#ef4444" : "#000000"}" fill-opacity="0.35"
-      stroke="${alarm ? "#ef4444" : "#000000"}" stroke-dasharray="3 2"/><text x="${X(z.lon) + 9}" y="${Y(z.lat) + 3}" font-size="9" fill="#000000">${esc(z.city)}</text>`;
-  }).join("");
+  // This map sits in the real-data block: it shows only check-ins from this device,
+  // never the simulated sites.
 
   // own shared counts, added up per map cell
   const cells = new Map();
@@ -641,7 +629,7 @@ async function renderMap(mode = "network") {
   const pin = place ? `<circle cx="${X(place.lon)}" cy="${Y(place.lat)}" r="4" fill="#fff" stroke="#000000" stroke-width="2"/>` : "";
 
   target.innerHTML = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" style="height:auto" role="img"
-    aria-label="${picker ? "Tap to set the place of this check" : "Map of sites and spot checks in the UAE"}">${land}${picker ? "" : zoneMarks + visitMarks}${pin}</svg>`;
+    aria-label="${picker ? "Tap to set the place of this check" : "Map of your check-ins in the UAE"}">${land}${picker ? "" : visitMarks}${pin}</svg>`;
   showPlace(place);
   if (picker) {
     target.querySelector("svg").addEventListener("click", (ev) => {
@@ -653,10 +641,10 @@ async function renderMap(mode = "network") {
     });
     return;
   }
-  $("visits").innerHTML = visits.length ? `<p class="mono kicker">YOUR SPOT CHECKS</p><table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
+  $("visits").innerHTML = visits.length ? `<table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
     `<tr><td>${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}</td><td>${c.seconds < 90 ? `${c.seconds} s` : `${Math.round(c.seconds / 60)} min`}</td><td>${c.coughs}</td>
      <td>${(c.coughs / (c.seconds / 3600)).toFixed(1)}</td></tr>`).join("")}</table>`
-    : `<p class="small">No spot checks from this phone yet. Set a place on the "Check in" tab, start a check-in, then press "Finish now and share counts" or wait 15 minutes.</p>`;
+    : `<p class="small">No check-ins from this device yet. Start one on the \"Check in\" tab.</p>`;
 }
 
 function useMyLocation() {

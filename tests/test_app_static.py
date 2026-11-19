@@ -128,3 +128,15 @@ def test_world_map_is_one_view_without_a_layer_toggle():
     for element_id in ("wSignal", "wLive", "wListed", "wOther"):
         assert f'id="{element_id}"' in html and f'$("{element_id}")' in js
     assert ".w-signal" in (APP / "styles.css").read_text(encoding="utf-8")
+
+
+def test_network_view_keeps_simulation_apart_from_real_data():
+    # Simulated sites and their alert must not share a block, a map or a sentence with real data.
+    html = (APP / "app.html").read_text(encoding="utf-8")
+    js = (APP / "app.js").read_text(encoding="utf-8")
+    real = html[html.index('class="block-real"'):html.index('class="block-sim"')]
+    sim = html[html.index('class="block-sim"'):html.index('class="block-planned"')]
+    assert 'id="uaeMap"' in real and 'id="wastewater"' in real and 'id="sharedCounts"' in real
+    assert 'id="alerts"' in sim and 'id="zones"' in sim
+    assert 'id="alerts"' not in real and 'id="zones"' not in real
+    assert "zoneMarks" not in js and "wwFlags" not in js and "Second signal" not in js

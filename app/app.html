@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=21">
 </head>
 <body>
   <header class="top">
@@ -160,36 +160,49 @@
 
     <!-- Officer view: zones, wastewater and alerts -->
     <section id="view-dashboard" class="view">
-      <p class="mono kicker">NETWORK · EXAMPLE, SYNTHETIC SITES</p>
-      <h2 class="section-title">Where check-ins land</h2>
-      <p class="small">Your check-ins appear on this UAE map. The sites and their alerts are synthetic examples of how a pilot network would look; the wastewater series below are real.</p>
-      <p class="mono kicker">GUEST MODE · SITE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
-      <h2><span class="marker"></span>Sensor network</h2>
-      <div class="card">
-        <div id="uaeMap"><p class="small">Loading the map…</p></div>
-        <ul class="legend small">
-          <li><span class="dot dashed"></span><span>Sites with listening devices, <b>synthetic</b> data; red when above the alarm level</span></li>
-          <li><span class="dot solid"></span><span>Spot checks from this phone: bigger for longer listening; green, amber, red for more coughs per hour</span></li>
-        </ul>
-        <div id="visits"></div>
-        <div class="row">
-          <button data-go="phone">Check a place →</button>
-          <button id="clearVisits">Delete my checks</button>
+      <p class="mono kicker">NETWORK</p>
+      <h2 class="section-title">What is real today, and what a pilot would add</h2>
+
+      <div class="block-real">
+        <p class="tag tag-real mono">REAL DATA</p>
+        <h2><span class="marker"></span>Your check-ins</h2>
+        <div class="card">
+          <div id="uaeMap"><p class="small">Loading the map…</p></div>
+          <ul class="legend small">
+            <li><span class="dot solid"></span><span>Bigger for longer listening; green, amber, red for more coughs per hour</span></li>
+          </ul>
+          <div id="visits"></div>
+          <div id="sharedCounts" class="small"></div>
+          <div class="row">
+            <button data-go="phone">Check a place →</button>
+            <button id="clearVisits">Delete my checks</button>
+          </div>
+          <p class="small">Kept on this device. The exact position is never stored.</p>
+          <div id="mapError" class="card error hidden" role="alert"></div>
         </div>
-        <p class="small">Spot checks are kept on this phone in this demo. The exact position is never stored.</p>
-        <div id="mapError" class="card error hidden" role="alert"></div>
+        <h2><span class="marker"></span>Aircraft wastewater, 2024 to 2025</h2>
+        <p class="small">Share of positive samples per week. Red marks weeks the detector flagged.</p>
+        <div class="row">
+          <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
+        </div>
+        <div id="wastewater" class="grid"><p class="small">Loading wastewater series…</p></div>
       </div>
-      <h2><span class="marker"></span>Alerts</h2>
-      <div id="alerts"><p class="small">Loading alerts…</p></div>
-      <h2><span class="marker"></span>Sites: cough detections per listening hour</h2>
-      <div id="zones" class="grid"><p class="small">Loading zones…</p></div>
-      <h2><span class="marker"></span>Aircraft wastewater: share of positive samples per week</h2>
-      <div class="row">
-        <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
+
+      <div class="block-sim">
+        <p class="tag tag-sim mono">SIMULATION · NOT REAL SITES</p>
+        <h2><span class="marker"></span>What a pilot network would show</h2>
+        <p class="small">Invented sites with generated counts. One has a 50% rise added, to show how an alert looks.</p>
+        <div id="alerts"><p class="small">Loading alerts…</p></div>
+        <div id="zones" class="grid"><p class="small">Loading zones…</p></div>
       </div>
-      <div id="wastewater" class="grid"><p class="small">Loading wastewater series…</p></div>
-      <h2><span class="marker"></span>Environment: dust, PM2.5, heat</h2>
-      <div class="card muted">Not connected in this prototype: the UAE data source is still being chosen.</div>
+
+      <div class="block-planned">
+        <p class="tag tag-planned mono">PLANNED · NOT BUILT</p>
+        <ul class="small">
+          <li>Listening devices at pilot sites</li>
+          <li>Dust, PM2.5 and heat for the UAE</li>
+        </ul>
+      </div>
       <div id="dashError" class="card error hidden" role="alert"></div>
     </section>
 
@@ -227,6 +240,6 @@
 
   <footer><div class="container small">Audio never leaves your phone. We count page visits with Cloudflare Web Analytics, without cookies.<br>Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=20"></script>
+  <script type="module" src="app.js?v=21"></script>
 </body>
 </html>
