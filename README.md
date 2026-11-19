@@ -55,3 +55,35 @@ after Kate approves this version, then verify the served assets and both layers.
 The previously reported nginx CSP block of Cloudflare Analytics remains unresolved;
 the footer claim about counting visits has not been reverified or corrected here.
 Local preview: `python -m http.server 8765 --bind 127.0.0.1 --directory app`.
+
+
+## Source catalog and MCP server (2026-11-19)
+
+`catalog/` holds a first version of an open catalog of what each country publishes about
+infectious-disease surveillance, and a read-only MCP server over it.
+
+- `catalog/schema.json`: the record format (JSON Schema 2020-12). One record per public source:
+  country, record class (dashboard, measurement, reference), signal type, status, what it covers,
+  the observed period, URL, licence and the closest existing standard.
+- `catalog/build_catalog.py`: builds `catalog/catalog.json` from `app/data/world_signals.json`,
+  the verified source list of the prototype. The version is a required argument:
+  `python -I catalog/build_catalog.py --catalog-version 0.1.0`.
+- `catalog/catalog.json`: version 0.1.0, 40 records for 27 countries (13 confirmed dashboards,
+  16 listed by the EU or WHO and not confirmed, 6 dated measurements, 5 references).
+- `catalog/mcp_server.py`: MCP server (stdio) with three tools: `list_countries`,
+  `sources_for_country`, `latest_signals`. It reads the catalog file only: no network, no writes,
+  no user data.
+
+What it is not. It is not a new terminology or data standard: wastewater already has PHES-ODM,
+case line lists have the Global.health outbreak schema, and WHO publishes SMART Guidelines. The
+`related_standard` field points to the closest one; no source has been mapped to it yet. It is
+not a live feed: values are snapshots with their dates. A `null` licence means the licence was not
+checked. It is not medical advice.
+
+Run the server:
+
+    python -m venv .venv-mcp
+    .venv-mcp/Scripts/python -m pip install -r catalog/requirements.txt
+    .venv-mcp/Scripts/python catalog/mcp_server.py
+
+Tests: `tests/test_catalog.py` (schema, builder, tools, and one end-to-end call over stdio).

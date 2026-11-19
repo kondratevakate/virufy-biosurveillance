@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://virufy.healthaiatlas.com/catalog/schema.json",
+  "title": "Biosurveillance source catalog",
+  "description": "One record per public source of infectious-disease surveillance information in a country. The catalog says what a country publishes and where; it is not a feed of the measurements themselves and not a replacement for existing data standards (PHES-ODM for wastewater, the Global.health outbreak schema for case line lists, WHO SMART Guidelines).",
+  "type": "object",
+  "required": ["catalog_version", "checked", "note", "records"],
+  "additionalProperties": false,
+  "properties": {
+    "catalog_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "checked": {"type": "string", "format": "date", "description": "Date of the last pass over the sources."},
+    "note": {"type": "string"},
+    "records": {"type": "array", "items": {"$ref": "#/$defs/record"}}
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "required": ["id", "country", "country_name", "name", "record_class", "signal_type", "status", "detail", "observed", "url", "licence", "related_standard"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Z]{3}-[a-z0-9-]+$"},
+        "country": {"type": "string", "pattern": "^[A-Z]{3}$", "description": "ISO 3166-1 alpha-3."},
+        "country_name": {"type": "string"},
+        "name": {"type": "string"},
+        "record_class": {
+          "enum": ["dashboard", "measurement", "reference"],
+          "description": "dashboard: a public page or portal exists. measurement: a dated value we saved from a public source. reference: an authority page or a published study without running public data."
+        },
+        "signal_type": {
+          "enum": ["wastewater", "clinical_lab_tests", "outpatient_visits", "reported_cases", "hospital_admissions", "genomic", "excess_mortality", "surveillance_portal", "authority_page", "research", "unspecified"]
+        },
+        "status": {
+          "enum": ["confirmed", "listed_unconfirmed", "no_public_data", "historical"],
+          "description": "confirmed: we opened the source. listed_unconfirmed: listed by the EU or WHO, we could not open it. no_public_data: the page exists, no surveillance data found on it. historical: real data from a past period only."
+        },
+        "detail": {"type": "string", "description": "What the source covers, or the saved value with its unit and geographic coverage."},
+        "observed": {"type": "string", "description": "Period the value refers to, or the date the page was opened. Never empty."},
+        "url": {"type": ["string", "null"], "description": "Null only for listed_unconfirmed records."},
+        "licence": {"type": ["string", "null"], "description": "Null means the licence was not checked, not that the data are free to reuse."},
+        "related_standard": {"type": ["string", "null"], "description": "Closest existing data standard for this signal type. A pointer only: the source has not been mapped to it."}
+      }
+    }
+  }
+}
