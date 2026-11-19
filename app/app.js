@@ -9,6 +9,7 @@ const WASM_PATH = "./vendor/tasks-audio/wasm";
 const COUGH_THRESHOLD = 0.5;
 const REFRACTORY_MS = 1000;     // one cough event per second at most
 const BIN_MS = 15 * 60 * 1000;  // sharing granularity
+const SESSION_SECONDS = 15 * 60; // one check-in listens for up to 15 minutes
 const MIN_PARTICIPANTS = 10;    // small-cell suppression
 const STORE_KEY = "virufy_shared_counts_v1";
 
@@ -50,6 +51,7 @@ function scrollToView(view) {
   document.getElementById(`view-${view}`)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 }
 const loaders = {
+  world: () => renderWorld(),
   phone: () => warmUpDetector(),
   dashboard: () => { renderDashboard(); renderMap("network"); },
   about: () => renderAbout(),
@@ -88,7 +90,8 @@ if ("IntersectionObserver" in window) {
 // A short vibration where the phone supports it (Android Chrome; iOS Safari has no Vibration API).
 // Nothing happens when the user asked the system for reduced motion.
 function buzz(pattern) {
-  if (reduceMotion) return;
+  // browsers allow vibration only after the user has touched the page
+  if (reduceMotion || navigator.userActivation?.hasBeenActive === false) return;
   try { navigator.vibrate?.(pattern); } catch { /* not supported */ }
 }
 function bump(el) {
@@ -136,7 +139,7 @@ async function startListening() {
     return;
   }
   starting = true; btn.disabled = true;
-  const fail = (msg) => { showError(err, msg); starting = false; btn.disabled = false; btn.textContent = "Start listening"; };
+  const fail = (msg) => { showError(err, msg); starting = false; btn.disabled = false; btn.textContent = "Start 15-minute check-in"; };
   // iOS only lets audio start from inside the tap, so the context is created before any waiting.
   try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
   catch (e) { fail(`Audio could not be started on this device (${e.message || e}).`); return; }
@@ -163,6 +166,7 @@ async function startListening() {
   const zone = $("zone").value, rate = audioCtx.sampleRate;
   placeName = $("zone").selectedOptions[0]?.textContent || zone; listenedSeconds = 0; total = 0;
   $("count").textContent = "0"; $("perHour").textContent = "…";
+  $("timeLeft").textContent = "15:00"; $("progressBar").style.width = "0%"; bins.length = 0;
   binStart = Math.floor(Date.now() / BIN_MS) * BIN_MS;
   let busy = false;
   node.onaudioprocess = (ev) => {
@@ -197,7 +201,7 @@ async function startListening() {
   analyser = audioCtx.createAnalyser(); analyser.fftSize = 128; analyser.smoothingTimeConstant = 0.7;
   src.connect(analyser);
   startVisuals();
-  starting = false; btn.disabled = false; btn.textContent = "Start listening";
+  starting = false; btn.disabled = false; btn.textContent = "Start 15-minute check-in";
   $("consent").classList.add("hidden");
   $("listening").classList.remove("hidden");
   buzz(20);
@@ -217,6 +221,11 @@ function onScore(score, zone) {
     $("count").textContent = total;
     bump($("count")); buzz(40);
   }
+  // countdown of the 15-minute check-in; at zero the counts are shared and the microphone goes off
+  const left = Math.max(0, SESSION_SECONDS - listenedSeconds);
+  $("timeLeft").textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
+  $("progressBar").style.width = `${Math.min(100, (100 * listenedSeconds) / SESSION_SECONDS).toFixed(1)}%`;
+  if (left === 0 && node) { setTimeout(shareCounts, 0); return; }
   // coughs per listening hour for this spot check, shown once a minute of audio is in
   if (listenedSeconds >= 60) $("perHour").textContent = (total / (listenedSeconds / 3600)).toFixed(1);
 }
@@ -307,7 +316,8 @@ function shareCounts() {
 }
 
 $("start").addEventListener("click", startListening);
-$("stop").addEventListener("click", stopListening);
+// stopping without sharing drops this session's counts
+$("stop").addEventListener("click", () => { bins.length = 0; binCount = 0; binSeconds = 0; stopListening(); });
 $("share").addEventListener("click", shareCounts);
 $("checkAgain").addEventListener("click", () => {
   showNote(""); $("recs").classList.add("hidden"); $("consent").classList.remove("hidden"); scrollToView("phone");
@@ -485,6 +495,66 @@ async function renderAbout() {
   }
 }
 
+// ---------- world map of real public signals ----------
+// Outline: Natural Earth 1:110m (public domain), bundled; no map tiles are requested.
+// Signals: data/world_signals.json, built by eval/build_world_signals.py from verified public
+// sources only. A country without an entry is "no public signal listed", never zero.
+const WORLD_STATUS_LABEL = {
+  live: "Public signal we opened", listed: "Listed by the EU or WHO, not confirmed by us",
+  past: "Real data from a past period only", studies: "Published studies, no running data",
+};
+function worldDetail(name, entry) {
+  if (!entry) return `<h3>${esc(name)}</h3><p class="small">No public signal listed here. That does not mean the country has none.</p>`;
+  return `<h3>${esc(name)}</h3><p class="mono kicker">${esc(WORLD_STATUS_LABEL[entry.status] || "")}</p><ul class="news">${entry.items.map((it) =>
+    `<li><b>${esc(it.name)}</b><br><span class="small">${esc(it.kind)} · ${esc(it.detail)}</span><br>
+     <span class="mono small">${esc(it.date)}</span>${it.url ? ` · <a href="${esc(it.url)}" target="_blank" rel="noopener">source ↗</a>` : ""}</li>`).join("")}</ul>`;
+}
+async function renderWorld() {
+  const box = $("worldMap");
+  try {
+    const [geo, sig] = await Promise.all([
+      fetch("./data/world.json").then((r) => { if (!r.ok) throw new Error(`world outline: HTTP ${r.status}`); return r.json(); }),
+      fetch("./data/world_signals.json").then((r) => { if (!r.ok) throw new Error(`world signals: HTTP ${r.status}`); return r.json(); }),
+    ]);
+    const lon0 = -170, lon1 = 180, lat0 = -57, lat1 = 84, k = 3;
+    const X = (lon) => (lon - lon0) * k, Y = (lat) => (lat1 - lat) * k;
+    const W = X(lon1), H = Y(lat0);
+    const byA3 = Object.fromEntries(geo.countries.map((c) => [c.a3, c]));
+    const paths = geo.countries.map((c) => {
+      const st = sig.countries[c.a3]?.status || "none";
+      const d = c.rings.map((r) => `M${r.map(([lo, la]) => `${X(lo).toFixed(1)},${Y(la).toFixed(1)}`).join("L")}Z`).join("");
+      return `<path data-a3="${esc(c.a3)}" class="w-${st}" d="${d}"><title>${esc(c.name)}</title></path>`;
+    }).join("");
+    box.innerHTML = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="World map of public respiratory signals">
+      <defs><pattern id="hatchW" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="#fff"/><line x1="0" y1="0" x2="0" y2="4" stroke="#000" stroke-width="1"/></pattern></defs>
+      <g class="countries">${paths}</g><g class="sel"></g></svg>`;
+    const svg = box.querySelector("svg"), sel = svg.querySelector(".sel");
+    const select = (a3) => {
+      const c = byA3[a3];
+      if (!c) return;
+      $("worldDetail").innerHTML = worldDetail(c.name, sig.countries[a3]);
+      $("worldDetail").classList.remove("hidden");
+      const src = svg.querySelector(`.countries path[data-a3="${a3}"]`);
+      sel.innerHTML = src ? `<path class="selected" d="${src.getAttribute("d")}"/>` : "";
+      document.querySelectorAll("#worldChips button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.a3 === a3)));
+      buzz(10);
+    };
+    svg.addEventListener("click", (ev) => select(ev.target.getAttribute && ev.target.getAttribute("data-a3")));
+    const withData = Object.entries(sig.countries).filter(([a3, e]) => byA3[a3] && e.status !== "listed")
+      .sort((a, b) => byA3[a[0]].name.localeCompare(byA3[b[0]].name));
+    $("worldChips").innerHTML = withData.map(([a3]) =>
+      `<button type="button" data-a3="${esc(a3)}" aria-pressed="false">${esc(byA3[a3].name)}</button>`).join("");
+    $("worldChips").addEventListener("click", (ev) => { const b = ev.target.closest("button"); if (b) select(b.dataset.a3); });
+    const count = (st) => Object.values(sig.countries).filter((e) => e.status === st).length;
+    $("wLive").textContent = count("live"); $("wListed").textContent = count("listed"); $("wPast").textContent = count("past");
+    $("worldChecked").textContent = new Date(`${sig.checked}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }).toUpperCase();
+    $("euLevel").innerHTML = sig.eu_level.map((m) =>
+      `<li><a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.name)} ↗</a> <span class="small">${esc(m.operator)} · ${esc(m.detail)}</span></li>`).join("");
+  } catch (e) {
+    box.innerHTML = `<div class="card error">The world map could not be loaded (${esc(e.message || e)}).</div>`;
+  }
+}
+
 // ---------- map of the UAE ----------
 // The outline is bundled with the app (Natural Earth, public domain): no map tiles are requested,
 // so no third party learns where the user is looking. A place is stored as a cell of 0.01 degrees
@@ -573,7 +643,7 @@ async function renderMap(mode = "network") {
   $("visits").innerHTML = visits.length ? `<p class="mono kicker">YOUR SPOT CHECKS</p><table><tr><th>Cell</th><th>Listening</th><th>Coughs</th><th>Per hour</th></tr>${visits.map((c) =>
     `<tr><td>${c.lat.toFixed(2)}, ${c.lon.toFixed(2)}</td><td>${c.seconds < 90 ? `${c.seconds} s` : `${Math.round(c.seconds / 60)} min`}</td><td>${c.coughs}</td>
      <td>${(c.coughs / (c.seconds / 3600)).toFixed(1)}</td></tr>`).join("")}</table>`
-    : `<p class="small">No spot checks from this phone yet. Set a place on the "Check here" tab, listen, then press "Add this check to the network".</p>`;
+    : `<p class="small">No spot checks from this phone yet. Set a place on the "Check in" tab, start a check-in, then press "Finish now and share counts" or wait 15 minutes.</p>`;
 }
 
 function useMyLocation() {
@@ -611,6 +681,7 @@ revealOnScroll(".view > .section-title, #view-home .card, #view-about .card");
 // The check is the first screen, so its detector starts loading at once, not on scroll.
 // (Called here, at the end, because the detector state is declared further down the module.)
 ensureLoaded("phone");
+ensureLoaded("world");
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./sw.js").catch(() => { /* offline cache is optional */ });

@@ -9,14 +9,15 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body>
   <header class="top">
     <div class="container bar">
       <a class="brand" href="./"><img class="logo" src="img/virufy-logo.svg" alt="Virufy logo" width="68" height="20"><span class="sub">Biosurveillance</span></a>
       <nav>
-        <button class="tab active" data-view="phone">Check here</button>
+        <button class="tab active" data-view="world">World</button>
+        <button class="tab" data-view="phone">Check in</button>
         <button class="tab" data-view="dashboard">Network</button>
         <button class="tab" data-view="about">Evidence</button>
       </nav>
@@ -25,10 +26,58 @@
 
   <main class="container">
     <!-- Participant flow: place, count, share -->
-    <section id="view-phone" class="view">
+    <section id="view-start" class="view">
       <p class="mono kicker">PROTOTYPE · NOT A MEDICAL DEVICE</p>
-      <h1>Check the cough load where you are</h1>
-      <p class="lead">The phone listens for a few minutes, counts coughs and forgets the sound. In a pilot, devices at many sites do the same and feed one <button class="link" data-go="dashboard">network map</button>.</p>
+      <h1>Respiratory signals, from the world map to one room</h1>
+      <p class="lead">Public surveillance shows what is spreading in a country. Cough counts at public places show it for one hall, worksite or clinic. Three ways in:</p>
+      <div class="entry-grid">
+        <button class="entry" data-go="world">
+          <span class="mono kicker">1 · REAL PUBLIC DATA</span>
+          <span class="entry-title">World map of public signals</span>
+          <span class="small">Monitors and surveillance data we opened, each with its source and date.</span>
+        </button>
+        <button class="entry" data-go="phone">
+          <span class="mono kicker">2 · 15 MINUTES</span>
+          <span class="entry-title">Check in at a public place</span>
+          <span class="small">Your phone counts coughs around you. Audio is not recorded or stored.</span>
+        </button>
+        <a class="entry" href="https://virufy.org/demo/" target="_blank" rel="noopener">
+          <span class="mono kicker">3 · VIRUFY'S OWN TOOL ↗</span>
+          <span class="entry-title">Check your own cough</span>
+          <span class="small">Opens the Virufy demo in a new tab. It is a separate tool from this prototype.</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="view-world" class="view">
+      <p class="mono kicker">WORLD · REAL PUBLIC DATA ONLY</p>
+      <h2 class="section-title">Public respiratory signals we could open</h2>
+      <p class="small mono">CHECKED <span id="worldChecked">18 NOV 2026</span> · EVERY SIGNAL SHOWS ITS SOURCE AND DATE · NO SYNTHETIC DATA</p>
+      <div class="map-grid">
+        <div id="worldMap" class="map-frame"><p class="small">Loading the map…</p></div>
+        <div class="monitor-side">
+          <ul class="legend-stats">
+            <li><span class="sq black"></span><span class="stat mono" id="wLive">0</span><span class="small">countries with a public signal we opened</span></li>
+            <li><span class="sq hatch"></span><span class="stat mono" id="wListed">0</span><span class="small">listed by the EU or WHO, not confirmed by us</span></li>
+            <li><span class="sq dark"></span><span class="stat mono" id="wPast">0</span><span class="small">real data from a past period only</span></li>
+            <li><span class="sq outline"></span><span class="small">published studies, no running data</span></li>
+          </ul>
+          <p class="small"><span class="sq grey"></span> Grey: no public signal listed here. That does not mean the country has none.</p>
+          <p class="mono kicker">COUNTRIES WITH DATA</p>
+          <div id="worldChips" class="chips" role="group" aria-label="Countries with a public signal"></div>
+          <div id="worldDetail" class="card detail hidden" aria-live="polite"></div>
+        </div>
+      </div>
+      <details class="more">
+        <summary>EU-wide monitors</summary>
+        <ul class="news" id="euLevel"></ul>
+      </details>
+    </section>
+
+    <section id="view-phone" class="view">
+      <p class="mono kicker">CHECK IN · 15 MINUTES</p>
+      <h2 class="section-title">Check in at a public place</h2>
+      <p class="lead">Your phone listens for up to 15 minutes and counts coughs around you. <b>Audio is not recorded or stored.</b> Only the number of coughs and the listening seconds are shared. You can stop at any time.</p>
       <div id="phoneNote" class="card hidden" role="status"></div>
       <div id="recs" class="card hidden">
         <p class="mono kicker">WHAT YOU CAN DO · EXAMPLE CONTENT, NOT MEDICAL ADVICE</p>
@@ -57,7 +106,7 @@
               <option value="OTHER">Other public place</option>
             </select>
           </label>
-          <button id="start" class="primary start-btn">Start listening</button>
+          <button id="start" class="primary start-btn">Start 15-minute check-in</button>
           <p id="modelState" class="small mono" aria-live="polite">Cough detector: not loaded yet.</p>
           <p class="small">Audio is analysed <b>on this phone</b> and discarded within a second; nothing is recorded or uploaded. It hears coughs about a table away, not across a hall, and it does not tell you whether you are ill.</p>
         </div>
@@ -66,6 +115,8 @@
       <div id="listening" class="hidden">
         <h2><span class="marker"></span>Listening <span class="live" aria-hidden="true"></span></h2>
         <div class="card">
+          <div class="countdown"><span class="mono kicker">TIME LEFT</span><span id="timeLeft" class="mono big-time">15:00</span></div>
+          <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
           <div class="row stats">
             <div><div class="mono kicker">COUGHS COUNTED</div><div id="count" class="big">0</div></div>
             <div><div class="mono kicker">COUGHS PER HOUR HERE</div><div id="perHour" class="big">…</div></div>
@@ -81,8 +132,8 @@
         <h2><span class="marker"></span>Finish the check</h2>
         <div class="card">
           <div class="row">
-            <button id="share" class="primary">Add this check to the network</button>
-            <button id="stop">Stop</button>
+            <button id="share" class="primary">Finish now and share counts</button>
+            <button id="stop">Stop without sharing</button>
           </div>
           <details>
             <summary>What is sent</summary>
@@ -103,13 +154,14 @@
         <p class="mono small" id="placeLabelPhone">No place set yet.</p>
         <p class="small">The position is rounded to a cell of about 1 km before it is stored. Without a place the check stays off the network map.</p>
       </details>
-      <p class="small">Judges and reviewers: every screen works without a login. Below: the <button class="link" data-go="dashboard">sensor network</button> and the <button class="link" data-go="about">evidence</button>.</p>
+      <p class="small">Judges and reviewers: every screen works without a login. Below: the <button class="link" data-go="dashboard">example network</button> where check-ins land, and the <button class="link" data-go="about">evidence</button>.</p>
     </section>
 
     <!-- Officer view: zones, wastewater and alerts -->
     <section id="view-dashboard" class="view">
-      <p class="mono kicker">NETWORK</p>
-      <h2 class="section-title">Sites, alerts and the second signal</h2>
+      <p class="mono kicker">NETWORK · EXAMPLE, SYNTHETIC SITES</p>
+      <h2 class="section-title">Where check-ins land</h2>
+      <p class="small">Your check-ins appear on this UAE map. The sites and their alerts are synthetic examples of how a pilot network would look; the wastewater series below are real.</p>
       <p class="mono kicker">GUEST MODE · SITE DATA ARE SYNTHETIC · WASTEWATER SERIES ARE REAL (US, UK, 2024 TO 2025)</p>
       <h2><span class="marker"></span>Sensor network</h2>
       <div class="card">
@@ -172,8 +224,8 @@
     </section>
   </main>
 
-  <footer><div class="container small">Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
+  <footer><div class="container small">Audio never leaves your phone. We count page visits with Cloudflare Web Analytics, without cookies.<br>Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=16"></script>
+  <script type="module" src="app.js?v=18"></script>
 </body>
 </html>

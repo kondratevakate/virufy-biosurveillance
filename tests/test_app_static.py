@@ -85,3 +85,18 @@ def test_scripts_parse_as_es_modules():
         res = subprocess.run([node, "--input-type=module", "--check"], input=src, text=True,
                              capture_output=True, encoding="utf-8")
         assert res.returncode == 0, f"{name}: {res.stderr.strip().splitlines()[-1] if res.stderr else ''}"
+
+
+def test_world_signals_are_real_dated_and_sourced():
+    import json
+    sig = json.loads((APP / "data" / "world_signals.json").read_text(encoding="utf-8"))
+    assert sig["checked"]
+    for a3, entry in sig["countries"].items():
+        assert entry["status"] in {"live", "listed", "past", "studies"}, a3
+        for item in entry["items"]:
+            assert item["date"], f"{a3}: {item['name']} has no date"
+            assert item["url"] or entry["status"] == "listed", f"{a3}: {item['name']} has no source"
+            text = json.dumps(item, ensure_ascii=False).lower()
+            assert "synthetic" not in text and "–" not in text and "—" not in text, a3
+    world = json.loads((APP / "data" / "world.json").read_text(encoding="utf-8"))
+    assert "Natural Earth" in world["source"]

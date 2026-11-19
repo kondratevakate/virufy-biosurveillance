@@ -1,0 +1,372 @@
+{
+ "checked": "2026-11-18",
+ "note": "Real public signals only. A country without an entry has no public signal listed here; that does not mean it has none.",
+ "eu_level": [
+  {
+   "name": "ERVISS",
+   "operator": "ECDC, WHO/Europe",
+   "url": "https://erviss.org/",
+   "detail": "Influenza, RSV, SARS-CoV-2; weekly"
+  },
+  {
+   "name": "EU Wastewater Surveillance Dashboard",
+   "operator": "European Commission HERA, JRC",
+   "url": "https://wastewater-observatory.jrc.ec.europa.eu/#/content/the-eu-dashboard",
+   "detail": "SARS-CoV-2, influenza, RSV; 11 countries"
+  }
+ ],
+ "countries": {
+  "AUT": {
+   "status": "live",
+   "items": [
+    {
+     "name": "AGES wastewater monitoring",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2, influenza A/B, RSV",
+     "url": "https://abwasser.ages.at/en/",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "BEL": {
+   "status": "live",
+   "items": [
+    {
+     "name": "Sciensano wastewater dashboard",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2, influenza, RSV",
+     "url": "https://wastewater.sciensano.be/dashboard/covid19/en/",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "CZE": {
+   "status": "live",
+   "items": [
+    {
+     "name": "Pathogen Portal CZ, wastewater",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2, poliovirus",
+     "url": "https://pathogens.vm.cesnet.cz/en/dashboards/wastewater-monitoring/",
+     "date": "page opened 2026-11-18"
+    },
+    {
+     "name": "Nextstrain Europe (Czech mirror)",
+     "kind": "Genomic",
+     "detail": "SARS-CoV-2",
+     "url": "https://pathogens.vm.cesnet.cz/en/dashboards/nextstrain-sarscov2/",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "DNK": {
+   "status": "live",
+   "items": [
+    {
+     "name": "Statens Serum Institut, wastewater",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2, influenza A",
+     "url": "https://en.ssi.dk/surveillance-and-preparedness/surveillance-in-denmark/national-wastewater-surveillance-of-sars-cov-2-and-influenza-a",
+     "date": "page opened 2026-11-18"
+    },
+    {
+     "name": "EuroMOMO (hosted by SSI)",
+     "kind": "Excess mortality",
+     "detail": "All causes",
+     "url": "https://www.euromomo.eu/graphs-and-maps/",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "FRA": {
+   "status": "live",
+   "items": [
+    {
+     "name": "SUM'Eau, archived open data",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2",
+     "url": "https://www.data.gouv.fr/datasets/surveillance-du-sars-cov-2-dans-les-eaux-usees-sumeau",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "DEU": {
+   "status": "live",
+   "items": [
+    {
+     "name": "AMELAG open data (RKI, UBA)",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2, influenza A/B, RSV",
+     "url": "https://github.com/robert-koch-institut/Abwassersurveillance_AMELAG",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "NLD": {
+   "status": "live",
+   "items": [
+    {
+     "name": "RIVM wastewater research",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2; Schiphol airport data not published",
+     "url": "https://www.rivm.nl/rioolwateronderzoek/covid-19",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "ESP": {
+   "status": "live",
+   "items": [
+    {
+     "name": "VATar COVID-19",
+     "kind": "Wastewater",
+     "detail": "SARS-CoV-2",
+     "url": "https://miteco.maps.arcgis.com/apps/dashboards/75cbb6eb7043400da519089fd516d5bd",
+     "date": "page opened 2026-11-18"
+    }
+   ]
+  },
+  "FIN": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "IRL": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "ITA": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "LUX": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "SWE": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "SVN": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "MLT": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "SVK": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "PRT": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "POL": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "HUN": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "LVA": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "LTU": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "GRC": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "LIE": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "NOR": {
+   "status": "listed",
+   "items": [
+    {
+     "name": "National monitor listed by the EU or WHO",
+     "kind": "not confirmed by us",
+     "detail": "We could not open and confirm it.",
+     "url": "",
+     "date": "checked 2026-11-18"
+    }
+   ]
+  },
+  "USA": {
+   "status": "live",
+   "items": [
+    {
+     "name": "CDC percent of tests positive (NREVSS)",
+     "kind": "Clinical laboratory tests",
+     "detail": "COVID-19 3.2%, influenza 11.3%, RSV 1.6% of tests positive",
+     "url": "https://data.cdc.gov/d/seuz-s2cv",
+     "date": "week ending 2026-11-07"
+    },
+    {
+     "name": "CDC ILINet, influenza-like illness",
+     "kind": "Outpatient visits",
+     "detail": "3.2% of 2,794,544 outpatient visits were for influenza-like illness",
+     "url": "https://www.cdc.gov/fluview/",
+     "date": "week 2026w44, released 2026-11-13"
+    },
+    {
+     "name": "Aviation wastewater from arriving aircraft",
+     "kind": "Wastewater, research dataset",
+     "detail": "SARS-CoV-2, Influenza A, Influenza B, RSV; weekly share of positive samples",
+     "url": "https://doi.org/10.5281/zenodo.18432347",
+     "date": "2024-W13 to 2025-W03"
+    }
+   ]
+  },
+  "GBR": {
+   "status": "past",
+   "items": [
+    {
+     "name": "Aviation wastewater from arriving aircraft",
+     "kind": "Wastewater, research dataset",
+     "detail": "SARS-CoV-2, Influenza A, Influenza B, RSV; weekly share of positive samples",
+     "url": "https://doi.org/10.5281/zenodo.18432347",
+     "date": "2024-W30 to 2025-W03"
+    }
+   ]
+  },
+  "ARE": {
+   "status": "studies",
+   "items": [
+    {
+     "name": "Published wastewater studies, no running public data",
+     "kind": "Research",
+     "detail": "Aircraft wastewater at Dubai Airport (2020) and 453 sites across the UAE (2020 to 2022).",
+     "url": "./#uae",
+     "date": "papers 2021 and 2023"
+    }
+   ]
+  }
+ }
+}
