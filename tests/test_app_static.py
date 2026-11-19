@@ -51,7 +51,7 @@ def test_uae_sources_are_honest_and_linked():
     for item in data["monitors"] + data["projects"]:
         assert item["url"].startswith("https://"), item["name"]
         text = json.dumps(item, ensure_ascii=False)
-        assert "–" not in text and "—" not in text, item["name"]
+        assert "â€“" not in text and "â€”" not in text, item["name"]
     # no UAE source was found publishing surveillance data; the page must not imply one
     assert not any(m["status"] == "confirmed" for m in data["monitors"])
     html = (APP / "index.html").read_text(encoding="utf-8")
@@ -91,12 +91,30 @@ def test_world_signals_are_real_dated_and_sourced():
     import json
     sig = json.loads((APP / "data" / "world_signals.json").read_text(encoding="utf-8"))
     assert sig["checked"]
-    for a3, entry in sig["countries"].items():
-        assert entry["status"] in {"live", "listed", "past", "studies"}, a3
-        for item in entry["items"]:
-            assert item["date"], f"{a3}: {item['name']} has no date"
-            assert item["url"] or entry["status"] == "listed", f"{a3}: {item['name']} has no source"
-            text = json.dumps(item, ensure_ascii=False).lower()
-            assert "synthetic" not in text and "–" not in text and "—" not in text, a3
+    assert set(sig["layers"]) == {"dashboards", "respiratory"}
+    for countries in sig["layers"].values():
+        for a3, entry in countries.items():
+            assert entry["status"] in {"live", "listed", "past", "studies", "programme"}, a3
+            for item in entry["items"]:
+                assert item["date"], f"{a3}: {item['name']} has no date"
+                assert item["url"] or entry["status"] == "listed", f"{a3}: {item['name']} has no source"
+                text = json.dumps(item, ensure_ascii=False).lower()
+                assert "synthetic" not in text and "â€“" not in text and "â€”" not in text, a3
     world = json.loads((APP / "data" / "world.json").read_text(encoding="utf-8"))
     assert "Natural Earth" in world["source"]
+
+
+def test_dashboard_availability_is_not_a_respiratory_measurement():
+    import json
+    data = json.loads((APP / "data/world_signals.json").read_text())
+    dashboards, respiratory = data["layers"]["dashboards"], data["layers"]["respiratory"]
+    assert "AUT" in dashboards and "AUT" not in respiratory
+    assert dashboards["ARE"]["status"] == "programme"
+    assert len(dashboards["ARE"]["items"]) == 4
+    assert respiratory["ARE"]["status"] == "studies"
+    assert len(respiratory["USA"]["items"]) == 3
+    uk = respiratory["GBR"]["items"]
+    assert len(uk) == 3
+    assert all("England" in item["detail"] for item in uk if "UKHSA" in item["name"])
+    assert any("2026-11-04" in item["date"] for item in uk)
+    assert any("2026-10-31" in item["date"] for item in uk)

@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <header class="top">
@@ -51,24 +51,29 @@
 
     <section id="view-world" class="view">
       <p class="mono kicker">WORLD · REAL PUBLIC DATA ONLY</p>
-      <h2 class="section-title">Public respiratory signals we could open</h2>
-      <p class="small mono">CHECKED <span id="worldChecked">18 NOV 2026</span> · EVERY SIGNAL SHOWS ITS SOURCE AND DATE · NO SYNTHETIC DATA</p>
+      <h2 class="section-title">Epidemiological dashboards and respiratory signals</h2>
+      <p class="small mono">LAST SOURCE CHECK <span id="worldChecked">18 NOV 2026</span> · EVERY SIGNAL SHOWS ITS SOURCE AND DATE · NO SYNTHETIC DATA</p>
+      <div id="worldLayers" class="chips" role="group" aria-label="World map layer">
+        <button type="button" data-layer="dashboards" aria-pressed="true">Epidemiological dashboards</button>
+        <button type="button" data-layer="respiratory" aria-pressed="false">Respiratory signals</button>
+      </div>
+      <p id="worldLayerNote" class="small" aria-live="polite"></p>
       <div class="map-grid">
         <div id="worldMap" class="map-frame"><p class="small">Loading the map…</p></div>
         <div class="monitor-side">
           <ul class="legend-stats">
-            <li><span class="sq black"></span><span class="stat mono" id="wLive">0</span><span class="small">countries with a public signal we opened</span></li>
+            <li><span class="sq black"></span><span class="stat mono" id="wLive">0</span><span class="small"><span id="wLiveLabel">countries with a public dashboard or data page</span></span></li>
             <li><span class="sq hatch"></span><span class="stat mono" id="wListed">0</span><span class="small">listed by the EU or WHO, not confirmed by us</span></li>
             <li><span class="sq dark"></span><span class="stat mono" id="wPast">0</span><span class="small">real data from a past period only</span></li>
-            <li><span class="sq outline"></span><span class="small">published studies, no running data</span></li>
+            <li><span class="sq outline"></span><span class="stat mono" id="wOther">0</span><span class="small" id="wOtherLabel">authority pages, no surveillance data found</span></li>
           </ul>
-          <p class="small"><span class="sq grey"></span> Grey: no public signal listed here. That does not mean the country has none.</p>
-          <p class="mono kicker">COUNTRIES WITH DATA</p>
+          <p class="small"><span class="sq grey"></span> <span id="worldEmptyLabel">Grey: no entry in this layer. This is not a complete global inventory.</span></p>
+          <p class="mono kicker">COUNTRIES WITH SOURCES</p>
           <div id="worldChips" class="chips" role="group" aria-label="Countries with a public signal"></div>
           <div id="worldDetail" class="card detail hidden" aria-live="polite"></div>
         </div>
       </div>
-      <details class="more">
+      <details class="more" id="worldEu">
         <summary>EU-wide monitors</summary>
         <ul class="news" id="euLevel"></ul>
       </details>
@@ -226,6 +231,6 @@
 
   <footer><div class="container small">Audio never leaves your phone. We count page visits with Cloudflare Web Analytics, without cookies.<br>Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=18"></script>
+  <script type="module" src="app.js?v=19"></script>
 </body>
 </html>

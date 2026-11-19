@@ -30,3 +30,28 @@ The microphone needs a secure context: `http://localhost` on the computer, HTTPS
 ## Results so far (2026-11-16)
 
 Detector on ESC-50 (2000 clips, 40 coughs), threshold chosen by 5-fold cross-validation: ROC AUC 0.991, sensitivity 92.5% (95% CI 80.1 to 97.4), specificity 91.2% (89.9 to 92.4), 63 false positives per hour of non-cough sound, mostly sneezing and breathing. The app uses a stricter threshold of 0.5 (sensitivity 82.5%, 3.3 false positives per hour on the same clips; exploratory, chosen on the same data).
+
+
+## World map continuation (2026-11-19, Codex)
+
+The `ux-audit` branch continues deployment baseline `825a469` with two map layers:
+- Epidemiological dashboards: 10 countries with opened dashboards/data pages,
+  16 EU/WHO-listed countries not confirmed, and UAE authority/programme pages.
+- Respiratory signals: dated CDC US measurements, UKHSA England measurements,
+  historical US/UK aviation wastewater, and UAE research references.
+
+Availability is not disease burden. This is a partial source inventory and saved
+snapshots, not a live feed. Every item retains its own observation/check date;
+UKHSA numbers cover England only. Its homepage was rechecked on 2026-11-19.
+The UKHSA snapshot is recorded explicitly in `eval/build_world_signals.py`.
+
+Validation: 14 tests passed; both layers, country details, selection reset and
+390 px mobile layout checked in a local browser. No horizontal overflow was
+observed. Service-worker and asset versions are v19. No detector, experiment,
+server or nginx configuration changes were made.
+
+This continuation is local only, not pushed, merged or deployed. Next: deploy
+after Kate approves this version, then verify the served assets and both layers.
+The previously reported nginx CSP block of Cloudflare Analytics remains unresolved;
+the footer claim about counting visits has not been reverified or corrected here.
+Local preview: `python -m http.server 8765 --bind 127.0.0.1 --directory app`.

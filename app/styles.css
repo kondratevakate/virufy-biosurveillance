@@ -269,3 +269,13 @@ button:active, a.button:active { transform: scale(0.97); }
 #view-world .map-grid { grid-template-columns: 1fr; }
 #view-world .legend-stats { grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 700px) { #view-world .legend-stats { grid-template-columns: 1fr 1fr; } }
+
+/* World layers keep availability separate from measured activity. */
+#worldLayers { margin: 1rem 0; }
+#worldLayers button[aria-pressed="true"] { background: #000; color: #fff; }
+#worldMap .w-programme { fill: #fff; stroke: #000; stroke-width: 1.2; }
+#view-world [hidden] { display: none !important; }
+#view-world .legend-stats { grid-template-columns: repeat(3, 1fr); }
+#view-world .legend-stats li:last-child { grid-template-rows: auto auto; }
+#view-world .legend-stats li:last-child .small { grid-column: 1 / -1; grid-row: 2; }
+@media (max-width: 700px) { #view-world .legend-stats { grid-template-columns: 1fr 1fr; } }

@@ -8,8 +8,10 @@ Inputs (all real, public, already checked):
     cdc-seuz-s2cv-percent-tests-positive-2026-11-18
   - CDC ILINet national (Delphi Epidata fluview), registry id cdc-ilinet-delphi-fluview-2026-11-18
 
-Outputs: app/data/world.json (outline) and app/data/world_signals.json (one entry per country
-with a real public signal; every entry carries its source and date). No synthetic data.
+Outputs: app/data/world.json (outline) and app/data/world_signals.json (country entries
+separated into dashboard availability and dated respiratory signals). No synthetic data.
+UKHSA figures are a manually verified snapshot of its homepage on 2026-11-19,
+under the Open Government Licence v3.0; they cover England, not the whole UK.
 
 Usage:
   python -I eval/build_world_signals.py <ne_110m_admin_0_countries.geojson> <C:/Projects/data root>
@@ -68,11 +70,12 @@ def signals(data_root: Path) -> dict:
     monitors = json.loads((APP_DATA / "monitors.json").read_text(encoding="utf-8"))
     ww = json.loads((APP_DATA / "wastewater.json").read_text(encoding="utf-8"))
     pct, ili = cdc_percent_positive(data_root), cdc_ilinet(data_root)
-    out = {}
+    layers = {"dashboards": {}, "respiratory": {}}
+    out = layers["dashboards"]
 
     def add(a3, status, item):
         entry = out.setdefault(a3, {"status": status, "items": []})
-        rank = {"live": 3, "listed": 2, "past": 1, "studies": 0}
+        rank = {"live": 3, "listed": 2, "past": 1, "studies": 0, "programme": 0}
         if rank[status] > rank[entry["status"]]:
             entry["status"] = status
         entry["items"].append(item)
@@ -86,6 +89,27 @@ def signals(data_root: Path) -> dict:
                            "detail": "We could not open and confirm it.", "url": "",
                            "date": f"checked {monitors['checked']}"})
 
+    for name, url, detail in (
+        ("CDC FluView", "https://www.cdc.gov/fluview/", "Influenza surveillance in the United States"),
+        ("CDC public data", "https://data.cdc.gov/d/seuz-s2cv", "Public respiratory laboratory surveillance data"),
+    ):
+        add("USA", "live", {"name": name, "kind": "Public surveillance portal", "detail": detail,
+                            "url": url, "date": "page opened 2026-11-18"})
+    add("GBR", "live", {"name": "UKHSA data dashboard", "kind": "Public health dashboard",
+                        "detail": "Multiple health topics; coverage varies by metric. Respiratory figures used here cover England.",
+                        "url": "https://ukhsa-dashboard.data.gov.uk/", "date": "page opened 2026-11-19"})
+    uae = json.loads((APP_DATA / "uae_monitors.json").read_text(encoding="utf-8"))
+    for m in uae["monitors"]:
+        add("ARE", "programme", {"name": m["short"] + ": " + m["name"], "kind": "Authority / programme page",
+                                  "detail": m["text"], "url": m["url"], "date": f"page opened {uae['checked']}"})
+
+    out = layers["respiratory"]
+    add("GBR", "live", {"name": "UKHSA COVID-19 cases, England", "kind": "Reported cases",
+                        "detail": "1,952 cases in the preceding 7 days. England only, not the whole UK.",
+                        "url": "https://ukhsa-dashboard.data.gov.uk/", "date": "7 days to 2026-11-04; page opened 2026-11-19"})
+    add("GBR", "live", {"name": "UKHSA COVID-19 hospital admissions, England", "kind": "Hospital admissions",
+                        "detail": "1,412 admissions in the preceding 7 days. England only, not the whole UK.",
+                        "url": "https://ukhsa-dashboard.data.gov.uk/", "date": "7 days to 2026-10-31; page opened 2026-11-19"})
     v = pct["values"]
     add("USA", "live", {"name": "CDC percent of tests positive (NREVSS)", "kind": "Clinical laboratory tests",
                         "detail": f"COVID-19 {v.get('COVID-19')}%, influenza {v.get('Influenza')}%, RSV {v.get('RSV')}% of tests positive",
@@ -106,7 +130,7 @@ def signals(data_root: Path) -> dict:
                            "kind": "Research", "detail": "Aircraft wastewater at Dubai Airport (2020) and 453 sites across the UAE (2020 to 2022).",
                            "url": "./#uae", "date": "papers 2021 and 2023"})
     return {
-        "checked": "2026-11-18",
+        "checked": "2026-11-19",
         "note": "Real public signals only. A country without an entry has no public signal listed here; that does not mean it has none.",
         "eu_level": [
             {"name": "ERVISS", "operator": "ECDC, WHO/Europe", "url": "https://erviss.org/",
@@ -115,7 +139,7 @@ def signals(data_root: Path) -> dict:
              "url": "https://wastewater-observatory.jrc.ec.europa.eu/#/content/the-eu-dashboard",
              "detail": "SARS-CoV-2, influenza, RSV; 11 countries"},
         ],
-        "countries": out,
+        "layers": layers,
     }
 
 
