@@ -140,3 +140,11 @@ def test_network_view_keeps_simulation_apart_from_real_data():
     assert 'id="alerts"' in sim and 'id="zones"' in sim
     assert 'id="alerts"' not in real and 'id="zones"' not in real
     assert "zoneMarks" not in js and "wwFlags" not in js and "Second signal" not in js
+
+
+def test_replay_of_the_outbreak_is_inside_the_simulation_block_and_labelled():
+    html = (APP / "app.html").read_text(encoding="utf-8")
+    js = (APP / "app.js").read_text(encoding="utf-8")
+    sim = html[html.index('class="block-sim"'):html.index('class="block-planned"')]
+    assert 'id="replayBtn"' in sim and 'id="replay"' in sim
+    assert "SIMULATED REPLAY" in js and "simulated" in sim.lower()

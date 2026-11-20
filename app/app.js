@@ -471,6 +471,44 @@ async function renderDashboard() {
 }
 $("wwCountry").addEventListener("change", renderDashboard);
 
+// Replay of the simulated outbreak, day by day, so the alert can be watched as it fires.
+// It uses the same generated series as the cards below; nothing here is real data.
+let replayTimer = null;
+async function replayOutbreak() {
+  const box = $("replay");
+  clearInterval(replayTimer);
+  let zones;
+  try {
+    zones = syntheticZones(await loadDetection());
+  } catch (e) {
+    showError($("dashError"), `The replay could not start (${e.message || e}).`);
+    return;
+  }
+  const z = zones.find((x) => x.outbreakStart >= 0 && x.firstAlarm >= 0 && x.participants >= MIN_PARTICIPANTS);
+  if (!z) { box.innerHTML = `<div class="card muted sim"><p class="mono sim-label">SIMULATED</p>No simulated outbreak is set up.</div>`; return; }
+  const [action, role] = ACTIONS[z.name] || ["Review the zone", "Public health officer"];
+  const top = Math.max(...z.vals, z.baseline) * 1.05, total = z.vals.length;
+  let n = Math.max(z.outbreakStart - 6, 2);
+  const draw = () => {
+    const day = n, rise = z.outbreakStart + 1, alarmDay = z.firstAlarm + 1;
+    const status = day < rise ? "Usual level. No alert."
+      : day < alarmDay ? `Coughing started to rise on day ${rise}. No alert yet.`
+        : `Alert on day ${alarmDay}, ${alarmDay - rise + 1} ${alarmDay - rise + 1 === 1 ? "day" : "days"} after the rise began. Suggested: ${action}. Decided by: ${role}.`;
+    box.innerHTML = `<div class="card zone sim${day >= alarmDay ? " alert" : ""}"><p class="mono sim-label">SIMULATED REPLAY · DAY ${day} OF ${total}</p>
+      <h4>${z.name}, ${z.city}</h4>
+      ${sparkline(z.vals.slice(0, day), z.flags.slice(0, day), { max: top, baseline: z.baseline, firstLabel: "Day 1", lastLabel: `Day ${day}` })}
+      <p><b>${status}</b></p></div>`;
+  };
+  if (reduceMotion) { n = total; draw(); return; }
+  draw();
+  replayTimer = setInterval(() => {
+    n += 1;
+    if (n > total) { clearInterval(replayTimer); return; }
+    draw();
+  }, 700);
+}
+$("replayBtn").addEventListener("click", replayOutbreak);
+
 async function renderAbout() {
   try {
     const res = await fetch("./data/esc50_summary.json");
