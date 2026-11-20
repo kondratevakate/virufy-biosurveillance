@@ -1,0 +1,1206 @@
+{
+ "@context": {
+  "dcat": "http://www.w3.org/ns/dcat#",
+  "dcterms": "http://purl.org/dc/terms/",
+  "xsd": "http://www.w3.org/2001/XMLSchema#",
+  "vb": "https://virufy.healthaiatlas.com/data/catalog.schema.json#"
+ },
+ "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld",
+ "@type": "dcat:Catalog",
+ "dcterms:title": {
+  "@value": "Virufy catalog of public respiratory surveillance sources",
+  "@language": "en"
+ },
+ "dcterms:description": {
+  "@value": "Partial inventory of public sources, saved snapshots only. A country without a record has no source listed here; that does not mean it has none. Not a live feed and not medical advice.",
+  "@language": "en"
+ },
+ "dcat:version": "0.1.0",
+ "dcterms:modified": {
+  "@value": "2026-11-19",
+  "@type": "xsd:date"
+ },
+ "dcat:theme": {
+  "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+ },
+ "dcat:dataset": [
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ARE-adphc-infectious-disease-programmes",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ARE-adphc-infectious-disease-programmes",
+   "dcterms:title": {
+    "@value": "ADPHC: Infectious disease programmes",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Programme pages on infectious disease, seasonal influenza and antimicrobial resistance. We found no public surveillance data.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ARE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "authority page",
+    "reference"
+   ],
+   "vb:record_class": "reference",
+   "vb:signal_type": "authority_page",
+   "vb:status": "no_public_data",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.adphc.gov.ae/Public-Health-Programs/Infectious-Disease"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ARE-doh-open-data-open-data-portal",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ARE-doh-open-data-open-data-portal",
+   "dcterms:title": {
+    "@value": "DoH open data: Open data portal",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Open data portal of the Abu Dhabi health regulator. We found no infectious-disease or wastewater dataset on it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ARE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "authority page",
+    "reference"
+   ],
+   "vb:record_class": "reference",
+   "vb:signal_type": "authority_page",
+   "vb:status": "no_public_data",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.doh.gov.ae/en/resources/opendata"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ARE-dha-dubai-health-authority",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ARE-dha-dubai-health-authority",
+   "dcterms:title": {
+    "@value": "DHA: Dubai Health Authority",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Health regulator of Dubai. We could not find public surveillance statistics on its site.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ARE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "authority page",
+    "reference"
+   ],
+   "vb:record_class": "reference",
+   "vb:signal_type": "authority_page",
+   "vb:status": "no_public_data",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.dha.gov.ae/en"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ARE-mohap-open-data-open-data-and-statistics",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ARE-mohap-open-data-open-data-and-statistics",
+   "dcterms:title": {
+    "@value": "MOHAP open data: Open data and statistics",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "National health indicators such as maternal and child mortality and vaccination coverage. We found no notifiable-disease or wastewater dataset.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ARE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "authority page",
+    "reference"
+   ],
+   "vb:record_class": "reference",
+   "vb:signal_type": "authority_page",
+   "vb:status": "no_public_data",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://mohap.gov.ae/en/open-data/mohap-open-data"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#AUT-ages-wastewater-monitoring",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "AUT-ages-wastewater-monitoring",
+   "dcterms:title": {
+    "@value": "AGES wastewater monitoring",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, influenza A/B, RSV",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/AUT"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://abwasser.ages.at/en/"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#BEL-sciensano-wastewater-dashboard",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "BEL-sciensano-wastewater-dashboard",
+   "dcterms:title": {
+    "@value": "Sciensano wastewater dashboard",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, influenza, RSV",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/BEL"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://wastewater.sciensano.be/dashboard/covid19/en/"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#CZE-pathogen-portal-cz-wastewater",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "CZE-pathogen-portal-cz-wastewater",
+   "dcterms:title": {
+    "@value": "Pathogen Portal CZ, wastewater",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, poliovirus",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/CZE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://pathogens.vm.cesnet.cz/en/dashboards/wastewater-monitoring/"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#CZE-nextstrain-europe-czech-mirror",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "CZE-nextstrain-europe-czech-mirror",
+   "dcterms:title": {
+    "@value": "Nextstrain Europe (Czech mirror)",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/CZE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "genomic",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "genomic",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://pathogens.vm.cesnet.cz/en/dashboards/nextstrain-sarscov2/"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#DEU-amelag-open-data-rki-uba",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DEU-amelag-open-data-rki-uba",
+   "dcterms:title": {
+    "@value": "AMELAG open data (RKI, UBA)",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, influenza A/B, RSV",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/DEU"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://github.com/robert-koch-institut/Abwassersurveillance_AMELAG"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#DNK-statens-serum-institut-wastewater",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DNK-statens-serum-institut-wastewater",
+   "dcterms:title": {
+    "@value": "Statens Serum Institut, wastewater",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, influenza A",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/DNK"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://en.ssi.dk/surveillance-and-preparedness/surveillance-in-denmark/national-wastewater-surveillance-of-sars-cov-2-and-influenza-a"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#DNK-euromomo-hosted-by-ssi",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DNK-euromomo-hosted-by-ssi",
+   "dcterms:title": {
+    "@value": "EuroMOMO (hosted by SSI)",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "All causes",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/DNK"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "excess mortality",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "excess_mortality",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.euromomo.eu/graphs-and-maps/"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ESP-vatar-covid-19",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ESP-vatar-covid-19",
+   "dcterms:title": {
+    "@value": "VATar COVID-19",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ESP"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://miteco.maps.arcgis.com/apps/dashboards/75cbb6eb7043400da519089fd516d5bd"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#FIN-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "FIN-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/FIN"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#FRA-sum-eau-archived-open-data",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "FRA-sum-eau-archived-open-data",
+   "dcterms:title": {
+    "@value": "SUM'Eau, archived open data",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/FRA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.data.gouv.fr/datasets/surveillance-du-sars-cov-2-dans-les-eaux-usees-sumeau"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#GBR-ukhsa-data-dashboard",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "GBR-ukhsa-data-dashboard",
+   "dcterms:title": {
+    "@value": "UKHSA data dashboard",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Multiple health topics; coverage varies by metric. Respiratory figures used here cover England.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/GBR"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "surveillance portal",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "surveillance_portal",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-19",
+   "dcat:landingPage": {
+    "@id": "https://ukhsa-dashboard.data.gov.uk/"
+   },
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#GRC-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "GRC-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/GRC"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#HUN-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "HUN-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/HUN"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#IRL-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "IRL-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/IRL"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ITA-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ITA-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ITA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#LIE-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "LIE-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/LIE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#LTU-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "LTU-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/LTU"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#LUX-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "LUX-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/LUX"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#LVA-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "LVA-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/LVA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#MLT-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "MLT-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/MLT"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#NLD-rivm-wastewater-research",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "NLD-rivm-wastewater-research",
+   "dcterms:title": {
+    "@value": "RIVM wastewater research",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2; Schiphol airport data not published",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/NLD"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.rivm.nl/rioolwateronderzoek/covid-19"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#NOR-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "NOR-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/NOR"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#POL-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "POL-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/POL"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#PRT-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "PRT-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/PRT"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#SVK-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "SVK-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/SVK"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#SVN-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "SVN-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/SVN"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#SWE-national-monitor-listed-by-the-eu-or-who",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "SWE-national-monitor-listed-by-the-eu-or-who",
+   "dcterms:title": {
+    "@value": "National monitor listed by the EU or WHO",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "We could not open and confirm it.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/SWE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "unspecified",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "unspecified",
+   "vb:status": "listed_unconfirmed",
+   "vb:observed": "checked 2026-11-18"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#USA-cdc-fluview",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "USA-cdc-fluview",
+   "dcterms:title": {
+    "@value": "CDC FluView",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Influenza surveillance in the United States",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/USA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "surveillance portal",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "surveillance_portal",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://www.cdc.gov/fluview/"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#USA-cdc-public-data",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "USA-cdc-public-data",
+   "dcterms:title": {
+    "@value": "CDC public data",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Public respiratory laboratory surveillance data",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/USA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "surveillance portal",
+    "dashboard"
+   ],
+   "vb:record_class": "dashboard",
+   "vb:signal_type": "surveillance_portal",
+   "vb:status": "confirmed",
+   "vb:observed": "page opened 2026-11-18",
+   "dcat:landingPage": {
+    "@id": "https://data.cdc.gov/d/seuz-s2cv"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#ARE-published-wastewater-studies-no-running-public-data",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "ARE-published-wastewater-studies-no-running-public-data",
+   "dcterms:title": {
+    "@value": "Published wastewater studies, no running public data",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "Aircraft wastewater at Dubai Airport (2020) and 453 sites across the UAE (2020 to 2022).",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/ARE"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "research",
+    "reference"
+   ],
+   "vb:record_class": "reference",
+   "vb:signal_type": "research",
+   "vb:status": "no_public_data",
+   "vb:observed": "papers 2021 and 2023",
+   "dcat:landingPage": {
+    "@id": "./#uae"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#GBR-ukhsa-covid-19-cases-england",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "GBR-ukhsa-covid-19-cases-england",
+   "dcterms:title": {
+    "@value": "UKHSA COVID-19 cases, England",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "1,952 cases in the preceding 7 days. England only, not the whole UK.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/GBR"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "reported cases",
+    "measurement"
+   ],
+   "vb:record_class": "measurement",
+   "vb:signal_type": "reported_cases",
+   "vb:status": "confirmed",
+   "vb:observed": "7 days to 2026-11-04; page opened 2026-11-19",
+   "dcat:landingPage": {
+    "@id": "https://ukhsa-dashboard.data.gov.uk/"
+   },
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "vb:related_standard": "Global.health outbreak schema"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#GBR-ukhsa-covid-19-hospital-admissions-england",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "GBR-ukhsa-covid-19-hospital-admissions-england",
+   "dcterms:title": {
+    "@value": "UKHSA COVID-19 hospital admissions, England",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "1,412 admissions in the preceding 7 days. England only, not the whole UK.",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/GBR"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "hospital admissions",
+    "measurement"
+   ],
+   "vb:record_class": "measurement",
+   "vb:signal_type": "hospital_admissions",
+   "vb:status": "confirmed",
+   "vb:observed": "7 days to 2026-10-31; page opened 2026-11-19",
+   "dcat:landingPage": {
+    "@id": "https://ukhsa-dashboard.data.gov.uk/"
+   },
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#GBR-aviation-wastewater-from-arriving-aircraft",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "GBR-aviation-wastewater-from-arriving-aircraft",
+   "dcterms:title": {
+    "@value": "Aviation wastewater from arriving aircraft",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, Influenza A, Influenza B, RSV; weekly share of positive samples",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/GBR"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "measurement"
+   ],
+   "vb:record_class": "measurement",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "2024-W30 to 2025-W03",
+   "dcat:landingPage": {
+    "@id": "https://doi.org/10.5281/zenodo.18432347"
+   },
+   "dcterms:license": {
+    "@id": "https://creativecommons.org/licenses/by/4.0/"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#USA-cdc-percent-of-tests-positive-nrevss",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "USA-cdc-percent-of-tests-positive-nrevss",
+   "dcterms:title": {
+    "@value": "CDC percent of tests positive (NREVSS)",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "COVID-19 3.2%, influenza 11.3%, RSV 1.6% of tests positive",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/USA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "clinical lab tests",
+    "measurement"
+   ],
+   "vb:record_class": "measurement",
+   "vb:signal_type": "clinical_lab_tests",
+   "vb:status": "confirmed",
+   "vb:observed": "week ending 2026-11-07",
+   "dcat:landingPage": {
+    "@id": "https://data.cdc.gov/d/seuz-s2cv"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#USA-cdc-ilinet-influenza-like-illness",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "USA-cdc-ilinet-influenza-like-illness",
+   "dcterms:title": {
+    "@value": "CDC ILINet, influenza-like illness",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "3.2% of 2,794,544 outpatient visits were for influenza-like illness",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/USA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "outpatient visits",
+    "measurement"
+   ],
+   "vb:record_class": "measurement",
+   "vb:signal_type": "outpatient_visits",
+   "vb:status": "confirmed",
+   "vb:observed": "week 2026w44, released 2026-11-13",
+   "dcat:landingPage": {
+    "@id": "https://www.cdc.gov/fluview/"
+   }
+  },
+  {
+   "@id": "https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld#USA-aviation-wastewater-from-arriving-aircraft",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "USA-aviation-wastewater-from-arriving-aircraft",
+   "dcterms:title": {
+    "@value": "Aviation wastewater from arriving aircraft",
+    "@language": "en"
+   },
+   "dcterms:description": {
+    "@value": "SARS-CoV-2, Influenza A, Influenza B, RSV; weekly share of positive samples",
+    "@language": "en"
+   },
+   "dcterms:spatial": {
+    "@id": "http://publications.europa.eu/resource/authority/country/USA"
+   },
+   "dcat:theme": {
+    "@id": "http://publications.europa.eu/resource/authority/data-theme/HEAL"
+   },
+   "dcat:keyword": [
+    "wastewater",
+    "measurement"
+   ],
+   "vb:record_class": "measurement",
+   "vb:signal_type": "wastewater",
+   "vb:status": "confirmed",
+   "vb:observed": "2024-W13 to 2025-W03",
+   "dcat:landingPage": {
+    "@id": "https://doi.org/10.5281/zenodo.18432347"
+   },
+   "dcterms:license": {
+    "@id": "https://creativecommons.org/licenses/by/4.0/"
+   },
+   "vb:related_standard": "PHES-ODM (Public Health Environmental Surveillance Open Data Model)"
+  }
+ ]
+}

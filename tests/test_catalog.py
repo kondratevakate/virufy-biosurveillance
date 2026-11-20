@@ -95,8 +95,25 @@ def test_server_speaks_mcp_over_stdio():
 def test_site_serves_the_same_catalog_as_the_repository():
     # The site links to a copy of the catalog; it must never drift from the built one.
     app_data = REPO / "app" / "data"
-    assert (app_data / "catalog.json").read_bytes() == (CATALOG_DIR / "catalog.json").read_bytes()
-    assert (app_data / "catalog.schema.json").read_bytes() == (CATALOG_DIR / "schema.json").read_bytes()
+    # compared as parsed JSON: git may check the two copies out with different line endings
+    load = lambda path: json.loads(path.read_text(encoding="utf-8"))
+    assert load(app_data / "catalog.json") == load(CATALOG_DIR / "catalog.json")
+    assert load(app_data / "catalog.schema.json") == load(CATALOG_DIR / "schema.json")
     html = (REPO / "app" / "app.html").read_text(encoding="utf-8")
     cat = json.loads((app_data / "catalog.json").read_text(encoding="utf-8"))
     assert f"{len(cat['records'])} records for {len({r['country'] for r in cat['records']})} countries" in html
+
+
+def test_dcat_export_carries_every_record_and_matches_the_site_copy():
+    dcat = load_module("build_dcat").build()
+    cat = json.loads((CATALOG_DIR / "catalog.json").read_text(encoding="utf-8"))
+    assert json.loads((CATALOG_DIR / "catalog.dcat.jsonld").read_text(encoding="utf-8")) == dcat
+    assert json.loads((REPO / "app" / "data" / "catalog.dcat.jsonld").read_text(encoding="utf-8")) == dcat
+    assert dcat["@type"] == "dcat:Catalog" and dcat["dcat:version"] == cat["catalog_version"]
+    by_id = {d["dcterms:identifier"]: d for d in dcat["dcat:dataset"]}
+    assert set(by_id) == {r["id"] for r in cat["records"]}
+    for r in cat["records"]:
+        d = by_id[r["id"]]
+        assert d["dcterms:spatial"]["@id"].endswith("/" + r["country"])
+        assert ("dcat:landingPage" in d) == bool(r["url"])
+        assert d["vb:status"] == r["status"] and d["vb:observed"] == r["observed"]

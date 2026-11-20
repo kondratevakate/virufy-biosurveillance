@@ -1,0 +1,16 @@
+# Virufy biosurveillance
+
+> Open catalog of what each country publishes about respiratory disease surveillance, and a prototype that counts coughs on a phone without recording audio. Built by team Virufy, a nonprofit. Prototype, not a medical device.
+
+The catalog is a partial inventory of public sources with saved snapshots. It is not a live feed and not medical advice. A country without a record has no source listed here; that does not mean it has none. Always show the source URL and the observed date with any value.
+
+## Catalog
+
+- [Catalog, JSON](https://virufy.healthaiatlas.com/data/catalog.json): version 0.1.0, one record per public source
+- [Record format, JSON Schema](https://virufy.healthaiatlas.com/data/catalog.schema.json): fields and allowed values
+- [Catalog, DCAT in JSON-LD](https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld): the same records in the W3C Data Catalog Vocabulary
+
+## Pages
+
+- [Project page](https://virufy.healthaiatlas.com/): what this is, related initiatives, studies
+- [Prototype](https://virufy.healthaiatlas.com/app.html): world map of the catalog, cough check-in, real and simulated network views, evidence
