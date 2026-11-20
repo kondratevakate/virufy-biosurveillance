@@ -145,16 +145,24 @@ if ("IntersectionObserver" in window) {
   startMap();
 }
 
-// Cards and blocks fade in as they scroll into view. The class is added here, so without
-// JavaScript or with reduced motion everything is simply visible.
-function revealOnScroll(selector) {
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
-  const els = [...document.querySelectorAll(selector)];
-  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
-    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-  }), { rootMargin: "0px 0px -8% 0px" });
-  els.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
-  // never leave content hidden if the observer does not fire (background tab, old browser)
-  window.addEventListener("load", () => setTimeout(() => els.forEach((el) => el.classList.add("in")), 2500));
+// Static hero preview: the same outline, status precedence and source snapshots as the app.
+// Keep this separate from app.js so the landing never downloads the audio runtime.
+async function renderHeroWorld() {
+  try {
+    const [geo, sig] = await Promise.all([getJson("data/world.json"), getJson("data/world_signals.json")]);
+    const dash = sig.layers.dashboards, resp = sig.layers.respiratory;
+    const status = (a3) => resp[a3]?.status === "live" ? "signal" : dash[a3]?.status || resp[a3]?.status || "none";
+    const X = (lon) => (lon + 170) * 3, Y = (lat) => (84 - lat) * 3;
+    const paths = geo.countries.map((c) => {
+      const d = c.rings.map((r) => `M${r.map(([lo, la]) => `${X(lo).toFixed(1)},${Y(la).toFixed(1)}`).join("L")}Z`).join("");
+      return `<path class="w-${status(c.a3)}" d="${d}"/>`;
+    }).join("");
+    $("heroWorld").innerHTML = `<svg viewBox="0 0 1050 423" role="img" aria-label="World map of public source availability, not disease burden">
+      <defs><pattern id="heroHatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="white"/><line x1="0" y1="0" x2="0" y2="4" stroke="black"/></pattern></defs>${paths}</svg>`;
+    $("heroSourceDate").textContent = `Source list checked ${sig.checked} · Natural Earth outline`;
+  } catch {
+    // The ordinary app link and explanatory caption remain usable when data cannot load.
+    $("heroWorld").innerHTML = '<p class="small">Map preview unavailable. Open the prototype to explore the sources.</p>';
+  }
 }
-revealOnScroll(".block > h2, .card, .legend-stats, details.more, .map-frame");
+renderHeroWorld();

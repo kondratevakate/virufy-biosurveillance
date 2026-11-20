@@ -90,3 +90,13 @@ def test_server_speaks_mcp_over_stdio():
     payload = json.loads(result.content[0].text)
     assert payload["country"] == "GBR" and any("England" in r["detail"] for r in payload["records"])
     assert failure.isError and "partial" in failure.content[0].text
+
+
+def test_site_serves_the_same_catalog_as_the_repository():
+    # The site links to a copy of the catalog; it must never drift from the built one.
+    app_data = REPO / "app" / "data"
+    assert (app_data / "catalog.json").read_bytes() == (CATALOG_DIR / "catalog.json").read_bytes()
+    assert (app_data / "catalog.schema.json").read_bytes() == (CATALOG_DIR / "schema.json").read_bytes()
+    html = (REPO / "app" / "app.html").read_text(encoding="utf-8")
+    cat = json.loads((app_data / "catalog.json").read_text(encoding="utf-8"))
+    assert f"{len(cat['records'])} records for {len({r['country'] for r in cat['records']})} countries" in html

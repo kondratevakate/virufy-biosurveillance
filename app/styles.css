@@ -6,7 +6,7 @@
 @font-face { font-family: "Space Mono"; font-weight: 700; font-display: swap; src: url("fonts/space-mono-latin-700-normal.woff2") format("woff2"); }
 
 :root {
-  --bg: #ffffff; --ink: #000000; --muted: #737373; --fill: #f5f5f5;
+  --bg: #ffffff; --ink: #000000; --muted: #666666; --fill: #f5f5f5;
   --success: #1a9e4b; --warning: #db7706; --danger: #dc2626;
   --sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --mono: "Space Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -212,7 +212,7 @@ details.more + details.more { margin-top: 0; }
 .live { display: inline-block; width: 10px; height: 10px; margin-left: 10px; background: var(--danger); animation: live 1.2s ease-in-out infinite; }
 button, a.button, .chips button { transition: transform 0.08s ease-out, opacity 0.15s; }
 button:active, a.button:active { transform: scale(0.97); }
-.reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+.reveal { opacity: 1; transform: none; }
 .reveal.in { opacity: 1; transform: none; }
 #meter { transition: width 0.25s ease-out; }
 @media (prefers-reduced-motion: reduce) {
@@ -318,3 +318,122 @@ button:active, a.button:active { transform: scale(0.97); }
 .block-sim .small, .block-sim .sim-label, .block-sim .meta, .block-planned { color: #595959; }
 /* on a phone the main action comes first in the tab row */
 @media (max-width: 700px) { header.top nav .tab.active[href="app.html"] { order: -1; } }
+
+/* Visual pass: one grid, visible content, and a source map on the first screen. */
+:root { --section-space: 48px; --card-space: 20px; }
+.container { max-width: 1240px; }
+.block { padding: var(--section-space) 0; scroll-margin-top: 112px; }
+.block > h2, .research-more h2 { font-size: clamp(24px, 2.6vw, 30px); line-height: 1.15; }
+.card { padding: var(--card-space); }
+.grid > *, .hero-layout > *, .map-grid > * { min-width: 0; }
+a.button, .chips button { min-height: 44px; }
+a.button { display: inline-flex; align-items: center; justify-content: center; }
+button:hover { opacity: 1; background: var(--fill); }
+button.primary:hover, .tab.active:hover, .chips button[aria-pressed="true"]:hover { background: #222; color: #fff; }
+.hero { padding: 24px 0 32px; }
+.hero > .badges:first-child { gap: 6px; margin-bottom: 20px; }
+.hero > .badges:first-child li { padding: 5px 9px; font-size: 11px; }
+.hero-layout { display: grid; grid-template-columns: 1fr 1.08fr; gap: 36px; align-items: start; }
+.hero h1 { font-size: clamp(36px, 4vw, 54px); max-width: 19ch; margin: 0 0 18px; }
+.hero-action { margin-bottom: 18px; }
+.hero-action .primary { min-height: 48px; padding: 11px 20px; }
+.hero-description .lead { font-size: 16px; line-height: 1.5; margin: 0 0 12px; max-width: 58ch; }
+.hero-description .tagline { margin: 0; }
+.hero-atlas { margin: 0; border: 1px solid var(--ink); align-self: stretch; display: flex; flex-direction: column; }
+.atlas-link { display: block; text-decoration: none; color: var(--ink); }
+.atlas-heading { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--ink); }
+.atlas-heading .kicker { margin: 0; color: var(--ink); }
+#heroWorld { border: 0; background: #fff; padding: 20px 8px; }
+#heroWorld svg { width: 100%; height: auto; }
+#heroWorld path { stroke: #fff; stroke-width: 0.8; }
+#heroWorld .w-none { fill: #e4e4e4; }
+#heroWorld .w-signal { fill: var(--success); }
+#heroWorld .w-live { fill: #000; }
+#heroWorld .w-listed { fill: url(#heroHatch); stroke: #000; }
+#heroWorld .w-programme, #heroWorld .w-studies { fill: #fff; stroke: #000; stroke-width: 1.5; }
+#heroWorld .w-past { fill: #6b6b6b; }
+.atlas-open { display: block; padding: 0 16px 12px; font-size: 14px; font-weight: 700; }
+.hero-atlas figcaption { padding: 12px 16px; border-top: 1px solid var(--ink); margin-top: auto; }
+.atlas-key { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin: 0 0 10px; padding: 0; }
+.atlas-key li { display: flex; align-items: center; gap: 8px; }
+.hero-atlas .small { font-size: 12px; color: #595959; }
+.hero-atlas p { margin-bottom: 5px; }
+.hero-secondary { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 10px; }
+.hero-secondary .button { padding: 4px 0; border: 0; text-decoration: underline; font-size: 14px; }
+.hero .hero-context { margin: 12px 0 0; }
+.hero .org-badges { margin: 4px 0 5px; gap: 6px; }
+.hero .org-badges li { font-size: 10px; padding: 3px 7px; letter-spacing: 0.02em; }
+.hero .hero-note { font-size: 12px; }
+.hero .stats-strip { margin-top: 18px; grid-template-columns: repeat(4, 1fr); }
+.stats-strip a { padding: 14px 16px; }
+.stats-strip .stat { font-size: 32px; }
+.stats-strip .small { font-size: 13px; }
+#landscape > .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#landscape .grid { margin-bottom: 20px; }
+#landscape .more { margin-bottom: 20px; }
+.when-open, details[open] > summary .when-closed { display: none; }
+details[open] > summary .when-open { display: inline; }
+details.research-more { margin: 0; border: 0; }
+.research-more > summary { padding: 0; min-height: 48px; }
+.research-more h2 { margin: 0; }
+.research-more[open] > .grid { margin-top: 24px; }
+.block-real, .block-sim, .block-planned { padding: var(--card-space); }
+.block-real > h2, .block-sim > h2 { margin-top: 24px; }
+.block-sim { background-color: #fff; }
+.tag { font-weight: 700; }
+.spark { margin: 16px 0 0; }
+.spark svg { height: 92px; overflow: visible; }
+.spark-values, .spark-axis { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: #595959; }
+.spark-values { margin-bottom: 6px; }
+.spark-values strong { color: var(--ink); font-size: 16px; }
+.spark-unit { font-size: 12px; margin-bottom: 8px; color: #595959; }
+.spark-axis { margin-top: 6px; }
+.chart-source { font-size: 11px; color: #595959; margin-top: 12px; }
+/* Keep the content visible even if scripts fail, or the tab was opened in the background. */
+.reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
+@media (max-width: 900px) {
+  .hero-layout { gap: 24px; grid-template-columns: 1fr 1fr; }
+  .hero h1 { font-size: 38px; }
+  #landscape > .grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  :root { --section-space: 36px; --card-space: 16px; }
+  .hero { display: flex; flex-direction: column; padding: 24px 0 32px; }
+  .hero-layout, .hero-copy { display: contents; }
+  .hero h1 { order: 0; font-size: 36px; margin-bottom: 18px; }
+  .hero-action { order: 1; }
+  .hero-atlas { order: 2; margin: 4px 0 24px; }
+  .hero > .badges:first-child { order: 3; }
+  .hero-description { order: 4; }
+  .hero-secondary { order: 5; }
+  .hero > .hero-context, .hero > .org-badges, .hero > .hero-note { order: 6; }
+  .hero .stats-strip { order: 7; grid-template-columns: 1fr 1fr; margin-top: 24px; }
+  .hero > .badges:first-child li { font-size: 10px; padding: 5px 7px; }
+  #heroWorld { padding: 16px 4px; }
+  .atlas-key { grid-template-columns: 1fr; }
+  .grid.four, #landscape > .grid { grid-template-columns: 1fr; }
+  .block-real .grid, .block-sim .grid { grid-template-columns: minmax(0, 1fr); }
+  .bar { gap: 8px; }
+  nav { flex-wrap: wrap; overflow: visible; }
+  .tab { font-size: 11px; }
+  .block { scroll-margin-top: 160px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  /* Freeze purely decorative level bars; the numerical count remains available. */
+  .eq span { transform: scaleY(0.04) !important; }
+}
+
+/* Keep the evidence strip at the laptop fold without shrinking its text. */
+.hero h1 { font-size: clamp(36px, 3.7vw, 50px); }
+.atlas-heading { padding: 8px 14px; }
+#heroWorld { padding: 10px 8px; }
+.hero-atlas figcaption { padding: 10px 14px; }
+.hero-team { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.hero-team .hero-context, .hero-team .org-badges { margin: 0; }
+.hero-secondary { margin-top: 6px; }
+.hero .hero-note { margin-top: 6px; }
+@media (max-width: 700px) {
+  .hero h1 { font-size: 36px; }
+  .hero-team { order: 6; }
+}

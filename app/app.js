@@ -29,18 +29,29 @@ function saveShared(list) {
   catch { return false; }
 }
 
-function sparkline(values, flags, { max } = {}) {
-  const w = 280, h = 70, pad = 4;
-  const vals = values.map((v) => (v == null ? null : v));
-  const top = max ?? Math.max(...vals.filter((v) => v != null), 1e-9);
-  const x = (i) => pad + (i * (w - 2 * pad)) / Math.max(vals.length - 1, 1);
+function sparkline(values, flags, { max, baseline = 0, unit = "coughs per listening hour", firstLabel = "First day", lastLabel = "Last day" } = {}) {
+  const w = 280, h = 92, pad = 6;
+  const top = max ?? Math.max(...values.filter((v) => v != null), baseline, 1e-9);
+  const x = (i) => pad + (i * (w - 2 * pad)) / Math.max(values.length - 1, 1);
   const y = (v) => h - pad - (v / top) * (h - 2 * pad);
-  let d = "";
-  vals.forEach((v, i) => { if (v != null) d += `${d ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; });
-  const dots = vals.map((v, i) => (flags[i]?.flag && v != null)
-    ? `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="#ef4444"/>` : "").join("");
-  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img">
-    <path d="${d}" fill="none" stroke="#000000" stroke-width="2"/>${dots}</svg>`;
+  const fmt = (v) => v == null ? "No observation" : (max === 1 ? `${(v * 100).toFixed(1)}%` : v.toFixed(2));
+  let d = "", segment = false;
+  values.forEach((v, i) => {
+    if (v == null) { segment = false; return; }
+    d += `${segment ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`; segment = true;
+  });
+  const dots = values.map((v, i) => (flags[i]?.flag && v != null)
+    ? `<circle cx="${x(i)}" cy="${y(v)}" r="4" fill="var(--danger)"/>` : "").join("");
+  const baselineText = baseline ? `Usual ${fmt(baseline)}` : "Zero baseline";
+  return `<figure class="spark">
+    <div class="spark-unit">${esc(unit)} · ${esc(baselineText)}</div>
+    <div class="spark-values mono"><span>First <strong>${fmt(values[0])}</strong></span><span>Last <strong>${fmt(values[values.length - 1])}</strong></span></div>
+    <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="${esc(unit)}; ${esc(firstLabel)}: ${fmt(values[0])}; ${esc(lastLabel)}: ${fmt(values[values.length - 1])}; ${baselineText}. Red points mark flagged observations.">
+      <line x1="${pad}" x2="${w-pad}" y1="${h-pad}" y2="${h-pad}" stroke="#737373" stroke-width="1"/>
+      ${baseline ? `<line x1="${pad}" x2="${w-pad}" y1="${y(baseline)}" y2="${y(baseline)}" stroke="#737373" stroke-dasharray="3 3"/>` : ""}
+      <path d="${d}" fill="none" stroke="#000" stroke-width="2"/>${dots}</svg>
+    <figcaption class="spark-axis mono"><span>${esc(firstLabel)}</span><span>${esc(lastLabel)}</span></figcaption>
+  </figure>`;
 }
 
 // ---------- one scrolling page: the tabs are anchors ----------
@@ -421,7 +432,7 @@ async function renderDashboard() {
     if (z.flags[last].flag) alerts.push({ z });
     return `<div class="card zone sim"><p class="mono sim-label">SIMULATED</p><h4>${z.name}, ${z.city}</h4>
       <div class="meta">${z.vals[last].toFixed(2)} coughs per hour today · 28 days</div>
-      ${sparkline(z.vals, z.flags)}</div>`;
+      ${sparkline(z.vals, z.flags, { baseline: z.baseline, firstLabel: "Day 1", lastLabel: "Day 28" })}<p class="chart-source">Source: generated counts · SIMULATED · 28 days</p></div>`;
   }).join("");
 
   // Counts shared from this device are real, so they sit in the real block, not among the simulated sites.
@@ -438,7 +449,7 @@ async function renderDashboard() {
       return `<div class="card ww"><h4>${esc(s.target)}</h4>
         <div class="meta">${esc(s.weeks[0])} to ${esc(s.weeks[s.weeks.length - 1])} · ${s.n.reduce((a, b) => a + b, 0)} samples ·
         ${Number(s.n_flagged_weeks)} flagged weeks</div>
-        ${sparkline(s.positivity, s.flags, { max: 1 })}</div>`;
+        ${sparkline(s.positivity, s.flags, { max: 1, unit: "Share of positive samples", firstLabel: s.weeks[0], lastLabel: s.weeks[s.weeks.length - 1] })}<p class="chart-source">Source: aviation wastewater qPCR · Zenodo 18432347</p></div>`;
     }).join("");
   } catch (e) {
     $("wastewater").innerHTML = "";
@@ -455,8 +466,8 @@ async function renderDashboard() {
       <b>${z.name}, ${z.city}</b><br>
       ${z.vals[last].toFixed(2)} coughs per hour, usual ${z.baseline.toFixed(2)}${day}<br>
       <span class="small">Suggested: ${action}. Decided by: ${role}.</span></div>`;
-  }).join("") : zonesOk ? `<div class="card muted">No simulated site is above its alarm level today.</div>`
-    : `<div class="card muted">Alerts are unavailable because the zone settings did not load.</div>`;
+  }).join("") : zonesOk ? `<div class="card muted sim"><p class="mono sim-label">SIMULATED</p>No simulated site is above its alarm level today.</div>`
+    : `<div class="card muted sim"><p class="mono sim-label">SIMULATED</p>Alerts are unavailable because the zone settings did not load.</div>`;
 }
 $("wwCountry").addEventListener("change", renderDashboard);
 
