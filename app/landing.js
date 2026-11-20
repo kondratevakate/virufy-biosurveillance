@@ -157,4 +157,4 @@ function revealOnScroll(selector) {
   // never leave content hidden if the observer does not fire (background tab, old browser)
   window.addEventListener("load", () => setTimeout(() => els.forEach((el) => el.classList.add("in")), 2500));
 }
-revealOnScroll(".block > h2, .card, .stats-strip li, .legend-stats, details.more, .map-frame");
+revealOnScroll(".block > h2, .card, .legend-stats, details.more, .map-frame");

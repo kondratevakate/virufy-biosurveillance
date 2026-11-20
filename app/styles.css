@@ -7,7 +7,7 @@
 
 :root {
   --bg: #ffffff; --ink: #000000; --muted: #737373; --fill: #f5f5f5;
-  --success: #1a9e4b; --warning: #db7706; --danger: #ef4444;
+  --success: #1a9e4b; --warning: #db7706; --danger: #dc2626;
   --sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --mono: "Space Mono", ui-monospace, Menlo, Consolas, monospace;
 }
@@ -309,3 +309,12 @@ button:active, a.button:active { transform: scale(0.97); }
 .badges li.solid { background: var(--ink); color: var(--bg); }
 .hero .tagline { font-weight: 700; margin-top: -12px; }
 .hero .hero-context { margin: 20px 0 0; }
+
+/* hero: organisations of the team, quieter than the claim badges */
+.org-badges { margin: 8px 0 8px; }
+.org-badges li { border-width: 1px; display: inline-flex; align-items: center; gap: 6px; }
+.hero .hero-note { margin: 0; color: var(--muted); }
+/* grey text on the hatched simulation block needs more contrast */
+.block-sim .small, .block-sim .sim-label, .block-sim .meta, .block-planned { color: #595959; }
+/* on a phone the main action comes first in the tab row */
+@media (max-width: 700px) { header.top nav .tab.active[href="app.html"] { order: -1; } }

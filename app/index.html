@@ -8,7 +8,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
   <header class="top">
@@ -44,11 +44,19 @@
         <a class="button" href="#landscape">Who else works on this</a>
         <a class="button" href="https://virufy.org/demo/" target="_blank" rel="noopener">Virufy cough screening demo ↗</a>
       </div>
+      <p class="mono kicker hero-context">TEAM FROM</p>
+      <ul class="badges org-badges mono" aria-label="Organisations of the team members">
+        <li><img src="img/virufy-icon.png" alt="" width="18" height="16">VIRUFY</li>
+        <li>MAASTRICHT UNIVERSITY</li>
+        <li>UNITED ARAB EMIRATES UNIVERSITY</li>
+        <li>UNIVERSITY OF FUKUI</li>
+      </ul>
+      <p class="small hero-note">Affiliations of the team members. The institutions have not reviewed or endorsed this prototype.</p>
       <p class="mono kicker hero-context">FUTURE HEALTH DIGITAL INNOVATION CHALLENGE 2026 · CHALLENGE 06 · PROTOTYPE, NOT A MEDICAL DEVICE</p>
       <ul class="stats-strip">
-        <li><a href="#how"><span class="stat mono">0.991</span><span class="small">ROC AUC of the cough detector on ESC-50</span></a></li>
+        <li><a href="#how"><span class="stat mono">0.991</span><span class="small">telling coughs from other sounds (ROC AUC, public test set ESC-50)</span></a></li>
         <li><a href="#how"><span class="stat mono">1.5 days</span><span class="small">to flag a 50% rise in simulation, at 200 listening hours a day</span></a></li>
-        <li><a href="#how"><span class="stat mono">0</span><span class="small">detections in 7.7 h of airports, metro, squares and a mall</span></a></li>
+        <li><a href="#how"><span class="stat mono">0</span><span class="small">false alarms in 7.7 h of crowd recordings; distant coughs are not heard either</span></a></li>
         <li><a href="#monitors"><span class="stat mono">0 of 17</span><span class="small">EU monitors we checked publish airport wastewater or air sampling</span></a></li>
       </ul>
     </section>
@@ -72,7 +80,7 @@
       <div class="grid four">
         <div class="card"><p class="mono kicker">1 · SITE</p><p>A listening device at the site, or a phone for a spot check, counts coughs with an on-device sound model and forgets the audio within a second. Only counts per 15 minutes, the kind of place and a 1 km map cell are shared, with an aggregator run under the health authority.</p></div>
         <div class="card"><p class="mono kicker">2 · ZONE</p><p>Each zone is compared with its own weekday baseline, adjusted for how many people are listening. Zones with fewer than 10 participants are hidden.</p></div>
-        <div class="card"><p class="mono kicker">3 · ALERT</p><p>A running sum of coughs above the baseline (a set of Poisson CUSUM charts) raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
+        <div class="card"><p class="mono kicker">3 · ALERT</p><p>A running sum of coughs above the baseline raises one alert for a sustained rise, set for about one false alarm in 180 days, with the reason and the responsible role.</p></div>
         <div class="card"><p class="mono kicker">4 · BORDER SIGNAL</p><p>Aircraft wastewater series sit next to the zones as a second, independent signal of what is arriving.</p></div>
       </div>
       <details class="more" open>
@@ -262,6 +270,6 @@
     </section>
   </main>
   <footer><div class="container small">Audio never leaves your phone. We count page visits with Cloudflare Web Analytics, without cookies.<br>Virufy biosurveillance prototype · not a medical device · monitor list checked 18 November 2026</div></footer>
-  <script type="module" src="landing.js?v=24"></script>
+  <script type="module" src="landing.js?v=25"></script>
 </body>
 </html>

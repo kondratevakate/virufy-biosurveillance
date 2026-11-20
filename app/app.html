@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/space-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
 </head>
 <body>
   <header class="top">
@@ -78,7 +78,7 @@
     <section id="view-phone" class="view">
       <p class="mono kicker">CHECK IN · 15 MINUTES</p>
       <h2 class="section-title">Check in at a public place</h2>
-      <p class="lead">Your phone listens for up to 15 minutes and counts coughs around you. <b>Audio is not recorded or stored.</b> Only the number of coughs and the listening seconds are shared. You can stop at any time.</p>
+      <p class="lead">Your phone listens for up to 15 minutes and counts coughs around you. <b>Audio is not recorded or stored.</b> Only the cough count, the listening time, the kind of place and, if you set one, a 1 km map cell would be shared. In this prototype they stay on this device. You can stop at any time.</p>
       <div id="phoneNote" class="card hidden" role="status"></div>
       <div id="recs" class="card hidden">
         <p class="mono kicker">WHAT YOU CAN DO · EXAMPLE CONTENT, NOT MEDICAL ADVICE</p>
@@ -109,7 +109,7 @@
           </label>
           <button id="start" class="primary start-btn">Start 15-minute check-in</button>
           <p id="modelState" class="small mono" aria-live="polite">Cough detector: not loaded yet.</p>
-          <p class="small">Audio is analysed <b>on this phone</b> and discarded within a second; nothing is recorded or uploaded. It hears coughs about a table away, not across a hall, and it does not tell you whether you are ill.</p>
+          <p class="small">Audio is analysed <b>on this device</b> and discarded within a second; nothing is recorded or uploaded. It hears coughs about a table away, not across a hall, and it does not tell you whether you are ill.</p>
         </div>
       </div>
 
@@ -133,7 +133,7 @@
         <h2><span class="marker"></span>Finish the check</h2>
         <div class="card">
           <div class="row">
-            <button id="share" class="primary">Finish now and share counts</button>
+            <button id="share" class="primary">Finish and save counts</button>
             <button id="stop">Stop without sharing</button>
           </div>
           <details>
@@ -165,7 +165,14 @@
 
       <div class="block-real">
         <p class="tag tag-real mono">REAL DATA</p>
-        <h2><span class="marker"></span>Your check-ins</h2>
+        <p class="small">Real today: aircraft wastewater from the US and the UK (a research dataset), and any check-ins made on this device. No UAE site is connected yet.</p>
+        <h2><span class="marker"></span>Aircraft wastewater, 2024 to 2025</h2>
+        <p class="small">Share of positive samples per week. Red marks weeks flagged as a sustained rise.</p>
+        <div class="row">
+          <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
+        </div>
+        <div id="wastewater" class="grid"><p class="small">Loading wastewater series…</p></div>
+        <h2><span class="marker"></span>Check-ins from this device</h2>
         <div class="card">
           <div id="uaeMap"><p class="small">Loading the map…</p></div>
           <ul class="legend small">
@@ -180,18 +187,12 @@
           <p class="small">Kept on this device. The exact position is never stored.</p>
           <div id="mapError" class="card error hidden" role="alert"></div>
         </div>
-        <h2><span class="marker"></span>Aircraft wastewater, 2024 to 2025</h2>
-        <p class="small">Share of positive samples per week. Red marks weeks the detector flagged.</p>
-        <div class="row">
-          <label>Country <select id="wwCountry"><option>US</option><option>UK</option></select></label>
-        </div>
-        <div id="wastewater" class="grid"><p class="small">Loading wastewater series…</p></div>
       </div>
 
       <div class="block-sim">
         <p class="tag tag-sim mono">SIMULATION · NOT REAL SITES</p>
         <h2><span class="marker"></span>What a pilot network would show</h2>
-        <p class="small">Invented sites with generated counts. One has a 50% rise added, to show how an alert looks.</p>
+        <p class="small">Invented sites with generated counts. One has a 50% rise in coughing added, to show how an alert looks. The counted rate rises by less than 50% because detector false alarms dilute it.</p>
         <div id="alerts"><p class="small">Loading alerts…</p></div>
         <div id="zones" class="grid"><p class="small">Loading zones…</p></div>
       </div>
@@ -240,6 +241,6 @@
 
   <footer><div class="container small">Audio never leaves your phone. We count page visits with Cloudflare Web Analytics, without cookies.<br>Virufy biosurveillance prototype · Future Health Digital Innovation Challenge 2026 · not a medical device</div></footer>
 
-  <script type="module" src="app.js?v=24"></script>
+  <script type="module" src="app.js?v=25"></script>
 </body>
 </html>

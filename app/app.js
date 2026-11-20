@@ -123,7 +123,7 @@ function warmUpDetector() {
   if (classifier) return;
   el.textContent = "Cough detector: loading (about 6 MB the first time)…";
   loadClassifier()
-    .then((c) => { classifier = c; el.textContent = "Cough detector: ready. It runs on this phone."; })
+    .then((c) => { classifier = c; el.textContent = "Cough detector: ready. It runs on this device."; })
     .catch((e) => { el.textContent = `Cough detector: could not load (${e.message || e}). Start will try again.`; });
 }
 
@@ -148,13 +148,13 @@ async function startListening() {
     stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false } });
   } catch (e) {
     audioCtx.close(); audioCtx = null;
-    fail("Microphone permission was refused, so nothing is being counted.");
+    fail("The microphone is blocked, so nothing is being counted. Allow it for this site in the browser's address bar, then tap Start again.");
     return;
   }
   btn.textContent = classifier ? "Starting…" : "Loading the cough detector…";
   try {
     classifier = await loadClassifier();
-    $("modelState").textContent = "Cough detector: ready. It runs on this phone.";
+    $("modelState").textContent = "Cough detector: ready. It runs on this device.";
   } catch (e) {
     stream.getTracks().forEach((t) => t.stop()); stream = null; audioCtx.close(); audioCtx = null;
     fail(`The cough detector could not be loaded (${e.message || e}).`);
@@ -205,7 +205,7 @@ async function startListening() {
   $("consent").classList.add("hidden");
   $("listening").classList.remove("hidden");
   buzz(20);
-  $("status").textContent = `Listening at: ${placeName}. Audio stays on this phone.`;
+  $("status").textContent = `Listening at: ${placeName}. Audio stays on this device.`;
 }
 
 function onScore(score, zone) {
@@ -215,7 +215,7 @@ function onScore(score, zone) {
   if (bin !== binStart) { bins.push(binRecord(zone)); binStart = bin; binCount = 0; binSeconds = 0; }
   binSeconds += 1; listenedSeconds += 1;
   const mm = Math.floor(listenedSeconds / 60), ss = String(listenedSeconds % 60).padStart(2, "0");
-  $("status").textContent = `Listening at: ${placeName} for ${mm}:${ss}. Audio stays on this phone.`;
+  $("status").textContent = `Listening at: ${placeName} for ${mm}:${ss}. Audio stays on this device.`;
   if (score >= COUGH_THRESHOLD && now - lastEventAt > REFRACTORY_MS) {
     lastEventAt = now; total += 1; binCount += 1;
     $("count").textContent = total;
@@ -306,8 +306,8 @@ function shareCounts() {
     return;
   }
   const placed = Boolean(loadPlace());
-  showNote(`Check finished: ${coughs} cough${coughs === 1 ? "" : "s"} in ${duration}, ${rate} (demo: kept on this phone). `
-    + (placed ? "It is on the network map." : "No place was set, so it is not on the network map; set one in Step 1 before the next check."));
+  showNote(`Check finished: ${coughs} cough${coughs === 1 ? "" : "s"} in ${duration}, ${rate} (prototype: kept on this device). `
+    + (placed ? "It is on the network map." : "No place was set, so it is not on the network map; set one under \"Optional: put this check on the map\" before the next check."));
   $("recs").classList.remove("hidden");
   $("toNetwork").classList.toggle("hidden", !placed);
   $("consent").classList.add("hidden");
@@ -329,7 +329,7 @@ function rng(seed) { return () => { seed = (seed * 1664525 + 1013904223) % 42949
 const ACTIONS = {
   "Airport arrivals hall": ["Increase ventilation and offer masks in the hall; notify port-of-entry health", "Port health officer"],
   "Worksite A": ["Check dust and heat exposure, rotate crews, offer testing to symptomatic workers", "Site occupational health lead"],
-  "Labour accommodation B": ["Offer testing and isolation space; check ventilation", "Occupational health lead"],
+  "Worksite B": ["Offer testing and isolation space; check ventilation", "Occupational health lead"],
   "District school cluster": ["Notify school health service; reinforce sick-day guidance", "District public health officer"],
   "Clinic waiting room": ["Separate respiratory patients in waiting area", "Clinic infection control lead"],
 };
@@ -351,7 +351,7 @@ function syntheticZones(det) {
   const r = rng(42), days = BURN_DAYS + SHOWN_DAYS;
   const spec = [  // name, participants, person-hours per day, outbreak days at the end
     ["Airport arrivals hall", 140, 1000, 6, "Dubai", 25.25, 55.36], ["Worksite A", 60, 200, 0, "Jebel Ali", 25.01, 55.06],
-    ["Labour accommodation B", 45, 200, 0, "Mussafah", 24.35, 54.5], ["District school cluster", 90, 1000, 0, "Al Ain", 24.21, 55.75],
+    ["Worksite B", 45, 200, 0, "Mussafah", 24.35, 54.5], ["District school cluster", 90, 1000, 0, "Al Ain", 24.21, 55.75],
     ["Clinic waiting room", 7, 50, 0, "Sharjah", 25.35, 55.4],
   ];
   return spec.map(([name, participants, load, outbreakDays, city, lat, lon]) => {
