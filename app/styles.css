@@ -302,3 +302,10 @@ button:active, a.button:active { transform: scale(0.97); }
 #landscape .card h3 a { color: var(--ink); }
 #landscape .card p { margin: 0; }
 #landscape .funder { margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #d9d9d9; font-size: 11px; line-height: 1.5; color: var(--muted); }
+
+/* hero: say what this is before anything else */
+.badges { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 20px; }
+.badges li { border: 2px solid var(--ink); padding: 6px 10px; font-size: 12px; letter-spacing: 0.06em; }
+.badges li.solid { background: var(--ink); color: var(--bg); }
+.hero .tagline { font-weight: 700; margin-top: -12px; }
+.hero .hero-context { margin: 20px 0 0; }
