@@ -1,8 +1,31 @@
-# Virufy biosurveillance prototype
+# Virufy biosurveillance
 
-Prototype for the Future Health Digital Innovation Challenge 2026 (Challenge 06, population and workforce health early warning).
+![DCAT](https://img.shields.io/badge/DCAT%20(W3C)-published%20as%20JSON--LD-000000)
+![MCP](https://img.shields.io/badge/MCP-read--only%20connector-000000)
+![llms.txt](https://img.shields.io/badge/llms.txt-published-000000)
+![Croissant](https://img.shields.io/badge/Croissant%20(MLCommons)-planned-737373)
+![Bridge2AI](https://img.shields.io/badge/Bridge2AI%20AI--readiness-not%20yet%20assessed-737373)
+![Licence](https://img.shields.io/badge/licence-all%20rights%20reserved-737373)
 
-A phone counts coughs in the browser and shares only counts per 15 minutes with a zone code. A dashboard compares each zone with its own baseline and shows aviation wastewater pathogen series as a second signal. Not a medical device.
+Open catalog of what each country publishes about respiratory disease surveillance, a read-only
+MCP connector over it, and a prototype that counts coughs on a phone without recording audio.
+Built by team Virufy, a nonprofit, for the Future Health Digital Innovation Challenge 2026
+(Challenge 06, population and workforce health early warning). Prototype, not a medical device.
+
+- Project page: https://virufy.healthaiatlas.com
+- Prototype: https://virufy.healthaiatlas.com/app.html
+- Catalog: [JSON](https://virufy.healthaiatlas.com/data/catalog.json), [record format](https://virufy.healthaiatlas.com/data/catalog.schema.json), [DCAT in JSON-LD](https://virufy.healthaiatlas.com/data/catalog.dcat.jsonld), [llms.txt](https://virufy.healthaiatlas.com/llms.txt)
+
+Formats, stated plainly: the catalog is published in the W3C Data Catalog Vocabulary (DCAT) with
+core terms only, without a claim of DCAT-AP or HealthDCAT-AP conformance. A Croissant description
+for ML tooling is planned and not written yet. The Bridge2AI AI-readiness criteria are the
+checklist we intend to assess the catalog against; that assessment has not been done.
+
+Licence: all rights reserved, see `LICENSE`. Third-party components: `THIRD_PARTY_NOTICES.md`.
+
+How it works: a phone counts coughs in the browser; in this prototype the counts stay on the
+device. A network view compares each site with its own baseline (simulated sites, labelled as
+such) and shows aviation wastewater pathogen series as a second, real signal.
 
 ## Layout
 
